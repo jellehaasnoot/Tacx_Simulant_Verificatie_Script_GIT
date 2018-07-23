@@ -69,22 +69,22 @@ class Main(wx.Frame):
                                                  pos=(4, 2))
         self.path_header_display.SetFont(self.font_header)
 
-        self.some_data_panel_1 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(680, 80), pos=(10, 270))
+        self.some_data_panel_1 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(680, 80), pos=(10, 260))
         self.data_panel_1_header_display = wx.StaticText(self.some_data_panel_1,
                                                          label="Some statistics about the first file: ", pos=(4, 2))
         self.data_panel_1_header_display.SetFont(self.font_header)
 
-        self.some_data_panel_2 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(680, 80), pos=(10, 360))
+        self.some_data_panel_2 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(680, 80), pos=(10, 350))
         self.data_panel_2_header_display = wx.StaticText(self.some_data_panel_2,
                                                          label="Some statistics about the second file: ", pos=(4, 2))
         self.data_panel_2_header_display.SetFont(self.font_header)
 
-        self.some_data_panel_3 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(680, 80), pos=(10, 450))
+        self.some_data_panel_3 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(680, 80), pos=(10, 440))
         self.data_panel_3_header_display = wx.StaticText(self.some_data_panel_3,
                                                          label="Some statistics about the third file: ", pos=(4, 2))
         self.data_panel_3_header_display.SetFont(self.font_header)
         
-        self.some_data_panel_4 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(680, 80), pos=(10, 540))
+        self.some_data_panel_4 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(680, 80), pos=(10, 530))
         self.data_panel_4_header_display = wx.StaticText(self.some_data_panel_4,
                                                          label="Some statistics about the fourth file: ", pos=(4, 2))
         self.data_panel_4_header_display.SetFont(self.font_header)
@@ -171,7 +171,7 @@ class Main(wx.Frame):
                                                       len(self.velocity_list_zero)), pos=(4, 24))
         self.data_panel_4_display.SetFont(self.font_normal)
 
-        xlsx_path_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(680, 50), pos=(10, 620))
+        xlsx_path_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(680, 50), pos=(10, 610))
         self.xlsx_path_panel_header_display = wx.StaticText(xlsx_path_panel,
                                                             label="Path to " + self.user_file_name + ".xslx: ",
                                                             pos=(4, 0))
@@ -516,8 +516,8 @@ class Main(wx.Frame):
         # with the highest value without a big if statement structure.
         error_lin = 0
         error_quadratic = 0
-        popt, pcov = curve_fit(self.func_lin, np.array(velocity_clean_zero), np.array(power_clean_zero))
-        fitted_power_zero_1 = self.func_lin(np.array(velocity_clean_zero), *popt)
+        popt1, pcov = curve_fit(self.func_lin, np.array(velocity_clean_zero), np.array(power_clean_zero))
+        fitted_power_zero_1 = self.func_lin(np.array(velocity_clean_zero), *popt1)
         for i in range(len(fitted_power_zero_1)):
             if fitted_power_zero_1[i] < 0:
                 fitted_power_zero_1[i] = 0
@@ -525,8 +525,8 @@ class Main(wx.Frame):
             if fitted_power_zero_1[i] > 0:
                 error_lin += abs(fitted_power_zero_1[i] - power_clean_zero[i])
 
-        popt, pcov = curve_fit(self.func_quadratic, np.array(velocity_clean_zero), np.array(power_clean_zero))
-        fitted_power_zero_2 = self.func_quadratic(np.array(velocity_clean_zero), *popt)
+        popt2, pcov = curve_fit(self.func_quadratic, np.array(velocity_clean_zero), np.array(power_clean_zero))
+        fitted_power_zero_2 = self.func_quadratic(np.array(velocity_clean_zero), *popt2)
         for i in range(len(fitted_power_zero_2)):
             if fitted_power_zero_2[i] < 0:
                 fitted_power_zero_2[i] = 0
@@ -539,20 +539,50 @@ class Main(wx.Frame):
             '2' : error_quadratic
         }
         lowest_error = min(errors, key=errors.get)
-        if lowest_error == '1':
-            fitted_power_zero = fitted_power_zero_1
-        elif lowest_error == '2':
-            fitted_power_zero = fitted_power_zero_2
 
         power_compensated = []
+        if lowest_error == '1':
+            fitted_power_zero = fitted_power_zero_1
+            for i in range(len(velocity_clean_zero_acc)):
+                power_to_substract = popt1[0] * velocity_clean_zero_acc[i] + popt1[1] / 3.6
+                power_compensated.append(power_clean_zero_acc[i] - power_to_substract)
 
-        for i in range(len(velocity_clean_zero_acc)):
-            power_to_substract = popt[0] * velocity_clean_zero_acc[i] + popt[1]
-            power_compensated.append(power_clean_zero_acc[i] - power_to_substract)
+        elif lowest_error == '2':
+            fitted_power_zero = fitted_power_zero_2
+            for i in range(len(velocity_clean_zero_acc)):
+                power_to_substract = popt2[0] * velocity_clean_zero_acc[i] ** 2 + popt2[1] * velocity_clean_zero_acc[i] + popt2[2] / 3.6
+                power_compensated.append(power_clean_zero_acc[i] - power_to_substract)
 
-        print(power_compensated)
+        simulated_mass = []
+        coefficient_a = []
+        coefficient_b = []
+        deceleration_indices = []
+        deceleration = []
+        for i in range(len(power_compensated) - 1):
+            if velocity_clean_zero_acc[i] > 10 and velocity_clean_zero_acc[i] > velocity_clean_zero_acc[i + 1]:
+                coefficient_a = ((velocity_clean_zero_acc[i + 1] - velocity_clean_zero_acc[i]) / 3.6 / (time_clean_zero_acc[i + 1] - time_clean_zero_acc[i]))
+                simulated_mass.append(power_compensated[i] / (coefficient_a * velocity_clean_zero_acc[i] / 3.6))
+
+        for i in range(len(power_compensated) - 1):
+            if velocity_clean_zero_acc[i] > 10 and velocity_clean_zero_acc[i] < velocity_clean_zero_acc[i + 1]:
+                coefficient_a = ((velocity_clean_zero_acc[i] - velocity_clean_zero_acc[i + 1]) / 3.6 / (time_clean_zero_acc[i] - time_clean_zero_acc[i + 1]))
+                simulated_mass.append(power_compensated[i] / (coefficient_a * velocity_clean_zero_acc[i] / 3.6))
 
 
+
+
+        #         deceleration_indices.append(velocity_clean_zero_acc.index(velocity_clean_zero_acc[i]))
+        #         deceleration.append(velocity_clean_zero_acc[i])
+        #
+        #
+        # for i in range(len(deceleration) - 1):
+        #     coefficient_a.append(((deceleration[i] - deceleration[i+1]) / 3.6) / (time_clean_zero_acc[deceleration_indices[i]] - time_clean_zero_acc[deceleration_indices[i+1]]))
+        #     coefficient_b.append((power_zero_acc[deceleration_indices[i]]) - coefficient_a[i] * time_clean_zero_acc[deceleration_indices[i]])
+        #     simulated_mass.append(power_compensated[deceleration_indices[i]] / (coefficient_a[i] * velocity_clean_zero_acc[deceleration_indices[i]] / 3.6))
+
+        print(coefficient_a)
+        print(simulated_mass)
+        print(np.mean(simulated_mass))
 
         """
         Initialize writing an excel file.
@@ -577,38 +607,6 @@ class Main(wx.Frame):
         graph_2.set_title({'name': '0 Watt acceleration ' + self.user_file_name})
         graph_2.set_size({'width': 1080, 'height': 720})
         worksheet.set_column('A:H', 14)
-
-        for i in range(len(power_clean_low)):
-            vertical_y.append(0)
-            vertical_y.append(power_clean_low[i])
-            vertical_y.append(0)
-            vertical_x.append(velocity_clean_low[i])
-            vertical_x.append(velocity_clean_low[i])
-            vertical_x.append(velocity_clean_low[i])
-
-        for i in range(len(power_clean_high)):
-            horizontal_x.append(0)
-            horizontal_x.append(velocity_clean_high[i])
-            horizontal_x.append(0)
-            horizontal_y.append(power_clean_high[i])
-            horizontal_y.append(power_clean_high[i])
-            horizontal_y.append(power_clean_high[i])
-
-        for i in range(len(power_clean_zero)):
-            horizontal_2_x.append(0)
-            horizontal_2_x.append(time_clean_zero[i])
-            horizontal_2_x.append(0)
-            horizontal_2_y.append(power_clean_zero[i])
-            horizontal_2_y.append(power_clean_zero[i])
-            horizontal_2_y.append(power_clean_zero[i])
-
-        for i in range(len(power_clean_zero_acc)):
-            horizontal_2_x.append(0)
-            horizontal_2_x.append(time_clean_zero_acc[i])
-            horizontal_2_x.append(0)
-            horizontal_2_y.append(power_clean_zero_acc[i])
-            horizontal_2_y.append(power_clean_zero_acc[i])
-            horizontal_2_y.append(power_clean_zero_acc[i])
 
         """
         Writing to excel file.
@@ -646,13 +644,7 @@ class Main(wx.Frame):
         worksheet.write_column(2, 14, time_clean_zero_acc)
         worksheet.write_column(2, 15, power_clean_zero_acc)
         worksheet.write_column(2, 16, velocity_clean_zero_acc)
-
-        worksheet.write_column(2, 99, vertical_x)
-        worksheet.write_column(2, 100, vertical_y)
-        worksheet.write_column(2, 101, horizontal_x)
-        worksheet.write_column(2, 102, horizontal_y)
-        worksheet.write_column(2, 103, horizontal_2_x)
-        worksheet.write_column(2, 104, horizontal_2_y)
+        worksheet.write_column(2, 17, power_compensated)
 
         """
         Writing to graph.
@@ -687,21 +679,21 @@ class Main(wx.Frame):
         })
 
 
-
-        graph_2.add_series({
-            'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
-            'values': [worksheet.name] + [2, 7] + [len(power_clean_zero) + 2, 7],
-            'line': {'color': '#ff0000'},
-            'name': '0 W Program Low Acceleration Power',
-        })
-
-        graph_2.add_series({
-            'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
-            'values': [worksheet.name] + [2, 11] + [len(velocity_clean_zero) + 2, 11],
-            'line': {'color': '#0000ff', 'dash_type': 'dash'},
-            'name': '0 W Program Low Acceleration Velocity',
-            'y2_axis': True,
-        })
+        #
+        # graph_2.add_series({
+        #     'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
+        #     'values': [worksheet.name] + [2, 7] + [len(power_clean_zero) + 2, 7],
+        #     'line': {'color': '#ff0000'},
+        #     'name': '0 W Program Low Acceleration Power',
+        # })
+        #
+        # graph_2.add_series({
+        #     'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
+        #     'values': [worksheet.name] + [2, 11] + [len(velocity_clean_zero) + 2, 11],
+        #     'line': {'color': '#0000ff', 'dash_type': 'dash'},
+        #     'name': '0 W Program Low Acceleration Velocity',
+        #     'y2_axis': True,
+        # })
 
         graph_2.add_series({
             'categories': [worksheet.name] + [2, 14] + [len(time_clean_zero_acc) + 2, 14],
@@ -710,6 +702,15 @@ class Main(wx.Frame):
             'name': '0 W Program High Acceleration Velocity',
             'y2_axis': True,
         })
+
+
+        graph_2.add_series({
+            'categories': [worksheet.name] + [2, 14] + [len(time_clean_zero_acc) + 2, 14],
+            'values': [worksheet.name] + [2, 17] + [len(power_compensated) + 2, 17],
+            'line': {'color': '#ff0000'},
+            'name': '0 W Program High Acceleration Power Compensated',
+        })
+
 
         worksheet.insert_chart('U2', graph)
         worksheet.insert_chart('U40', graph_2)
@@ -725,7 +726,7 @@ class Main(wx.Frame):
                                                  "\n"
                                                  "\n"
                                                  "Created by Tim de Jong and Jelle Haasnoot at Tacx B.V.",
-                                           "About SimulANT+ Log Analyzer", wx.OK)
+                                                 "About SimulANT+ Log Analyzer", wx.OK)
         prompted_dialog.ShowModal()
         prompted_dialog.Destroy()
 
