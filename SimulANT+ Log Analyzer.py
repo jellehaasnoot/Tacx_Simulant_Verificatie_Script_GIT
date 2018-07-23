@@ -191,7 +191,8 @@ class Main(wx.Frame):
 
         """
 
-        # Opening File 1
+        # Opening File 1 with the use of a dialog. File 1 will contain the ANT+ data of the measurements with a high
+        # gradient (slope). This will be used to calculate the maximal brake power.
         self.directory_name_1 = ""
 
         with wx.FileDialog(self, "Choose the logged SimulANT+ file with the HIGHEST slope...",
@@ -203,7 +204,9 @@ class Main(wx.Frame):
 
             self.pathname_1 = prompted_dialog.GetPath()
 
-        # Opening File 2
+
+        # Opening File 2 with the use of a dialog. File 2 will contain the ANT+ data of the measurements with a low
+        # (negative) gradient (slope). This will be used to calculate the minimal brake power.
         self.directory_name_2 = ""
 
         with wx.FileDialog(self, "Choose the second logged SimulANT+ file with the LOWEST (negative) slope...",
@@ -215,7 +218,9 @@ class Main(wx.Frame):
 
             self.pathname_2 = prompted_dialog.GetPath()
 
-        # Opening File 3
+
+        # Opening File 3 with the use of a dialog. File 3 will contain the ANT+ data of the measurements with a power
+        # goal of 0W, this will be used to see the residual brake power if no brake is used.
         self.directory_name_3 = ""
 
         with wx.FileDialog(self, "Choose the third logged SimulANT+ file with the 0 W Power program - low acceleration...",
@@ -229,7 +234,10 @@ class Main(wx.Frame):
 
         self.folder_pathname = os.path.dirname(self.pathname_3)
 
-        # Opening File 4
+
+        # Opening File 4 with the use of a dialog. File 4 will contain the ANT+ data of the measurements with a power
+        # goal of 0W. In contrary with the other files, the acceleration needs to be high. This way, it is possible to
+        # calculate the simulated mass (inertia).
         self.directory_name_4 = ""
 
         with wx.FileDialog(self, "Choose the third logged SimulANT+ file with the 0 W Power program - high acceleration...",
@@ -243,7 +251,9 @@ class Main(wx.Frame):
 
         self.folder_pathname = os.path.dirname(self.pathname_4)
 
-        # Retrieving the filename the user wants to use
+
+        # Retrieving the filename the user wants to use. This will be the file name of the new excel file which will be
+        # created after running this program.
         self.user_file_name_dialog = wx.TextEntryDialog(self,
                                                         "What do you want the .xslx file to be named? Enter here: ",
                                                         "Enter file name...")
@@ -253,7 +263,10 @@ class Main(wx.Frame):
             return
         self.user_file_name = self.user_file_name_dialog.GetValue()
 
-        # Analyse the log-file
+
+        # Analyse the log-files. This will be used to retrieve the data from the four selected log files above. This
+        # will be done by ANTlogfileconverter.py. Raw data will be stored in data_.... and used in further calculations.
+        # Analysing log file 1:
         self.logfile_analyser(self.pathname_1)
         data_high = []
         max_velocity_high = max(velocity_list)
@@ -273,6 +286,7 @@ class Main(wx.Frame):
         self.power_list_high = power_list
         self.time_list_high = time_list
 
+        # Analysing log file 2:
         self.logfile_analyser(self.pathname_2)
         data_low = []
         max_velocity_low = max(velocity_list)
@@ -291,6 +305,7 @@ class Main(wx.Frame):
         self.power_list_low = power_list
         self.time_list_low = time_list
 
+        # Analysing log file 3:
         self.logfile_analyser(self.pathname_3)
         data_zero = []
         max_velocity_zero = max(velocity_list)
@@ -310,6 +325,8 @@ class Main(wx.Frame):
         self.time_list_zero = time_list
         self.velocity_list_zero_acc = velocity_list
 
+
+        # Analysing log file 4:
         self.logfile_analyser(self.pathname_4)
         data_zero_acc = []
         max_velocity_zero_acc = max(velocity_list)
@@ -330,9 +347,8 @@ class Main(wx.Frame):
         self.time_list_zero_acc = time_list
 
 
-        """
-        Calculating averages for every file
-        """
+        # Calculating the averages of every file, this is not necessary for the calculations below, but this will give
+        # a quick overview of the used files to the user.
         self.velocity_high_avg = np.mean(self.velocity_list_high)
         self.velocity_high_avg = round(float(self.velocity_high_avg), 1)
         self.power_high_avg = np.mean(self.power_list_high)
@@ -368,7 +384,6 @@ class Main(wx.Frame):
         velocity_zero_acc = []
         power_zero_acc = []
         time_clean_zero_acc = []
-
         power_zero_coefficients = []
         power_zero_scalars = []
         energy_zero = []
@@ -381,10 +396,7 @@ class Main(wx.Frame):
         horizontal_2_x = []
         horizontal_2_y = []
 
-        """
-        Convert the raw data from the file to named lists for the FIRST file
-        """
-
+        # Raw data will be converted in the first file.
         for i in range(round(max_velocity_high)):
             dummy_velocity = []
             dummy_power = []
