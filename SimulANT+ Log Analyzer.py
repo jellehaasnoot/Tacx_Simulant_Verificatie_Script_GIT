@@ -396,7 +396,9 @@ class Main(wx.Frame):
         horizontal_2_x = []
         horizontal_2_y = []
 
-        # Raw data will be converted in the first file.
+        """
+        Convert the raw data from the file to named lists for the FIRST file
+        """
         for i in range(round(max_velocity_high)):
             dummy_velocity = []
             dummy_power = []
@@ -427,6 +429,41 @@ class Main(wx.Frame):
                 power_clean_high.append(power_raw_high[i])
                 velocity_clean_high.append(velocity_raw_high[i])
                 time_clean_high.append(time_raw_high[i])
+
+        """
+        Make a fit for the data of the FIRST file 
+        """
+        error_lin_high = 0
+        error_quadratic_high = 0
+        popt1_high, pcov = curve_fit(self.func_lin, np.array(velocity_clean_high), np.array(power_clean_high))
+        fitted_power_high_1 = self.func_lin(np.array(velocity_clean_high), *popt1_high)
+        for i in range(len(fitted_power_high_1)):
+            if fitted_power_high_1[i] < 0:
+                fitted_power_high_1[i] = 0
+        for i in range(len(fitted_power_high_1)):
+            if fitted_power_high_1[i] > 0:
+                error_lin_high += abs(fitted_power_high_1[i] - power_clean_high[i])
+
+        popt2_high, pcov = curve_fit(self.func_quadratic, np.array(velocity_clean_high), np.array(power_clean_high))
+        fitted_power_high_2 = self.func_quadratic(np.array(velocity_clean_high), *popt2_high)
+        for i in range(len(fitted_power_high_2)):
+            if fitted_power_high_2[i] < 0:
+                fitted_power_high_2[i] = 0
+        for i in range(len(fitted_power_high_2)):
+            if fitted_power_high_2[i] > 0:
+                error_quadratic_high += abs(fitted_power_high_2[i] - power_clean_high[i])
+
+        errors = {
+            '1' : error_lin_high,
+            '2' : error_quadratic_high
+        }
+        lowest_error = min(errors, key=errors.get)
+        if lowest_error == '1':
+            fitted_power_high = fitted_power_high_1
+        elif lowest_error == '2':
+            fitted_power_high = fitted_power_high_2
+
+
 
         """
         Convert the raw data from the file to named lists for the SECOND file
@@ -462,6 +499,41 @@ class Main(wx.Frame):
                 power_clean_low.append(power_raw_low[i])
                 velocity_clean_low.append(velocity_raw_low[i])
                 time_clean_low.append(time_raw_low[i])
+
+
+        """
+        Make a fit for the data of the SECOND file 
+        """
+        error_lin_low = 0
+        error_quadratic_low = 0
+        popt1_low, pcov = curve_fit(self.func_lin, np.array(velocity_clean_low), np.array(power_clean_low))
+        fitted_power_low_1 = self.func_lin(np.array(velocity_clean_low), *popt1_low)
+        for i in range(len(fitted_power_low_1)):
+            if fitted_power_low_1[i] < 0:
+                fitted_power_low_1[i] = 0
+        for i in range(len(fitted_power_low_1)):
+            if fitted_power_low_1[i] > 0:
+                error_lin_low += abs(fitted_power_low_1[i] - power_clean_low[i])
+
+        popt2_low, pcov = curve_fit(self.func_quadratic, np.array(velocity_clean_low), np.array(power_clean_low))
+        fitted_power_low_2 = self.func_quadratic(np.array(velocity_clean_low), *popt2_low)
+        for i in range(len(fitted_power_low_2)):
+            if fitted_power_low_2[i] < 0:
+                fitted_power_low_2[i] = 0
+        for i in range(len(fitted_power_low_2)):
+            if fitted_power_low_2[i] > 0:
+                error_quadratic_low += abs(fitted_power_low_2[i] - power_clean_low[i])
+
+        errors = {
+            '1' : error_lin_low,
+            '2' : error_quadratic_low
+        }
+        lowest_error = min(errors, key=errors.get)
+        if lowest_error == '1':
+            fitted_power_low = fitted_power_low_1
+        elif lowest_error == '2':
+            fitted_power_low = fitted_power_low_2
+
 
         """
         Convert the raw data from the file to named lists for the THIRD file
@@ -618,12 +690,14 @@ class Main(wx.Frame):
         worksheet.write('B2', 'Power [W]', bold)
         worksheet.write_column(2, 0, velocity_clean_high)
         worksheet.write_column(2, 1, power_clean_high)
+        worksheet.write_column(2, 2, fitted_power_high)
 
         worksheet.write('D1', 'Tested with lowest gradient (without slip)', underline)
         worksheet.write('D2', 'Velocity [km/h]', bold)
         worksheet.write('E2', 'Power [W]', bold)
         worksheet.write_column(2, 3, velocity_clean_low)
         worksheet.write_column(2, 4, power_clean_low)
+        worksheet.write_column(2, 5, fitted_power_low)
 
         worksheet.write('G1', 'Tested with 0 W program - low acceleration (without slip)', underline)
         worksheet.write('G2', 'Time [s]', bold)
@@ -660,33 +734,27 @@ class Main(wx.Frame):
         graph.add_series({
             'categories': [worksheet.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
             'values': [worksheet.name] + [2, 4] + [len(power_clean_low) + 2, 4],
+            'line': {'color': '#67bfe7', 'dash_type': 'dash'},
+            'name': 'Lowest Gradient Power',
+        })
+        graph.add_series({
+            'categories': [worksheet.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
+            'values': [worksheet.name] + [2, 5] + [len(power_clean_low) + 2, 5],
             'line': {'color': '#67bfe7'},
             'name': 'Lowest Gradient Power',
-            'fill': {'color': 'red'},
         })
-
         graph.add_series({
             'categories': [worksheet.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
             'values': [worksheet.name] + [2, 1] + [len(power_clean_high) + 2, 1],
+            'line': {'color': '#67bfe7', 'dash_type': 'dash'},
+            'name': 'Highest Gradient Power',
+        })
+        graph.add_series({
+            'categories': [worksheet.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
+            'values': [worksheet.name] + [2, 2] + [len(power_clean_high) + 2, 2],
             'line': {'color': '#67bfe7'},
             'name': 'Highest Gradient Power',
         })
-
-        graph.add_series({
-            'categories': [worksheet.name] + [2, 11] + [len(velocity_clean_zero) + 2, 11],
-            'values': [worksheet.name] + [2, 7] + [len(power_clean_zero) + 2, 7],
-            'line': {'color': '#ff0000', 'dash_type': 'dash'},
-            'name': '0 W Power Low Acceleration Program',
-        })
-
-        graph.add_series({
-            'categories': [worksheet.name] + [2, 11] + [len(velocity_clean_zero) + 2, 11],
-            'values': [worksheet.name] + [2, 8] + [len(fitted_power_zero) + 2, 8],
-            'line': {'color': '#ff0000'},
-            'name': '0 W Power Fitted Low Acceleration Program',
-        })
-
-
 
         graph_2.add_series({
             'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
