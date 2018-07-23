@@ -639,7 +639,8 @@ class Main(wx.Frame):
         worksheet.write_column(2, 8, fitted_power_zero)
         worksheet.write_column(2, 9, power_needed_to_accelerate)
         worksheet.write_column(2, 10, filtered_calculated_power)
-        worksheet.write_column(2, 11, filtered_velocity_zero)
+        worksheet.write_column(2, 11, velocity_clean_zero)
+        worksheet.write_column(2, 12, filtered_velocity_zero)
 
         worksheet.write_column(2, 14, time_clean_zero_acc)
         worksheet.write_column(2, 15, power_clean_zero_acc)
@@ -656,7 +657,7 @@ class Main(wx.Frame):
         """
         graph.add_series({
             'categories': [worksheet.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
-            'values': [worksheet.name] + [2, 4] + [len(velocity_clean_low) + 2, 4],
+            'values': [worksheet.name] + [2, 4] + [len(power_clean_low) + 2, 4],
             'line': {'color': '#67bfe7'},
             'name': 'Lowest Gradient Power',
             'fill': {'color': 'red'},
@@ -664,16 +665,20 @@ class Main(wx.Frame):
 
         graph.add_series({
             'categories': [worksheet.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
-            'values': [worksheet.name] + [2, 1] + [len(velocity_clean_high) + 2, 1],
+            'values': [worksheet.name] + [2, 1] + [len(power_clean_high) + 2, 1],
             'line': {'color': '#67bfe7'},
             'name': 'Highest Gradient Power',
         })
 
         graph.add_series({
-            'categories': [worksheet.name] + [2, 8] + [len(velocity_clean_zero) + 2, 8],
-            'values': [worksheet.name] + [2, 9] + [len(power_needed_to_accelerate) + 2, 9],
+            'categories': [worksheet.name] + [2, 12] + [len(velocity_clean_zero) + 2, 12],
+            'values': [worksheet.name] + [2, 7] + [len(power_clean_zero) + 2, 7],
             'line': {'color': '#ff0000'},
-            'name': '0 W Theoretical Power Low Acceleration Program',
+            'name': '0 W Power Low Acceleration Program',
+        })
+
+        graph.add_series({
+            'categories': [worksheet.name] + [2, ]
         })
 
         graph_2.add_series({
