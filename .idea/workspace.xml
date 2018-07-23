@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6ee7abea-7152-40b0-9158-7e0d84e00cb4" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/Flux.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/Flux.xlsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SimulANT+ Log Analyzer.py" beforeDir="false" afterPath="$PROJECT_DIR$/SimulANT+ Log Analyzer.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -16,31 +17,10 @@
       <file leaf-file-name="SimulANT+ Log Analyzer.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SimulANT+ Log Analyzer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="624">
-              <caret line="712" column="44" selection-start-line="712" selection-start-column="44" selection-end-line="712" selection-end-column="44" />
+            <state relative-caret-position="281">
+              <caret line="508" column="39" lean-forward="true" selection-start-line="508" selection-start-column="39" selection-end-line="508" selection-end-column="39" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="log1.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/log1.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="13" column="6" selection-start-line="13" selection-start-column="6" selection-end-line="13" selection-end-column="6" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ANTlogfileconverter.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ANTlogfileconverter.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="543">
-              <caret line="73" column="28" lean-forward="true" selection-start-line="73" selection-start-column="28" selection-end-line="73" selection-end-column="28" />
-              <folding>
-                <element signature="e#0#17#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -516,8 +496,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/SimulANT+ Log Analyzer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="624">
-          <caret line="712" column="44" selection-start-line="712" selection-start-column="44" selection-end-line="712" selection-end-column="44" />
+        <state relative-caret-position="281">
+          <caret line="508" column="39" lean-forward="true" selection-start-line="508" selection-start-column="39" selection-end-line="508" selection-end-column="39" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>

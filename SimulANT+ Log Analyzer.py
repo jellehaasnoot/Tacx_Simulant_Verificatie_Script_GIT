@@ -500,8 +500,11 @@ class Main(wx.Frame):
         for i in range(max_velocity_zero_acc_index):
             velocity_clean_zero_acc.append(velocity_zero_acc[i])
 
-        popt, pcov = curve_fit(self.func_pw, np.array(velocity_clean_zero), np.array(power_clean_zero))
-        fitted_power_zero = self.func_pw(np.array(velocity_clean_zero), *popt)
+        popt, pcov = curve_fit(self.func_lin, np.array(velocity_clean_zero), np.array(power_clean_zero))
+        fitted_power_zero = self.func_lin(np.array(velocity_clean_zero), *popt)
+        for i in range(len(fitted_power_zero)):
+            if fitted_power_zero[i] < 0:
+                fitted_power_zero[i] = 0
 
         power_needed_to_accelerate = []
         acceleration = []
@@ -857,8 +860,8 @@ class Main(wx.Frame):
     def func_powerlaw(self, x, m, c):
         return x ** m * c
 
-    def func_pw(self, x, a, b):
-        return a * x ** 2 + b * x
+    def func_lin(self, x, a, b):
+        return a * x + b
 
 if __name__ == '__main__':
     Application = wx.App(False)
