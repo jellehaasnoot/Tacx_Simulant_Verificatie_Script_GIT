@@ -535,8 +535,8 @@ class Main(wx.Frame):
                 error_quadratic += abs(fitted_power_zero_2[i] - power_clean_zero[i])
 
         errors = {
-            '1' : fitted_power_zero_1,
-            '2' : fitted_power_zero_2
+            '1' : error_lin,
+            '2' : error_quadratic
         }
         lowest_error = min(errors, key=errors.get)
         if lowest_error == '1':
@@ -627,10 +627,7 @@ class Main(wx.Frame):
         worksheet.write_column(2, 6, time_clean_zero)
         worksheet.write_column(2, 7, power_clean_zero)
         worksheet.write_column(2, 8, fitted_power_zero)
-        worksheet.write_column(2, 9, power_needed_to_accelerate)
-        worksheet.write_column(2, 10, filtered_calculated_power)
         worksheet.write_column(2, 11, velocity_clean_zero)
-        worksheet.write_column(2, 12, filtered_velocity_zero)
 
         worksheet.write('O1', 'Tested with 0 W program - high acceleration (without slip)', underline)
         worksheet.write('O2', 'Time [s]', bold)
@@ -673,19 +670,14 @@ class Main(wx.Frame):
             'name': '0 W Power Low Acceleration Program',
         })
 
-        # graph.add_series({
-        #     'categories': [worksheet.name] + [2, 16] + [len(velocity_clean_zero_acc) + 2, 16],
-        #     'values': [worksheet.name] + [2, 15] + [len(power_clean_zero_acc) + 2, 15],
-        #     'line': {'color': '#0000ff'},
-        #     'name': 'o W Power High Acceleration Program',
-        # })
-
         graph.add_series({
             'categories': [worksheet.name] + [2, 11] + [len(velocity_clean_zero) + 2, 11],
             'values': [worksheet.name] + [2, 8] + [len(fitted_power_zero) + 2, 8],
             'line': {'color': '#ff0000'},
             'name': '0 W Power Fitted Low Acceleration Program',
         })
+
+
 
         graph_2.add_series({
             'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
@@ -696,31 +688,9 @@ class Main(wx.Frame):
 
         graph_2.add_series({
             'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
-            'values': [worksheet.name] + [2, 9] + [len(power_needed_to_accelerate) + 2, 9],
-            'line': {'color': '#00ff00'},
-            'name': '0 W Program Low Acceleration Calculated Theoretical Power',
-        })
-
-        # graph_2.add_series({
-        #     'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
-        #     'values': [worksheet.name] + [2, 10] + [len(filtered_calculated_power) + 2, 10],
-        #     'line': {'color': '#66ff00'},
-        #     'name': '0 W Program Filtered Low Acceleration Calculated Theoretical Power',
-        # })
-
-        graph_2.add_series({
-            'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
             'values': [worksheet.name] + [2, 11] + [len(velocity_clean_zero) + 2, 11],
             'line': {'color': '#0000ff', 'dash_type': 'dash'},
             'name': '0 W Program Low Acceleration Velocity',
-            'y2_axis': True,
-        })
-
-        graph_2.add_series({
-            'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
-            'values': [worksheet.name] + [2, 12] + [len(filtered_velocity_zero) + 2, 12],
-            'line': {'color': '#0000ff'},
-            'name': '0 W Program Filtered Low Acceleration Velocity',
             'y2_axis': True,
         })
 
@@ -731,16 +701,7 @@ class Main(wx.Frame):
             'name': '0 W Program High Acceleration Velocity',
             'y2_axis': True,
         })
-        #
-        # graph_2.add_series({
-        #     'categories': [worksheet.name] + [2, 14] + [len(time_clean_zero_acc) + 2, 14],
-        #     'values': [worksheet.name] + [2, 15] + [len(power_clean_zero_acc) + 2, 15],
-        #     'line': {'color': '#0000ff'},
-        #     'name': '0 W Power High Acceleration Program',
-        # })
 
-        # graph.set_legend({'delete_series': [0, 1, 2, 3]})
-        # graph_2.set_legend({'delete_series': [0, 1]})
         worksheet.insert_chart('U2', graph)
         worksheet.insert_chart('U40', graph_2)
         excel.close()
