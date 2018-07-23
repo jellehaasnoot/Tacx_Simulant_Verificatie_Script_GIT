@@ -607,27 +607,23 @@ class Main(wx.Frame):
         worksheet.write('A1', 'Tested with highest gradient (without slip)', underline)
         worksheet.write('A2', 'Velocity [km/h]', bold)
         worksheet.write('B2', 'Power [W]', bold)
+        worksheet.write_column(2, 0, velocity_clean_high)
+        worksheet.write_column(2, 1, power_clean_high)
+
         worksheet.write('D1', 'Tested with lowest gradient (without slip)', underline)
         worksheet.write('D2', 'Velocity [km/h]', bold)
         worksheet.write('E2', 'Power [W]', bold)
+        worksheet.write_column(2, 3, velocity_clean_low)
+        worksheet.write_column(2, 4, power_clean_low)
+
         worksheet.write('G1', 'Tested with 0 W program - low acceleration (without slip)', underline)
         worksheet.write('G2', 'Time [s]', bold)
         worksheet.write('H2', 'Power [W]', bold)
-        worksheet.write('I2', 'Fitted Power [W]')
+        worksheet.write('I2', 'Fitted Power [W]', bold)
         worksheet.write('J2', 'Calculated Power [W]', bold)
         worksheet.write('K2', 'Filtered Calculated Power [W]', bold)
         worksheet.write('L2', 'Velocity [km/h]', bold)
         worksheet.write('M2', 'Fitted Velocity [km/h]', bold)
-        worksheet.write('O1', 'Tested with 0 W program - high acceleration (without slip)', underline)
-        worksheet.write('O2', 'Time [s]', bold)
-        worksheet.write('P2', 'Power [km/h]', bold)
-        worksheet.write('Q2', 'Velocity [km/h]', bold)
-        worksheet.write('R2', 'Theor. Power [W]', bold)
-
-        worksheet.write_column(2, 0, velocity_clean_high)
-        worksheet.write_column(2, 1, power_clean_high)
-        worksheet.write_column(2, 3, velocity_clean_low)
-        worksheet.write_column(2, 4, power_clean_low)
         worksheet.write_column(2, 6, time_clean_zero)
         worksheet.write_column(2, 7, power_clean_zero)
         worksheet.write_column(2, 8, fitted_power_zero)
@@ -636,9 +632,15 @@ class Main(wx.Frame):
         worksheet.write_column(2, 11, velocity_clean_zero)
         worksheet.write_column(2, 12, filtered_velocity_zero)
 
+        worksheet.write('O1', 'Tested with 0 W program - high acceleration (without slip)', underline)
+        worksheet.write('O2', 'Time [s]', bold)
+        worksheet.write('P2', 'Power [km/h]', bold)
+        worksheet.write('Q2', 'Velocity [km/h]', bold)
+        worksheet.write('R2', 'Theor. Power [W]', bold)
         worksheet.write_column(2, 14, time_clean_zero_acc)
         worksheet.write_column(2, 15, power_clean_zero_acc)
         worksheet.write_column(2, 16, velocity_clean_zero_acc)
+
         worksheet.write_column(2, 99, vertical_x)
         worksheet.write_column(2, 100, vertical_y)
         worksheet.write_column(2, 101, horizontal_x)
@@ -667,9 +669,16 @@ class Main(wx.Frame):
         graph.add_series({
             'categories': [worksheet.name] + [2, 11] + [len(velocity_clean_zero) + 2, 11],
             'values': [worksheet.name] + [2, 7] + [len(power_clean_zero) + 2, 7],
-            'line': {'color': '#ff0000'},
+            'line': {'color': '#ff0000', 'dash_type': 'dash'},
             'name': '0 W Power Low Acceleration Program',
         })
+
+        # graph.add_series({
+        #     'categories': [worksheet.name] + [2, 16] + [len(velocity_clean_zero_acc) + 2, 16],
+        #     'values': [worksheet.name] + [2, 15] + [len(power_clean_zero_acc) + 2, 15],
+        #     'line': {'color': '#0000ff'},
+        #     'name': 'o W Power High Acceleration Program',
+        # })
 
         graph.add_series({
             'categories': [worksheet.name] + [2, 11] + [len(velocity_clean_zero) + 2, 11],
@@ -692,17 +701,17 @@ class Main(wx.Frame):
             'name': '0 W Program Low Acceleration Calculated Theoretical Power',
         })
 
-        graph_2.add_series({
-            'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
-            'values': [worksheet.name] + [2, 10] + [len(filtered_calculated_power) + 2, 10],
-            'line': {'color': '#66ff00'},
-            'name': '0 W Program Filtered Low Acceleration Calculated Theoretical Power',
-        })
+        # graph_2.add_series({
+        #     'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
+        #     'values': [worksheet.name] + [2, 10] + [len(filtered_calculated_power) + 2, 10],
+        #     'line': {'color': '#66ff00'},
+        #     'name': '0 W Program Filtered Low Acceleration Calculated Theoretical Power',
+        # })
 
         graph_2.add_series({
             'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
             'values': [worksheet.name] + [2, 11] + [len(velocity_clean_zero) + 2, 11],
-            'line': {'color': '#0000ff'},
+            'line': {'color': '#0000ff', 'dash_type': 'dash'},
             'name': '0 W Program Low Acceleration Velocity',
             'y2_axis': True,
         })
@@ -716,12 +725,19 @@ class Main(wx.Frame):
         })
 
         graph_2.add_series({
-            'categories': [worksheet.name] + [2, 13] + [len(time_clean_zero_acc) + 2, 13],
-            'values': [worksheet.name] + [2, 15] + [len(velocity_clean_zero_acc) + 2, 15],
-            'line': {'color': '#0000ff'},
+            'categories': [worksheet.name] + [2, 14] + [len(time_clean_zero_acc) + 2, 14],
+            'values': [worksheet.name] + [2, 16] + [len(velocity_clean_zero_acc) + 2, 16],
+            'line': {'color': '#0000ff', 'dash_type': 'dash'},
             'name': '0 W Program High Acceleration Velocity',
             'y2_axis': True,
         })
+        #
+        # graph_2.add_series({
+        #     'categories': [worksheet.name] + [2, 14] + [len(time_clean_zero_acc) + 2, 14],
+        #     'values': [worksheet.name] + [2, 15] + [len(power_clean_zero_acc) + 2, 15],
+        #     'line': {'color': '#0000ff'},
+        #     'name': '0 W Power High Acceleration Program',
+        # })
 
         # graph.set_legend({'delete_series': [0, 1, 2, 3]})
         # graph_2.set_legend({'delete_series': [0, 1]})
