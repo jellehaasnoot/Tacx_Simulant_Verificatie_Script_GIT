@@ -500,8 +500,8 @@ class Main(wx.Frame):
         for i in range(max_velocity_zero_acc_index):
             velocity_clean_zero_acc.append(velocity_zero_acc[i])
 
-        popt, pcov = curve_fit(self.func_lin, np.array(velocity_clean_zero), np.array(power_clean_zero))
-        fitted_power_zero = self.func_lin(np.array(velocity_clean_zero), *popt)
+        popt, pcov = curve_fit(self.func_pw, np.array(velocity_clean_zero), np.array(power_clean_zero))
+        fitted_power_zero = self.func_pw(np.array(velocity_clean_zero), *popt)
 
         power_needed_to_accelerate = []
         acceleration = []
@@ -623,7 +623,8 @@ class Main(wx.Frame):
         worksheet.write('I2', 'Fitted Power [W]')
         worksheet.write('J2', 'Calculated Power [W]', bold)
         worksheet.write('K2', 'Filtered Calculated Power [W]', bold)
-        worksheet.write('L2', 'Fitted Velocity [km/h]', bold)
+        worksheet.write('L2', 'Velocity [km/h]', bold)
+        worksheet.write('M2', 'Fitted Velocity [km/h]', bold)
         worksheet.write('O1', 'Tested with 0 W program - high acceleration (without slip)', underline)
         worksheet.write('O2', 'Time [s]', bold)
         worksheet.write('P2', 'Power [km/h]', bold)
@@ -671,40 +672,43 @@ class Main(wx.Frame):
         })
 
         graph.add_series({
-            'categories': [worksheet.name] + [2, 12] + [len(velocity_clean_zero) + 2, 12],
+            'categories': [worksheet.name] + [2, 11] + [len(velocity_clean_zero) + 2, 11],
             'values': [worksheet.name] + [2, 7] + [len(power_clean_zero) + 2, 7],
             'line': {'color': '#ff0000'},
             'name': '0 W Power Low Acceleration Program',
         })
 
         graph.add_series({
-            'categories': [worksheet.name] + [2, ]
+            'categories': [worksheet.name] + [2, 11] + [len(velocity_clean_zero) + 2, 11],
+            'values': [worksheet.name] + [2, 8] + [len(fitted_power_zero) + 2, 8],
+            'line': {'color': '#ff0000'},
+            'name': '0 W Power Fitted Low Acceleration Program',
         })
 
         graph_2.add_series({
             'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
-            'values': [worksheet.name] + [2, 7] + [len(time_clean_zero) + 2, 7],
+            'values': [worksheet.name] + [2, 7] + [len(power_clean_zero) + 2, 7],
             'line': {'color': '#ff0000'},
             'name': '0 W Program Low Acceleration Power',
         })
 
         graph_2.add_series({
             'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
-            'values': [worksheet.name] + [2, 9] + [len(time_clean_zero) + 2, 9],
+            'values': [worksheet.name] + [2, 9] + [len(power_needed_to_accelerate) + 2, 9],
             'line': {'color': '#00ff00'},
-            'name': '0 W Program Low Acceleration Theoretical Power',
+            'name': '0 W Program Low Acceleration Calculated Theoretical Power',
         })
 
         graph_2.add_series({
             'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
-            'values': [worksheet.name] + [2, 11] + [len(time_clean_zero) + 2, 11],
+            'values': [worksheet.name] + [2, 10] + [len(filtered_calculated_power) + 2, 10],
             'line': {'color': '#66ff00'},
-            'name': '0 W Program Filtered Low Acceleration Theoretical Power',
+            'name': '0 W Program Filtered Low Acceleration Calculated Theoretical Power',
         })
 
         graph_2.add_series({
             'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
-            'values': [worksheet.name] + [2, 8] + [len(time_clean_zero) + 2, 8],
+            'values': [worksheet.name] + [2, 11] + [len(velocity_clean_zero) + 2, 11],
             'line': {'color': '#0000ff'},
             'name': '0 W Program Low Acceleration Velocity',
             'y2_axis': True,
@@ -712,7 +716,7 @@ class Main(wx.Frame):
 
         graph_2.add_series({
             'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
-            'values': [worksheet.name] + [2, 10] + [len(time_clean_zero) + 2, 10],
+            'values': [worksheet.name] + [2, 12] + [len(filtered_velocity_zero) + 2, 12],
             'line': {'color': '#0000ff'},
             'name': '0 W Program Filtered Low Acceleration Velocity',
             'y2_axis': True,
@@ -853,8 +857,8 @@ class Main(wx.Frame):
     def func_powerlaw(self, x, m, c):
         return x ** m * c
 
-    def func_lin(self, x, a, b):
-        return a * x + b
+    def func_pw(self, x, a, b):
+        return a * x ** 2 + b * x
 
 if __name__ == '__main__':
     Application = wx.App(False)
