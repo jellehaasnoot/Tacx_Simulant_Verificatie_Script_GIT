@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6ee7abea-7152-40b0-9158-7e0d84e00cb4" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flux.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/Flux.xlsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SimulANT+ Log Analyzer.py" beforeDir="false" afterPath="$PROJECT_DIR$/SimulANT+ Log Analyzer.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,8 +16,8 @@
       <file leaf-file-name="SimulANT+ Log Analyzer.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SimulANT+ Log Analyzer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="691">
-              <caret line="723" selection-start-line="723" selection-end-line="728" selection-end-column="12" />
+            <state relative-caret-position="871">
+              <caret line="687" column="45" lean-forward="true" selection-start-line="687" selection-start-column="45" selection-end-line="687" selection-end-column="45" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -488,8 +485,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/SimulANT+ Log Analyzer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="691">
-          <caret line="723" selection-start-line="723" selection-end-line="728" selection-end-column="12" />
+        <state relative-caret-position="871">
+          <caret line="687" column="45" lean-forward="true" selection-start-line="687" selection-start-column="45" selection-end-line="687" selection-end-column="45" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
