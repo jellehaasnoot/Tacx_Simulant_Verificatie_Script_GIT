@@ -478,8 +478,6 @@ class Main(wx.Frame):
                 time_clean_zero.append(data_zero[j][2])
         max_velocity_zero_index = velocity_zero.index(max(velocity_zero))
 
-
-
         """
         Convert the raw data from the file to named lists for the FOURTH file
         """
@@ -494,78 +492,58 @@ class Main(wx.Frame):
                 time_clean_zero_acc.append(data_zero_acc[j][2])
         max_velocity_zero_acc_index = velocity_zero_acc.index(max(velocity_zero_acc))
 
+
         """
         Start calculations on the THIRD AND FOURTH file to calculate the SIMULATED MASS.
         This includes fitting the data. 
         """
         power_clean_zero = []
+        velocity_clean_zero = []
+        power_clean_zero_acc = []
+        velocity_clean_zero_acc = []
+
         for i in range(max_velocity_zero_index):
             power_clean_zero.append(power_zero[i])
-        velocity_clean_zero = []
         for i in range(max_velocity_zero_index):
             velocity_clean_zero.append(velocity_zero[i])
-
-        power_clean_zero_acc = []
         for i in range(max_velocity_zero_acc_index):
             power_clean_zero_acc.append(power_zero_acc[i])
-        velocity_clean_zero_acc = []
         for i in range(max_velocity_zero_acc_index):
             velocity_clean_zero_acc.append(velocity_zero_acc[i])
 
+        # Calculating the best possible fit, we only consider quadratic and linear fits at this moment. The error with
+        # the original data is calculated and the best fit will be drawn. A dictionary is used to track the variable
+        # with the highest value without a big if statement structure.
+        error_lin = 0
+        error_quadratic = 0
         popt, pcov = curve_fit(self.func_lin, np.array(velocity_clean_zero), np.array(power_clean_zero))
-        fitted_power_zero = self.func_lin(np.array(velocity_clean_zero), *popt)
-        for i in range(len(fitted_power_zero)):
-            if fitted_power_zero[i] < 0:
-                fitted_power_zero[i] = 0
+        fitted_power_zero_1 = self.func_lin(np.array(velocity_clean_zero), *popt)
+        for i in range(len(fitted_power_zero_1)):
+            if fitted_power_zero_1[i] < 0:
+                fitted_power_zero_1[i] = 0
+        for i in range(len(fitted_power_zero_1)):
+            if fitted_power_zero_1[i] > 0:
+                error_lin += abs(fitted_power_zero_1[i] - power_clean_zero[i])
 
-        power_needed_to_accelerate = []
-        acceleration = []
-        cycle_mass = float(22.8)
+        popt, pcov = curve_fit(self.func_quadratic, np.array(velocity_clean_zero), np.array(power_clean_zero))
+        fitted_power_zero_2 = self.func_quadratic(np.array(velocity_clean_zero), *popt)
+        for i in range(len(fitted_power_zero_2)):
+            if fitted_power_zero_2[i] < 0:
+                fitted_power_zero_2[i] = 0
+        for i in range(len(fitted_power_zero_2)):
+            if fitted_power_zero_2[i] > 0:
+                error_quadratic += abs(fitted_power_zero_2[i] - power_clean_zero[i])
 
-        for i in range(len(time_clean_zero)):
-            if len(time_clean_zero) > len(velocity_clean_zero):
-                time_clean_zero.pop()
+        errors = {
+            '1' : fitted_power_zero_1,
+            '2' : fitted_power_zero_2
+        }
+        lowest_error = min(errors, key=errors.get)
+        if lowest_error == '1':
+            fitted_power_zero = fitted_power_zero_1
+        elif lowest_error == '2':
+            fitted_power_zero = fitted_power_zero_2
 
-        filtered_velocity_zero = velocity_clean_zero
-
-        for i in range(len(filtered_velocity_zero) - 1):
-            acceleration.append((filtered_velocity_zero[i + 1] - filtered_velocity_zero[i]) / (2 * (time_clean_zero[i + 1] - time_clean_zero[i]))) # TODO '2 * ' verwijderen
-            power_needed_to_accelerate.append(((filtered_velocity_zero[i + 1] + filtered_velocity_zero[i]) / 3.6 / 2) * acceleration[i] / 3.6 * cycle_mass)
-
-        for j in range(len(power_clean_zero) - 1):
-            if power_clean_zero[j] > power_clean_zero[j + 1]:
-                energy_zero.append((0.5 * (power_clean_zero[j] - power_clean_zero[j + 1]) / (
-                        time_clean_zero[j + 1] - time_clean_zero[j]) * (
-                                            time_clean_zero[j + 1] - time_clean_zero[j])) + (
-                                           power_clean_zero[j + 1] * (time_clean_zero[j + 1] - time_clean_zero[j])))
-            else:
-                energy_zero.append((0.5 * (power_clean_zero[j + 1] - power_clean_zero[j]) / (
-                        time_clean_zero[j + 1] - time_clean_zero[j]) * (
-                                            time_clean_zero[j + 1] - time_clean_zero[j])) + (
-                                           power_clean_zero[j] * (time_clean_zero[j + 1] - time_clean_zero[j])))
-
-        for j in range(len(energy_zero)):
-            try:
-                simulated_mass.append(
-                    ((abs(float(velocity_clean_zero[j]) + float(velocity_clean_zero[j + 1])) / 3.6 / 2) ** -2) * 2 *
-                    energy_zero[j])
-            except:
-                continue
-
-        velocity_clean_zero.pop()
-        popt, pcov = curve_fit(self.func_powerlaw, np.array(velocity_clean_zero), np.array(power_needed_to_accelerate))
-        filtered = self.func_powerlaw(np.array(time_clean_zero), *popt)
-
-        filtered_calculated_power = signal.savgol_filter(np.array(power_needed_to_accelerate), 3, 1)
-
-        max_for_average = simulated_mass.index(max(simulated_mass))
-
-        estimate_range = []
-        for i in range(max_for_average + 1):
-            if simulated_mass[i] > 0:
-                estimate_range.append(simulated_mass[i])
-
-        self.simulated_mass_estimate = np.mean(estimate_range)
 
         """
         Initialize writing an excel file.
@@ -871,6 +849,9 @@ class Main(wx.Frame):
 
     def func_powerlaw(self, x, m, c):
         return x ** m * c
+
+    def func_quadratic(self, x, a, b, c):
+        return a * x**2 + b*x + c
 
     def func_lin(self, x, a, b):
         return a * x + b
