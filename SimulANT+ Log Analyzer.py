@@ -544,8 +544,13 @@ class Main(wx.Frame):
         elif lowest_error == '2':
             fitted_power_zero = fitted_power_zero_2
 
+        power_compensated = []
 
+        for i in range(len(velocity_clean_zero_acc)):
+            power_to_substract = popt[0] * velocity_clean_zero_acc[i] + popt[1]
+            power_compensated.append(power_clean_zero_acc[i] - power_to_substract)
 
+        print(power_compensated)
 
 
 
