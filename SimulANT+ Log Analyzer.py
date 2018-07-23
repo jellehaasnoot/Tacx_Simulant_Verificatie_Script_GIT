@@ -567,6 +567,10 @@ class Main(wx.Frame):
 
         self.simulated_mass_estimate = np.mean(estimate_range)
 
+
+
+
+
         """
         Initialize writing an excel file.
         """
