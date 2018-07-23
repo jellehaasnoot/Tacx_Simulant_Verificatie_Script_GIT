@@ -689,9 +689,16 @@ class Main(wx.Frame):
         graph.add_series({
             'categories': [worksheet.name] + [2, 11] + [len(velocity_clean_zero) + 2, 11],
             'values': [worksheet.name] + [2, 7] + [len(power_clean_zero) + 2, 7],
-            'line': {'color': '#ff0000'},
+            'line': {'color': '#ff0000', 'dash_type': 'dash'},
             'name': '0 W Power Low Acceleration Program',
         })
+
+        # graph.add_series({
+        #     'categories': [worksheet.name] + [2, 16] + [len(velocity_clean_zero_acc) + 2, 16],
+        #     'values': [worksheet.name] + [2, 15] + [len(power_clean_zero_acc) + 2, 15],
+        #     'line': {'color': '#0000ff'},
+        #     'name': 'o W Power High Acceleration Program',
+        # })
 
         graph.add_series({
             'categories': [worksheet.name] + [2, 11] + [len(velocity_clean_zero) + 2, 11],
@@ -714,17 +721,17 @@ class Main(wx.Frame):
             'name': '0 W Program Low Acceleration Calculated Theoretical Power',
         })
 
-        graph_2.add_series({
-            'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
-            'values': [worksheet.name] + [2, 10] + [len(filtered_calculated_power) + 2, 10],
-            'line': {'color': '#66ff00'},
-            'name': '0 W Program Filtered Low Acceleration Calculated Theoretical Power',
-        })
+        # graph_2.add_series({
+        #     'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
+        #     'values': [worksheet.name] + [2, 10] + [len(filtered_calculated_power) + 2, 10],
+        #     'line': {'color': '#66ff00'},
+        #     'name': '0 W Program Filtered Low Acceleration Calculated Theoretical Power',
+        # })
 
         graph_2.add_series({
             'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
             'values': [worksheet.name] + [2, 11] + [len(velocity_clean_zero) + 2, 11],
-            'line': {'color': '#0000ff'},
+            'line': {'color': '#0000ff', 'dash_type': 'dash'},
             'name': '0 W Program Low Acceleration Velocity',
             'y2_axis': True,
         })
@@ -738,12 +745,19 @@ class Main(wx.Frame):
         })
 
         graph_2.add_series({
-            'categories': [worksheet.name] + [2, 13] + [len(time_clean_zero_acc) + 2, 13],
-            'values': [worksheet.name] + [2, 15] + [len(velocity_clean_zero_acc) + 2, 15],
-            'line': {'color': '#0000ff'},
+            'categories': [worksheet.name] + [2, 14] + [len(time_clean_zero_acc) + 2, 14],
+            'values': [worksheet.name] + [2, 16] + [len(velocity_clean_zero_acc) + 2, 16],
+            'line': {'color': '#0000ff', 'dash_type': 'dash'},
             'name': '0 W Program High Acceleration Velocity',
             'y2_axis': True,
         })
+        #
+        # graph_2.add_series({
+        #     'categories': [worksheet.name] + [2, 14] + [len(time_clean_zero_acc) + 2, 14],
+        #     'values': [worksheet.name] + [2, 15] + [len(power_clean_zero_acc) + 2, 15],
+        #     'line': {'color': '#0000ff'},
+        #     'name': '0 W Power High Acceleration Program',
+        # })
 
         # graph.set_legend({'delete_series': [0, 1, 2, 3]})
         # graph_2.set_legend({'delete_series': [0, 1]})
