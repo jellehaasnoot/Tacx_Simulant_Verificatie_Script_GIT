@@ -90,10 +90,11 @@ class Main(wx.Frame):
         self.data_panel_4_header_display.SetFont(self.font_header)
         # self.image_panel = wx.Panel(self.top_panel, -1, style=wx.BORDER_SIMPLE, size=())
 
-        self.checkbox = wx.CheckBox(self.top_panel, -1, 'User Input Simulated Mass', pos=(30, 802.5))
-        self.checkbox.SetValue(False)
+        self.checkbox_sim = wx.CheckBox(self.top_panel, -1, 'User Input Simulated Mass', pos=(30, 795))
+        self.checkbox_sim.SetValue(False)
 
-
+        self.checkbox_inertia = wx.CheckBox(self.top_panel, -1, 'User Input Moment of Inertia', pos=(30, 815))
+        self.checkbox_inertia.SetValue(False)
 
         # Set events
         self.Bind(wx.EVT_MENU, self.on_open, menu_file_open)
@@ -104,6 +105,7 @@ class Main(wx.Frame):
         self.open_xlsx_button.Bind(wx.EVT_BUTTON, self.on_xlsx_button)
         self.open_files_butten.Bind(wx.EVT_BUTTON, self.on_open)
         self.Bind(wx.EVT_CHECKBOX, self.on_check_sim_mass)
+        self.Bind(wx.EVT_CHECKBOX, self.on_check_inertia)
 
 
         # Set start-up message
@@ -663,7 +665,7 @@ class Main(wx.Frame):
         """
         Initialize writing an excel file.
         """
-        excel = xlsxwriter.Workbook(self.user_file_name + ".xlsx", {'constant_memory': True})
+        excel = xlsxwriter.Workbook(self.user_file_name + ".xlsx")
         graph = excel.add_chart({'type': 'scatter', 'subtype': 'straight'})
         graph_2 = excel.add_chart({'type': 'scatter', 'subtype': 'straight'})
         worksheet_charts = excel.add_worksheet('Charts')
@@ -691,6 +693,7 @@ class Main(wx.Frame):
         worksheet_data.write('A1', 'Tested with highest gradient (without slip)', underline)
         worksheet_data.write('A2', 'Velocity [km/h]', bold)
         worksheet_data.write('B2', 'Power [W]', bold)
+        worksheet_data.write('C2', 'Fitted Power [W]', bold)
         worksheet_data.write_column(2, 0, velocity_clean_high)
         worksheet_data.write_column(2, 1, power_clean_high)
         worksheet_data.write_column(2, 2, fitted_power_high)
@@ -698,6 +701,7 @@ class Main(wx.Frame):
         worksheet_data.write('D1', 'Tested with lowest gradient (without slip)', underline)
         worksheet_data.write('D2', 'Velocity [km/h]', bold)
         worksheet_data.write('E2', 'Power [W]', bold)
+        worksheet_data.write('F2', 'Fitted Power [W]', bold)
         worksheet_data.write_column(2, 3, velocity_clean_low)
         worksheet_data.write_column(2, 4, power_clean_low)
         worksheet_data.write_column(2, 5, fitted_power_low)
@@ -726,8 +730,10 @@ class Main(wx.Frame):
         worksheet_data.write_column(2, 15, power_compensated)
         worksheet_data.write_column(2, 16, fitted_power_zero_acc)
 
-        worksheet_data.write_column(2, 100, power_clean_high_brake)
-        worksheet_data.write_column(2, 101, power_clean_low_brake)
+        worksheet_data.write('S2', 'Brake Power Trainer Upper Limit [W]', bold)
+        worksheet_data.write('T2', 'Brake Power Trainer Lower Limit [W]', bold)
+        worksheet_data.write_column(2, 18, power_clean_high_brake)
+        worksheet_data.write_column(2, 19, power_clean_low_brake)
 
         """
         Writing to graph.
@@ -746,7 +752,7 @@ class Main(wx.Frame):
         })
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
-            'values': [worksheet_data.name] + [2, 101] + [len(power_clean_low) + 2, 101],
+            'values': [worksheet_data.name] + [2, 19] + [len(power_clean_low) + 2, 19],
             'line': {'color': 'black'},
             'name': 'Lowest Gradient Power',
         })
@@ -764,7 +770,7 @@ class Main(wx.Frame):
         })
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
-            'values': [worksheet_data.name] + [2, 100] + [len(power_clean_high) + 2, 100],
+            'values': [worksheet_data.name] + [2, 18] + [len(power_clean_high) + 2, 18],
             'line': {'color': 'black'},
             'name': 'Highest Gradient Power',
         })
@@ -953,16 +959,41 @@ class Main(wx.Frame):
         return a * x + b
 
     def on_check_sim_mass(self, event):
-        if self.checkbox.GetValue():
+        if self.checkbox_sim.GetValue():
             self.sim_mass_dialog = wx.TextEntryDialog(self,
                                                             "What is the value for the simulated mass [kg] (use '.' as decimal separator): ",
                                                             "Enter simulated mass value...")
             self.sim_mass_dialog.CenterOnParent()
 
             if self.sim_mass_dialog.ShowModal() == wx.ID_CANCEL:
-                self.checkbox.SetValue(False)
+                self.checkbox_sim.SetValue(False)
                 return
             self.simulated_mass = float(self.sim_mass_dialog.GetValue())
+
+    def on_check_inertia(self, event):
+        if self.checkbox_inertia.GetValue():
+            self.inertia_dialog = wx.TextEntryDialog(self,
+                                                            "What is the value for the moment of inertia [kg * m^2] (use '.' as decimal separator): ",
+                                                            "Enter inertia value...")
+            self.inertia_dialog.CenterOnParent()
+
+            if self.inertia_dialog.ShowModal() == wx.ID_CANCEL:
+                self.checkbox_inertia.SetValue(False)
+                return
+
+            self.conversion_dialog = wx.TextEntryDialog(self,
+                                                            "What is the value for the conversion factor (use '.' as decimal separator, see README.txt for explanation): ",
+                                                            "Enter conversion value...")
+            self.conversion_dialog.CenterOnParent()
+
+            if self.conversion_dialog.ShowModal() == wx.ID_CANCEL:
+                self.checkbox_inertia.SetValue(False)
+                return
+
+            self.inertia = float(self.inertia_dialog.GetValue())
+            self.conversion = float(self.conversion_dialog.GetValue())
+
+            self.simulated_mass = (self.conversion ** 2) * self.inertia
 
 if __name__ == '__main__':
     Application = wx.App(False)
