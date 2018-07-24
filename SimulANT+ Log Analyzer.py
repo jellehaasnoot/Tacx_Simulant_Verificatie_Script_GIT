@@ -391,17 +391,6 @@ class Main(wx.Frame):
         velocity_zero_acc = []
         power_zero_acc = []
         time_clean_zero_acc = []
-        power_zero_coefficients = []
-        power_zero_scalars = []
-        energy_zero = []
-        simulated_mass = []
-
-        vertical_x = []
-        vertical_y = []
-        horizontal_x = []
-        horizontal_y = []
-        horizontal_2_x = []
-        horizontal_2_y = []
 
         """
         Convert the raw data from the file to named lists for the FIRST file
@@ -470,8 +459,6 @@ class Main(wx.Frame):
             fitted_power_high = fitted_power_high_1
         elif lowest_error == '2':
             fitted_power_high = fitted_power_high_2
-
-
 
         """
         Convert the raw data from the file to named lists for the SECOND file
@@ -671,20 +658,6 @@ class Main(wx.Frame):
         for i in range(len(velocity_clean_low)):
             power_flywheel_low.append(self.simulated_mass * velocity_clean_low[i] * popt6[0])
             power_clean_low_brake.append(fitted_power_low[i] - power_flywheel_low[i])
-
-        # coefficient_a = []
-        #
-        # for i in range(len(power_compensated) - 1):
-        #     if velocity_clean_zero_acc[i] > 10 and velocity_clean_zero_acc[i] > velocity_clean_zero_acc[i + 1]:
-        #         coefficient_a = ((velocity_clean_zero_acc[i + 1] - velocity_clean_zero_acc[i]) / 3.6 / (time_clean_zero_acc[i + 1] - time_clean_zero_acc[i]))
-        #         simulated_mass.append(power_compensated[i] / (coefficient_a * velocity_clean_zero_acc[i] / 3.6))
-        #
-        # for i in range(len(power_compensated) - 1):
-        #     if velocity_clean_zero_acc[i] > 10 and velocity_clean_zero_acc[i] < velocity_clean_zero_acc[i + 1]:
-        #         coefficient_a = ((velocity_clean_zero_acc[i] - velocity_clean_zero_acc[i + 1]) / 3.6 / (time_clean_zero_acc[i] - time_clean_zero_acc[i + 1]))
-        #         simulated_mass.append(power_compensated[i] / (coefficient_a * velocity_clean_zero_acc[i] / 3.6))
-
-        # print(coefficient_a)
 
         print(popt3, popt4)
         """
