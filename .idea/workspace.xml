@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6ee7abea-7152-40b0-9158-7e0d84e00cb4" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flux.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/Flux.xlsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SimulANT+ Log Analyzer.py" beforeDir="false" afterPath="$PROJECT_DIR$/SimulANT+ Log Analyzer.py" afterDir="false" />
-    </list>
+    <list default="true" id="6ee7abea-7152-40b0-9158-7e0d84e00cb4" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,8 +14,8 @@
       <file leaf-file-name="SimulANT+ Log Analyzer.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SimulANT+ Log Analyzer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="337">
-              <caret line="728" column="26" lean-forward="true" selection-start-line="728" selection-start-column="26" selection-end-line="728" selection-end-column="26" />
+            <state relative-caret-position="339">
+              <caret line="618" column="60" selection-start-line="618" selection-start-column="60" selection-end-line="618" selection-end-column="60" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -207,8 +203,8 @@
     <frame x="-8" y="-8" width="2576" height="1456" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12450749" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.20545869" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.12450749" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.20545869" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="8" weight="0.22668688" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3995451" />
@@ -507,8 +503,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/SimulANT+ Log Analyzer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="337">
-          <caret line="728" column="26" lean-forward="true" selection-start-line="728" selection-start-column="26" selection-end-line="728" selection-end-column="26" />
+        <state relative-caret-position="339">
+          <caret line="618" column="60" selection-start-line="618" selection-start-column="60" selection-end-line="618" selection-end-column="60" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
