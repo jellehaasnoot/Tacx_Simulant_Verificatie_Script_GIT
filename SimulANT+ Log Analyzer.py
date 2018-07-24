@@ -638,6 +638,7 @@ class Main(wx.Frame):
             if len(velocity_clean_zero_acc) < len(time_clean_zero_acc):
                 time_clean_zero_acc.pop()
 
+        print(velocity_zero_acc)
         print(len(velocity_clean_zero_acc))
         print(len(time_clean_zero_acc))
 
@@ -665,9 +666,7 @@ class Main(wx.Frame):
         #         simulated_mass.append(power_compensated[i] / (coefficient_a * velocity_clean_zero_acc[i] / 3.6))
 
         # print(coefficient_a)
-        print(simulated_mass)
         print(np.mean(simulated_mass))
-
         print(popt3, popt4)
         """
         Initialize writing an excel file.
@@ -760,25 +759,25 @@ class Main(wx.Frame):
             'line': {'color': '#67bfe7'},
             'name': 'Highest Gradient Power',
         })
-        # graph.add_series({
-        #     'categories': [worksheet.name] + [2, 16] + [len(velocity_clean_zero_acc) + 2, 16],
-        #     'values': [worksheet.name] + [2, 18] + [len(power_compensated) + 2, 18],
-        #     'line': {'color': 'black'},
-        #     'name': 'Power vs. Velocity',
-        # })
-        # graph.add_series({
-        #     'categories': [worksheet.name] + [2, 16] + [len(velocity_clean_zero_acc) + 2, 16],
-        #     'values': [worksheet.name] + [2, 19] + [len(fitted_power_zero_acc) + 2, 19],
-        #     'line': {'color': 'purple'},
-        #     'name': 'Fitted Compensated Power',
-        # })
-        #
-        # graph.add_series({
-        #     'categories': [worksheet.name] + [2, 9] + [len(velocity_clean_zero) + 2, 9],
-        #         'values': [worksheet.name] + [2, 8] + [len(fitted_power_zero) + 2, 8],
-        #     'line': {'color': 'red'},
-        #     'name': 'Power Zero',
-        # })
+        graph.add_series({
+            'categories': [worksheet.name] + [2, 16] + [len(velocity_clean_zero_acc) + 2, 16],
+            'values': [worksheet.name] + [2, 18] + [len(power_compensated) + 2, 18],
+            'line': {'color': 'black'},
+            'name': 'Power vs. Velocity',
+        })
+        graph.add_series({
+            'categories': [worksheet.name] + [2, 16] + [len(velocity_clean_zero_acc) + 2, 16],
+            'values': [worksheet.name] + [2, 19] + [len(fitted_power_zero_acc) + 2, 19],
+            'line': {'color': 'purple'},
+            'name': 'Fitted Compensated Power',
+        })
+
+        graph.add_series({
+            'categories': [worksheet.name] + [2, 9] + [len(velocity_clean_zero) + 2, 9],
+                'values': [worksheet.name] + [2, 8] + [len(fitted_power_zero) + 2, 8],
+            'line': {'color': 'red'},
+            'name': 'Power Zero',
+        })
 
         graph_2.add_series({
             'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
@@ -821,7 +820,7 @@ class Main(wx.Frame):
 
 
         worksheet.insert_chart('U2', graph)
-        # worksheet.insert_chart('U40', graph_2)
+        worksheet.insert_chart('U40', graph_2)
         excel.close()
         self.panel_layout()
 
