@@ -8,12 +8,12 @@ missing module named multiprocessing.get_start_method - imported by multiprocess
 missing module named multiprocessing.SimpleQueue - imported by multiprocessing, concurrent.futures.process
 missing module named 'win32com.gen_py' - imported by win32com, C:\Users\Jelle\AppData\Local\Programs\Python\Python36\lib\site-packages\PyInstaller\loader\rthooks\pyi_rth_win32comgenpy.py
 missing module named pyimod03_importers - imported by C:\Users\Jelle\AppData\Local\Programs\Python\Python36\lib\site-packages\PyInstaller\loader\rthooks\pyi_rth_pkgres.py
-missing module named 'pkg_resources.extern.pyparsing' - imported by pkg_resources._vendor.packaging.requirements, pkg_resources._vendor.packaging.markers
+missing module named 'pkg_resources.extern.pyparsing' - imported by pkg_resources._vendor.packaging.markers, pkg_resources._vendor.packaging.requirements
+missing module named __builtin__ - imported by numpy.core.numerictypes, numpy.core.numeric, numpy.distutils.misc_util, numpy.lib.function_base, numpy.lib._iotools, numpy.ma.core, numpy, scipy._lib.six, pkg_resources._vendor.pyparsing
+missing module named ordereddict - imported by pkg_resources._vendor.pyparsing
+missing module named StringIO - imported by six, xlsxwriter.compatibility, numpy.lib.utils, numpy.testing.nose_tools.utils, numpy.lib.format, scipy._lib.six, pkg_resources._vendor.six
 missing module named 'com.sun' - imported by pkg_resources._vendor.appdirs
 missing module named com - imported by pkg_resources._vendor.appdirs
-missing module named __builtin__ - imported by numpy.core.numerictypes, numpy.core.numeric, scipy._lib.six, numpy.distutils.misc_util, numpy.lib.function_base, numpy.lib._iotools, numpy.ma.core, numpy, pkg_resources._vendor.pyparsing
-missing module named ordereddict - imported by pkg_resources._vendor.pyparsing
-missing module named StringIO - imported by six, xlsxwriter.compatibility, numpy.lib.utils, numpy.testing.nose_tools.utils, scipy._lib.six, numpy.lib.format, pkg_resources._vendor.six
 missing module named __main__ - imported by pkg_resources
 missing module named pkg_resources.extern.packaging - imported by pkg_resources.extern, pkg_resources
 missing module named pkg_resources.extern.appdirs - imported by pkg_resources.extern, pkg_resources
@@ -33,16 +33,15 @@ missing module named 'java.lang' - imported by platform, C:\Users\Jelle\PycharmP
 missing module named vms_lib - imported by platform, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
 missing module named termios - imported by tty, getpass, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
 missing module named grp - imported by shutil, tarfile, pathlib, distutils.archive_util, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
-missing module named 'org.python' - imported by copy, setuptools.sandbox, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py, xml.sax
 missing module named pwd - imported by posixpath, shutil, tarfile, http.server, webbrowser, pathlib, distutils.util, distutils.archive_util, netrc, getpass, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
 missing module named _dummy_threading - imported by dummy_threading, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
+missing module named 'org.python' - imported by copy, setuptools.sandbox, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py, xml.sax
 missing module named psutil - imported by scipy._lib._testutils
 missing module named pytest - imported by scipy._lib._testutils
-missing module named scipy.linalg.qr_insert - imported by scipy.linalg, scipy.sparse.linalg.isolve._gcrotmk
 missing module named numpy.lib.i0 - imported by numpy.lib, numpy.dual
 missing module named dummy_thread - imported by numpy.core.arrayprint
 missing module named thread - imported by numpy.core.arrayprint
-missing module named numpy.eye - imported by numpy, numpy.core.numeric, scipy.optimize.optimize, scipy.linalg.decomp, scipy.optimize.minpack, scipy.interpolate._pade
+missing module named numpy.eye - imported by numpy, numpy.core.numeric, scipy.optimize.optimize, scipy.optimize.minpack, scipy.interpolate._pade
 missing module named cPickle - imported by xlsxwriter.compat_collections, numpy.core.numeric, numpy.lib.format, numpy.lib.npyio, numpy.ma.core
 missing module named cStringIO - imported by cPickle
 missing module named copy_reg - imported by cPickle, cStringIO, numpy.core
@@ -51,12 +50,15 @@ missing module named numpy.core.signbit - imported by numpy.core, numpy.testing.
 missing module named numpy.core.float64 - imported by numpy.core, numpy.testing.nose_tools.utils
 missing module named nose - imported by numpy.testing.nose_tools.utils, numpy.testing.nose_tools.decorators, numpy.testing.nose_tools.noseclasses
 missing module named numpy.core.float32 - imported by numpy.core, numpy.testing.nose_tools.utils
+missing module named numpy.core.integer - imported by numpy.core, numpy.fft.helper
+missing module named numpy.core.conjugate - imported by numpy.core, numpy.fft.fftpack
 missing module named numpy.core.divide - imported by numpy.core, numpy.linalg.linalg
 missing module named numpy.core.object_ - imported by numpy.core, numpy.linalg.linalg
 missing module named numpy.core.intp - imported by numpy.core, numpy.linalg.linalg
 missing module named numpy.core.longdouble - imported by numpy.core, numpy.linalg.linalg
 missing module named numpy.core.geterrobj - imported by numpy.core, numpy.linalg.linalg
 missing module named numpy.core.maximum - imported by numpy.core, numpy.linalg.linalg
+missing module named numpy.core.sqrt - imported by numpy.core, numpy.linalg.linalg, numpy.fft.fftpack, scipy.sparse.linalg._norm
 missing module named numpy.core.add - imported by numpy.core, numpy.linalg.linalg
 missing module named numpy.core.complexfloating - imported by numpy.core, numpy.linalg.linalg
 missing module named numpy.core.inexact - imported by numpy.core, numpy.linalg.linalg
@@ -64,9 +66,6 @@ missing module named numpy.core.cdouble - imported by numpy.core, numpy.linalg.l
 missing module named numpy.core.csingle - imported by numpy.core, numpy.linalg.linalg
 missing module named numpy.core.double - imported by numpy.core, numpy.linalg.linalg
 missing module named numpy.core.single - imported by numpy.core, numpy.linalg.linalg
-missing module named numpy.core.integer - imported by numpy.core, numpy.fft.helper
-missing module named numpy.core.sqrt - imported by numpy.core, numpy.fft.fftpack, numpy.linalg.linalg, scipy.sparse.linalg._norm
-missing module named numpy.core.conjugate - imported by numpy.core, numpy.fft.fftpack
 missing module named commands - imported by numpy.distutils.cpuinfo
 missing module named setuptools.extern.packaging - imported by setuptools.extern, setuptools.dist, setuptools.command.egg_info
 missing module named 'setuptools.extern.six' - imported by setuptools, setuptools.extension
@@ -95,7 +94,7 @@ missing module named numpy.ndarray - imported by numpy, numpy.ma.core, numpy.ma.
 missing module named numpy.dtype - imported by numpy, numpy.ma.mrecords, numpy.ctypeslib, scipy.optimize.minpack
 missing module named numpy.bool_ - imported by numpy, numpy.ma.core, numpy.ma.mrecords
 missing module named numpy.expand_dims - imported by numpy, numpy.ma.core
-missing module named numpy.iscomplexobj - imported by numpy, numpy.ma.core, scipy.linalg.decomp, scipy.linalg._decomp_ldl
+missing module named numpy.iscomplexobj - imported by numpy, numpy.ma.core, scipy.linalg.decomp
 missing module named numpy.amin - imported by numpy, numpy.ma.core
 missing module named numpy.amax - imported by numpy, numpy.ma.core, scipy.linalg.matfuncs
 missing module named future_builtins - imported by numpy.lib.npyio
@@ -107,12 +106,8 @@ missing module named numpy.lib.triu - imported by numpy.lib, numpy.linalg.linalg
 missing module named numpy.lib.imag - imported by numpy.lib, numpy.testing.nose_tools.utils
 missing module named numpy.lib.real - imported by numpy.lib, numpy.testing.nose_tools.utils
 missing module named numpy.lib.iscomplexobj - imported by numpy.lib, numpy.testing.nose_tools.utils
-missing module named scipy.sparse.coo_matrix - imported by scipy.sparse, scipy.sparse.data, scipy.optimize._numdiff, scipy.integrate._bvp, scipy.integrate._ivp.common
 missing module named scipy.special.xlogy - imported by scipy.special, scipy.interpolate.rbf
-missing module named scikits - imported by scipy.sparse.linalg.dsolve.linsolve
-missing module named scipy.arange - imported by scipy, scipy.sparse.linalg.isolve.minres
-missing module named scipy.ones - imported by scipy, scipy.sparse.linalg.isolve.minres
-missing module named scipy.sparse.linalg.onenormest - imported by scipy.sparse.linalg, scipy.linalg._matfuncs_inv_ssq
+missing module named scipy.sparse.coo_matrix - imported by scipy.sparse, scipy.sparse.data, scipy.optimize._numdiff, scipy.integrate._bvp, scipy.integrate._ivp.common
 missing module named scipy.spatial.cKDTree - imported by scipy.spatial, scipy.interpolate.ndgriddata
 missing module named 'matplotlib.collections' - imported by scipy.spatial._plotutils
 missing module named matplotlib - imported by scipy.spatial._plotutils
@@ -126,16 +121,17 @@ missing module named numpy.single - imported by numpy, scipy.linalg.decomp_schur
 missing module named numpy.sign - imported by numpy, scipy.linalg.matfuncs, scipy.optimize.zeros
 missing module named numpy.conjugate - imported by numpy, scipy.linalg.matfuncs
 missing module named numpy.logical_not - imported by numpy, scipy.linalg.matfuncs
+missing module named scipy.linalg.qr_insert - imported by scipy.linalg, scipy.sparse.linalg.isolve._gcrotmk
 missing module named numpy.conj - imported by numpy, scipy.linalg.decomp
 missing module named numpy.arcsin - imported by numpy, scipy.linalg.decomp_svd
 missing module named scipy.linalg._clapack - imported by scipy.linalg, scipy.linalg.lapack
 missing module named scipy.linalg._cblas - imported by scipy.linalg, scipy.linalg.blas
+missing module named scikits - imported by scipy.sparse.linalg.dsolve.linsolve
 missing module named numpy.double - imported by numpy, scipy.optimize.nnls
 missing module named numpy.float64 - imported by numpy, scipy.optimize.lbfgsb
 missing module named numpy.greater - imported by numpy, scipy.optimize.minpack
-missing module named sksparse - imported by scipy.optimize._trustregion_constr.projections
-missing module named cffi - imported by scipy._lib._ccallback
+missing module named numpy.array - imported by numpy, numpy.ma.core, numpy.ma.extras, numpy.ma.mrecords, numpy.ctypeslib, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py, scipy.linalg.decomp, scipy.sparse.linalg.isolve.utils, scipy.optimize.lbfgsb, scipy.optimize.tnc, scipy.optimize.slsqp, scipy.optimize.minpack, scipy.integrate._ode, scipy.interpolate.interpolate, scipy.interpolate._fitpack_impl, scipy.interpolate.fitpack2
 missing module named numpy.random.randn - imported by numpy.random, scipy
 missing module named numpy.random.rand - imported by numpy.random, scipy
-missing module named numpy.array - imported by numpy, numpy.ma.core, numpy.ma.extras, numpy.ma.mrecords, numpy.ctypeslib, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py, scipy.sparse.linalg.isolve.utils, scipy.linalg.decomp, scipy.linalg.decomp_schur, scipy.optimize.lbfgsb, scipy.optimize.tnc, scipy.optimize.slsqp, scipy.optimize.minpack, scipy.integrate._ode, scipy.interpolate.interpolate, scipy.interpolate._fitpack_impl, scipy.interpolate.fitpack2
+missing module named cffi - imported by scipy._lib._ccallback
 missing module named Carbon - imported by wx.lib.colourutils

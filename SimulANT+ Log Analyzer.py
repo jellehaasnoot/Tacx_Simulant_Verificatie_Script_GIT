@@ -1,6 +1,9 @@
 import wx as wx
 from ValueConverter import ValueConverter
 import xlsxwriter
+import scipy
+import numpy
+import os
 from os import path
 from os import startfile
 from numpy import mean

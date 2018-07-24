@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['SimulANT+ Log Analyzer.py'],
-             pathex=['C:\\Users\\Jelle\\PycharmProjects\\Tacx_Simulant_Verificatie_Script_GIT\\Tacx_Simulant_Verificatie_Script'],
+             pathex=['C:\\Users\\Jelle\\AppData\\Local\\Programs\\Python\\Python36\\Lib\\site-packages\\scipy\\optimize', 'C:\\Users\\Jelle\\PycharmProjects\\Tacx_Simulant_Verificatie_Script_GIT\\Tacx_Simulant_Verificatie_Script'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -18,12 +18,16 @@ pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
           a.scripts,
-          a.binaries,
-          a.zipfiles,
-          a.datas,
+          exclude_binaries=True,
           name='SimulANT+ Log Analyzer',
           debug=False,
           strip=False,
           upx=True,
-          runtime_tmpdir=None,
           console=True )
+coll = COLLECT(exe,
+               a.binaries,
+               a.zipfiles,
+               a.datas,
+               strip=False,
+               upx=True,
+               name='SimulANT+ Log Analyzer')
