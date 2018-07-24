@@ -120,6 +120,11 @@ class Main(wx.Frame):
         self.data_1 = []
         self.data_2 = []
         self.data_3 = []
+        self.directory_name_1 = ""
+        self.directory_name_2 = ""
+        self.directory_name_3 = ""
+        self.directory_name_4 = ""
+
         self.folder_pathname = ""
         self.user_file_name = ""
         self.velocity_list_high = []
@@ -199,68 +204,49 @@ class Main(wx.Frame):
         5: Close file
 
         """
-
         # Opening File 1 with the use of a dialog. File 1 will contain the ANT+ data of the measurements with a high
         # gradient (slope). This will be used to calculate the maximal brake power.
-        self.directory_name_1 = ""
-
         with wx.FileDialog(self, "Choose the logged SimulANT+ file with the HIGHEST slope...",
                            wildcard="Text files (*.txt)|*.txt|" "Comma Separated Value-files (*.csv)|*.csv",
                            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as prompted_dialog:
 
             if prompted_dialog.ShowModal() == wx.ID_CANCEL:
                 return
-
             self.pathname_1 = prompted_dialog.GetPath()
-
 
         # Opening File 2 with the use of a dialog. File 2 will contain the ANT+ data of the measurements with a low
         # (negative) gradient (slope). This will be used to calculate the minimal brake power.
-        self.directory_name_2 = ""
-
         with wx.FileDialog(self, "Choose the second logged SimulANT+ file with the LOWEST (negative) slope...",
                            wildcard="Text files (*.txt)|*.txt|" "Comma Separated Value-files (*.csv)|*.csv",
                            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as prompted_dialog:
 
             if prompted_dialog.ShowModal() == wx.ID_CANCEL:
                 return
-
             self.pathname_2 = prompted_dialog.GetPath()
-
 
         # Opening File 3 with the use of a dialog. File 3 will contain the ANT+ data of the measurements with a power
         # goal of 0W, this will be used to see the residual brake power if no brake is used.
-        self.directory_name_3 = ""
-
         with wx.FileDialog(self, "Choose the third logged SimulANT+ file with the 0 W Power program - low acceleration...",
                            wildcard="Text files (*.txt)|*.txt|" "Comma Separated Value-files (*.csv)|*.csv",
                            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as prompted_dialog:
 
             if prompted_dialog.ShowModal() == wx.ID_CANCEL:
                 return
-
             self.pathname_3 = prompted_dialog.GetPath()
 
         self.folder_pathname = os.path.dirname(self.pathname_3)
-
-
         # Opening File 4 with the use of a dialog. File 4 will contain the ANT+ data of the measurements with a power
         # goal of 0W. In contrary with the other files, the acceleration needs to be high. This way, it is possible to
         # calculate the simulated mass (inertia).
-        self.directory_name_4 = ""
-
         with wx.FileDialog(self, "Choose the third logged SimulANT+ file with the 0 W Power program - high acceleration...",
                            wildcard="Text files (*.txt)|*.txt|" "Comma Separated Value-files (*.csv)|*.csv",
                            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as prompted_dialog:
 
             if prompted_dialog.ShowModal() == wx.ID_CANCEL:
                 return
-
             self.pathname_4 = prompted_dialog.GetPath()
 
         self.folder_pathname = os.path.dirname(self.pathname_4)
-
-
         # Retrieving the filename the user wants to use. This will be the file name of the new excel file which will be
         # created after running this program.
         self.user_file_name_dialog = wx.TextEntryDialog(self,
@@ -271,7 +257,6 @@ class Main(wx.Frame):
         if self.user_file_name_dialog.ShowModal() == wx.ID_CANCEL:
             return
         self.user_file_name = self.user_file_name_dialog.GetValue()
-
 
         # Analyse the log-files. This will be used to retrieve the data from the four selected log files above. This
         # will be done by ANTlogfileconverter.py. Raw data will be stored in data_.... and used in further calculations.
@@ -334,7 +319,6 @@ class Main(wx.Frame):
         self.time_list_zero = time_list
         self.velocity_list_zero_acc = velocity_list
 
-
         # Analysing log file 4:
         self.logfile_analyser(self.pathname_4)
         data_zero_acc = []
@@ -354,7 +338,6 @@ class Main(wx.Frame):
         self.velocity_list_zero = velocity_list
         self.power_list_zero_acc = power_list
         self.time_list_zero_acc = time_list
-
 
         # Calculating the averages of every file, this is not necessary for the calculations below, but this will give
         # a quick overview of the used files to the user.
@@ -416,7 +399,6 @@ class Main(wx.Frame):
             else:
                 pass
 
-
         for i in range(len(power_raw_high)):
             if round(velocity_raw_high[i]) == 0:
                 power_clean_high.append(0)
@@ -465,7 +447,6 @@ class Main(wx.Frame):
         """
         Convert the raw data from the file to named lists for the SECOND file
         """
-
         for i in range(round(max_velocity_low)):
             dummy_velocity = []
             dummy_power = []
@@ -496,7 +477,6 @@ class Main(wx.Frame):
                 power_clean_low.append(power_raw_low[i])
                 velocity_clean_low.append(velocity_raw_low[i])
                 time_clean_low.append(time_raw_low[i] * 2)
-
 
         """
         Make a fit for the data of the SECOND file 
@@ -531,7 +511,6 @@ class Main(wx.Frame):
         elif lowest_error == '2':
             fitted_power_low = fitted_power_low_2
 
-
         """
         Convert the raw data from the file to named lists for the THIRD file
         """
@@ -557,7 +536,6 @@ class Main(wx.Frame):
                 power_zero_acc.append(data_zero_acc[j][1])
                 velocity_zero_acc.append(data_zero_acc[j][0])
                 time_clean_zero_acc.append(data_zero_acc[j][2] * 2)
-
 
         """
         Start calculations on the THIRD AND FOURTH file to calculate the SIMULATED MASS.
@@ -629,7 +607,6 @@ class Main(wx.Frame):
         popt3, pcov = curve_fit(self.func_lin, array(velocity_clean_zero_acc) / 3.6, array(power_compensated))
         fitted_power_zero_acc = self.func_lin(array(velocity_clean_zero_acc) / 3.6, *popt3)
 
-
         for i in range(len(time_clean_zero_acc)):
             if len(velocity_clean_zero_acc) < len(time_clean_zero_acc):
                 time_clean_zero_acc.pop()
@@ -662,6 +639,7 @@ class Main(wx.Frame):
             power_clean_low_brake.append(fitted_power_low[i] - power_flywheel_low[i])
 
         print(popt3, popt4)
+
         """
         Initialize writing an excel file.
         """
@@ -744,30 +722,35 @@ class Main(wx.Frame):
             'line': {'color': '#67bfe7', 'dash_type': 'dash'},
             'name': 'Lowest Gradient Power',
         })
+
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
             'values': [worksheet_data.name] + [2, 5] + [len(power_clean_low) + 2, 5],
             'line': {'color': '#67bfe7'},
             'name': 'Lowest Gradient Power',
         })
+
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
             'values': [worksheet_data.name] + [2, 19] + [len(power_clean_low) + 2, 19],
             'line': {'color': 'black'},
             'name': 'Lowest Gradient Power',
         })
+
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
             'values': [worksheet_data.name] + [2, 1] + [len(power_clean_high) + 2, 1],
             'line': {'color': '#67bfe7', 'dash_type': 'dash'},
             'name': 'Highest Gradient Power',
         })
+
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
             'values': [worksheet_data.name] + [2, 2] + [len(power_clean_high) + 2, 2],
             'line': {'color': '#67bfe7'},
             'name': 'Highest Gradient Power',
         })
+
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
             'values': [worksheet_data.name] + [2, 18] + [len(power_clean_high) + 2, 18],
@@ -809,7 +792,6 @@ class Main(wx.Frame):
             'y2_axis': True,
         })
 
-
         graph_2.add_series({
             'categories': [worksheet_data.name] + [2, 11] + [len(time_clean_zero_acc) + 2, 11],
             'values': [worksheet_data.name] + [2, 13] + [len(velocity_clean_zero_acc) + 2, 13],
@@ -818,7 +800,6 @@ class Main(wx.Frame):
             'y2_axis': True,
         })
 
-
         graph_2.add_series({
             'categories': [worksheet_data.name] + [2, 11] + [len(time_clean_zero_acc) + 2, 11],
             'values': [worksheet_data.name] + [2, 14] + [len(fitted_velocity_zero_acc) + 2, 14],
@@ -826,13 +807,13 @@ class Main(wx.Frame):
             'name': '0 W Program Fitted Acceleration Velocity',
             'y2_axis': True,
         })
+
         graph_2.add_series({
             'categories': [worksheet_data.name] + [2, 11] + [len(time_clean_zero_acc) + 2, 11],
             'values': [worksheet_data.name] + [2, 15] + [len(power_compensated) + 2, 15],
             'line': {'color': '#ff0000'},
             'name': '0 W Program High Acceleration Power Compensated',
         })
-
 
         worksheet_charts.insert_chart('B2', graph)
         worksheet_charts.insert_chart('B40', graph_2)
@@ -865,7 +846,6 @@ class Main(wx.Frame):
         power_list = []
         speed = True
         power = True
-        time = True
 
         """
         The log-file is opened here. 
