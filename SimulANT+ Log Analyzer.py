@@ -479,15 +479,16 @@ class Main(wx.Frame):
         """
         Convert the raw data from the file to named lists for the THIRD file
         """
+        time_raw_zero = []
         for j in range(len(data_zero)):
             if round(data_zero[j][0]) == 0:
                 power_zero.append(0)
                 velocity_zero.append(0)
-                time_clean_zero.append(data_zero[j][2] * 2)
+                time_raw_zero.append(data_zero[j][2] * 2)
             else:
                 power_zero.append(data_zero[j][1])
                 velocity_zero.append(data_zero[j][0])
-                time_clean_zero.append(data_zero[j][2] * 2)
+                time_raw_zero.append(data_zero[j][2] * 2)
 
         """
         Convert the raw data from the file to named lists for the FOURTH file
@@ -515,8 +516,8 @@ class Main(wx.Frame):
 
         for i in range(power_zero.index(max(power_zero))):
             power_clean_zero.append(power_zero[i])
-        for i in range(power_zero.index(max(power_zero))):
             velocity_clean_zero.append(velocity_zero[i])
+            time_clean_zero.append(time_raw_zero[i])
         for i in range(power_zero_acc.index(max(power_zero_acc))):
             power_clean_zero_acc_dummy.append(power_zero_acc[i])
         for i in range(power_zero_acc.index(max(power_zero_acc))):
@@ -583,18 +584,22 @@ class Main(wx.Frame):
         # if self.user_input == 0:
 
         """
-        Calculation of the power which is needed to speed up the flywheel. For the first and second file.
+        Calculation of the power which is needed to accelerate the flywheel. For the first and second file.
         """
         if self.checkbox.GetValue() != True:
             self.simulated_mass = popt3[0] / popt4[0]
 
         power_flywheel_high = []
         power_flywheel_low = []
+        power_flywheel_zero = []
         power_clean_low_brake = []
         power_clean_high_brake = []
+        power_clean_zero_brake = []
 
+        # Acceleration needs to be constant to use this.
         popt5, pcov = curve_fit(self.func_lin, array(time_clean_high), array(velocity_clean_high) / 3.6)
         popt6, pcov = curve_fit(self.func_lin, array(time_clean_low), array(velocity_clean_low) / 3.6)
+        popt7, pcov = curve_fit(self.func_lin, array(time_clean_zero), array(velocity_clean_zero) / 3.6)
 
         for i in range(len(velocity_clean_high)):
             power_flywheel_high.append(float(self.simulated_mass) * velocity_clean_high[i] / 3.6 * popt5[0])
@@ -604,6 +609,13 @@ class Main(wx.Frame):
             power_flywheel_low.append(float(self.simulated_mass) * velocity_clean_low[i] / 3.6 * popt6[0])
             power_clean_low_brake.append(fitted_power_low[i] - power_flywheel_low[i])
 
+<<<<<<< HEAD
+=======
+        for i in range(len(velocity_clean_zero)):
+            power_flywheel_zero.append(self.simulated_mass * velocity_clean_zero[i]/3.6 * popt7[0])
+            power_clean_zero_brake.append(fitted_power_zero[i] - power_flywheel_zero[i])
+
+>>>>>>> 33757f96ac383b36a7a81989d31e14572fb75891
         """
         Initialize writing an excel file.
         """
@@ -719,6 +731,12 @@ class Main(wx.Frame):
             'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
             'values': [worksheet_data.name] + [2, 18] + [len(power_clean_high) + 2, 18],
             'line': {'color': 'black'},
+            'name': 'Highest Gradient Power',
+        })
+        graph.add_series({
+            'categories': [worksheet_data.name] + [2, 9] + [len(velocity_clean_zero) + 2, 9],
+            'values': [worksheet_data.name] + [2, 10] + [len(power_clean_zero) + 2, 10],
+            'line': {'color': 'red'},
             'name': 'Highest Gradient Power',
         })
         # graph.add_series({
