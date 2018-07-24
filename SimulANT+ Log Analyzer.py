@@ -576,9 +576,9 @@ class Main(wx.Frame):
             power_clean_zero.append(power_zero[i])
         for i in range(len(power_zero)):
             velocity_clean_zero.append(velocity_zero[i])
-        for i in range(len(power_zero)):
+        for i in range(len(power_zero_acc)):
             power_clean_zero_acc.append(power_zero_acc[i])
-        for i in range(len(power_zero)):
+        for i in range(len(power_zero_acc)):
             velocity_clean_zero_acc.append(velocity_zero_acc[i])
 
 
@@ -728,6 +728,12 @@ class Main(wx.Frame):
             'values': [worksheet.name] + [2, 2] + [len(power_clean_high) + 2, 2],
             'line': {'color': '#67bfe7'},
             'name': 'Highest Gradient Power',
+        })
+        graph.add_series({
+            'categories': [worksheet.name] + [2, 16] + [len(velocity_clean_zero_acc) + 2, 16],
+            'values': [worksheet.name] + [2, 15] + [len(power_clean_zero_acc) + 2, 15],
+            'line': {'color': 'black'},
+            'name': 'Power vs. Velocity',
         })
 
 
