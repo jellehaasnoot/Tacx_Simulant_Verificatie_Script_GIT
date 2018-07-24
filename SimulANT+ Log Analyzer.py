@@ -2,8 +2,8 @@ import wx as wx
 from ValueConverter import ValueConverter
 import xlsxwriter
 import os
-import numpy as np
-from scipy import signal
+from numpy import mean
+from numpy import array
 from scipy.optimize import curve_fit
 
 
@@ -356,21 +356,21 @@ class Main(wx.Frame):
 
         # Calculating the averages of every file, this is not necessary for the calculations below, but this will give
         # a quick overview of the used files to the user.
-        self.velocity_high_avg = np.mean(self.velocity_list_high)
+        self.velocity_high_avg = mean(self.velocity_list_high)
         self.velocity_high_avg = round(float(self.velocity_high_avg), 1)
-        self.power_high_avg = np.mean(self.power_list_high)
+        self.power_high_avg = mean(self.power_list_high)
         self.power_high_avg = round(float(self.power_high_avg), 1)
-        self.velocity_low_avg = np.mean(self.velocity_list_low)
+        self.velocity_low_avg = mean(self.velocity_list_low)
         self.velocity_low_avg = round(float(self.velocity_low_avg), 1)
-        self.power_low_avg = np.mean(self.power_list_low)
+        self.power_low_avg = mean(self.power_list_low)
         self.power_low_avg = round(float(self.power_low_avg), 1)
-        self.velocity_zero_avg = np.mean(self.velocity_list_zero)
+        self.velocity_zero_avg = mean(self.velocity_list_zero)
         self.velocity_zero_avg = round(float(self.velocity_zero_avg), 1)
-        self.power_zero_avg = np.mean(self.power_list_zero)
+        self.power_zero_avg = mean(self.power_list_zero)
         self.power_zero_avg = round(float(self.power_zero_avg), 1)
-        self.velocity_zero_acc_avg = np.mean(self.velocity_list_zero_acc)
+        self.velocity_zero_acc_avg = mean(self.velocity_list_zero_acc)
         self.velocity_zero_acc_avg = round(float(self.velocity_zero_acc_avg), 1)
-        self.power_zero_acc_avg = np.mean(self.power_list_zero_acc)
+        self.power_zero_acc_avg = mean(self.power_list_zero_acc)
         self.power_zero_acc_avg = round(float(self.power_zero_acc_avg), 1)
 
         velocity_raw_high = []
@@ -443,8 +443,8 @@ class Main(wx.Frame):
         """
         error_lin_high = 0
         error_quadratic_high = 0
-        popt1_high, pcov = curve_fit(self.func_lin, np.array(velocity_clean_high), np.array(power_clean_high))
-        fitted_power_high_1 = self.func_lin(np.array(velocity_clean_high), *popt1_high)
+        popt1_high, pcov = curve_fit(self.func_lin, array(velocity_clean_high), array(power_clean_high))
+        fitted_power_high_1 = self.func_lin(array(velocity_clean_high), *popt1_high)
         for i in range(len(fitted_power_high_1)):
             if fitted_power_high_1[i] < 0:
                 fitted_power_high_1[i] = 0
@@ -452,8 +452,8 @@ class Main(wx.Frame):
             if fitted_power_high_1[i] > 0:
                 error_lin_high += abs(fitted_power_high_1[i] - power_clean_high[i])
 
-        popt2_high, pcov = curve_fit(self.func_quadratic, np.array(velocity_clean_high), np.array(power_clean_high))
-        fitted_power_high_2 = self.func_quadratic(np.array(velocity_clean_high), *popt2_high)
+        popt2_high, pcov = curve_fit(self.func_quadratic, array(velocity_clean_high), array(power_clean_high))
+        fitted_power_high_2 = self.func_quadratic(array(velocity_clean_high), *popt2_high)
         for i in range(len(fitted_power_high_2)):
             if fitted_power_high_2[i] < 0:
                 fitted_power_high_2[i] = 0
@@ -514,8 +514,8 @@ class Main(wx.Frame):
         """
         error_lin_low = 0
         error_quadratic_low = 0
-        popt1_low, pcov = curve_fit(self.func_lin, np.array(velocity_clean_low), np.array(power_clean_low))
-        fitted_power_low_1 = self.func_lin(np.array(velocity_clean_low), *popt1_low)
+        popt1_low, pcov = curve_fit(self.func_lin, array(velocity_clean_low), array(power_clean_low))
+        fitted_power_low_1 = self.func_lin(array(velocity_clean_low), *popt1_low)
         for i in range(len(fitted_power_low_1)):
             if fitted_power_low_1[i] < 0:
                 fitted_power_low_1[i] = 0
@@ -523,8 +523,8 @@ class Main(wx.Frame):
             if fitted_power_low_1[i] > 0:
                 error_lin_low += abs(fitted_power_low_1[i] - power_clean_low[i])
 
-        popt2_low, pcov = curve_fit(self.func_quadratic, np.array(velocity_clean_low), np.array(power_clean_low))
-        fitted_power_low_2 = self.func_quadratic(np.array(velocity_clean_low), *popt2_low)
+        popt2_low, pcov = curve_fit(self.func_quadratic, array(velocity_clean_low), array(power_clean_low))
+        fitted_power_low_2 = self.func_quadratic(array(velocity_clean_low), *popt2_low)
         for i in range(len(fitted_power_low_2)):
             if fitted_power_low_2[i] < 0:
                 fitted_power_low_2[i] = 0
@@ -600,8 +600,8 @@ class Main(wx.Frame):
         # with the highest value without a big if statement structure.
         error_lin = 0
         error_quadratic = 0
-        popt1, pcov = curve_fit(self.func_lin, np.array(velocity_clean_zero), np.array(power_clean_zero))
-        fitted_power_zero_1 = self.func_lin(np.array(velocity_clean_zero), *popt1)
+        popt1, pcov = curve_fit(self.func_lin, array(velocity_clean_zero), array(power_clean_zero))
+        fitted_power_zero_1 = self.func_lin(array(velocity_clean_zero), *popt1)
         for i in range(len(fitted_power_zero_1)):
             if fitted_power_zero_1[i] < 0:
                 fitted_power_zero_1[i] = 0
@@ -609,8 +609,8 @@ class Main(wx.Frame):
             if fitted_power_zero_1[i] > 0:
                 error_lin += abs(fitted_power_zero_1[i] - power_clean_zero[i])
 
-        popt2, pcov = curve_fit(self.func_quadratic, np.array(velocity_clean_zero), np.array(power_clean_zero))
-        fitted_power_zero_2 = self.func_quadratic(np.array(velocity_clean_zero), *popt2)
+        popt2, pcov = curve_fit(self.func_quadratic, array(velocity_clean_zero), array(power_clean_zero))
+        fitted_power_zero_2 = self.func_quadratic(array(velocity_clean_zero), *popt2)
         for i in range(len(fitted_power_zero_2)):
             if fitted_power_zero_2[i] < 0:
                 fitted_power_zero_2[i] = 0
@@ -637,8 +637,8 @@ class Main(wx.Frame):
                 power_to_substract = popt2[0] * velocity_clean_zero_acc[i] ** 2 + popt2[1] * velocity_clean_zero_acc[i] + popt2[2]
                 power_compensated.append(power_clean_zero_acc[i] - power_to_substract)
 
-        popt3, pcov = curve_fit(self.func_lin, np.array(velocity_clean_zero_acc) / 3.6, np.array(power_compensated))
-        fitted_power_zero_acc = self.func_lin(np.array(velocity_clean_zero_acc) / 3.6, *popt3)
+        popt3, pcov = curve_fit(self.func_lin, array(velocity_clean_zero_acc) / 3.6, array(power_compensated))
+        fitted_power_zero_acc = self.func_lin(array(velocity_clean_zero_acc) / 3.6, *popt3)
 
 
         for i in range(len(time_clean_zero_acc)):
@@ -649,8 +649,8 @@ class Main(wx.Frame):
         print(len(velocity_clean_zero_acc))
         print(len(time_clean_zero_acc))
 
-        popt4, pcov = curve_fit(self.func_lin, np.array(time_clean_zero_acc), np.array(velocity_clean_zero_acc) / 3.6)
-        fitted_velocity_zero_acc = self.func_lin(np.array(time_clean_zero_acc), *popt4)
+        popt4, pcov = curve_fit(self.func_lin, array(time_clean_zero_acc), array(velocity_clean_zero_acc) / 3.6)
+        fitted_velocity_zero_acc = self.func_lin(array(time_clean_zero_acc), *popt4)
 
 
 
@@ -673,7 +673,7 @@ class Main(wx.Frame):
         #         simulated_mass.append(power_compensated[i] / (coefficient_a * velocity_clean_zero_acc[i] / 3.6))
 
         # print(coefficient_a)
-        print(np.mean(simulated_mass))
+        print(mean(simulated_mass))
         print(popt3, popt4)
         """
         Initialize writing an excel file.
