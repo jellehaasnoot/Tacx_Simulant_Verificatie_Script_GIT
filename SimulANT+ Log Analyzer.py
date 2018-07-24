@@ -638,20 +638,32 @@ class Main(wx.Frame):
             if len(velocity_clean_zero_acc) < len(time_clean_zero_acc):
                 time_clean_zero_acc.pop()
 
-        print(velocity_zero_acc)
-        print(len(velocity_clean_zero_acc))
-        print(len(time_clean_zero_acc))
-
         popt4, pcov = curve_fit(self.func_lin, np.array(time_clean_zero_acc), np.array(velocity_clean_zero_acc) / 3.6)
         fitted_velocity_zero_acc = self.func_lin(np.array(time_clean_zero_acc), *popt4)
 
-
-
-
-
-        simulated_mass = []
+        self.simulated_mass = []
         for i in range(len(fitted_velocity_zero_acc)):
-            simulated_mass.append(popt3[0] / popt4[0])
+            self.simulated_mass.append(popt3[0] / popt4[0])
+
+        """
+        Calculation of the power which is needed to speed up the flywheel. For the first and second file.
+        """
+        self.simulated_mass = 22
+        power_flywheel_high = []
+        power_flywheel_low = []
+        power_clean_low_brake = []
+        power_clean_high_brake = []
+
+        popt5, pcov = curve_fit(self.func_lin, np.array(time_clean_high), np.array(velocity_clean_high) / 3.6)
+        popt6, pcov = curve_fit(self.func_lin, np.array(time_clean_low), np.array(velocity_clean_low) / 3.6)
+
+        for i in range(len(velocity_clean_high)):
+            power_flywheel_high.append(self.simulated_mass * velocity_clean_high[i] * popt5[0])
+            power_clean_high_brake.append(fitted_power_high[i] - power_flywheel_high[i])
+
+        for i in range(len(velocity_clean_low)):
+            power_flywheel_low.append(self.simulated_mass * velocity_clean_low[i] * popt6[0])
+            power_clean_low_brake.append(fitted_power_low[i] - power_flywheel_low[i])
 
         # coefficient_a = []
         #
@@ -666,7 +678,6 @@ class Main(wx.Frame):
         #         simulated_mass.append(power_compensated[i] / (coefficient_a * velocity_clean_zero_acc[i] / 3.6))
 
         # print(coefficient_a)
-        print(np.mean(simulated_mass))
         print(popt3, popt4)
         """
         Initialize writing an excel file.
@@ -732,6 +743,9 @@ class Main(wx.Frame):
         worksheet.write_column(2, 18, power_compensated)
         worksheet.write_column(2, 19, fitted_power_zero_acc)
 
+        worksheet.write_column(2, 100, power_clean_high_brake)
+        worksheet.write_column(2, 101, power_clean_low_brake)
+
         """
         Writing to graph.
         """
@@ -748,6 +762,12 @@ class Main(wx.Frame):
             'name': 'Lowest Gradient Power',
         })
         graph.add_series({
+            'categories': [worksheet.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
+            'values': [worksheet.name] + [2, 101] + [len(power_clean_low) + 2, 101],
+            'line': {'color': 'black'},
+            'name': 'Lowest Gradient Power',
+        })
+        graph.add_series({
             'categories': [worksheet.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
             'values': [worksheet.name] + [2, 1] + [len(power_clean_high) + 2, 1],
             'line': {'color': '#67bfe7', 'dash_type': 'dash'},
@@ -760,24 +780,30 @@ class Main(wx.Frame):
             'name': 'Highest Gradient Power',
         })
         graph.add_series({
-            'categories': [worksheet.name] + [2, 16] + [len(velocity_clean_zero_acc) + 2, 16],
-            'values': [worksheet.name] + [2, 18] + [len(power_compensated) + 2, 18],
+            'categories': [worksheet.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
+            'values': [worksheet.name] + [2, 100] + [len(power_clean_high) + 2, 100],
             'line': {'color': 'black'},
-            'name': 'Power vs. Velocity',
+            'name': 'Highest Gradient Power',
         })
-        graph.add_series({
-            'categories': [worksheet.name] + [2, 16] + [len(velocity_clean_zero_acc) + 2, 16],
-            'values': [worksheet.name] + [2, 19] + [len(fitted_power_zero_acc) + 2, 19],
-            'line': {'color': 'purple'},
-            'name': 'Fitted Compensated Power',
-        })
-
-        graph.add_series({
-            'categories': [worksheet.name] + [2, 9] + [len(velocity_clean_zero) + 2, 9],
-                'values': [worksheet.name] + [2, 8] + [len(fitted_power_zero) + 2, 8],
-            'line': {'color': 'red'},
-            'name': 'Power Zero',
-        })
+        # graph.add_series({
+        #     'categories': [worksheet.name] + [2, 16] + [len(velocity_clean_zero_acc) + 2, 16],
+        #     'values': [worksheet.name] + [2, 18] + [len(power_compensated) + 2, 18],
+        #     'line': {'color': 'black'},
+        #     'name': 'Power vs. Velocity',
+        # })
+        # graph.add_series({
+        #     'categories': [worksheet.name] + [2, 16] + [len(velocity_clean_zero_acc) + 2, 16],
+        #     'values': [worksheet.name] + [2, 19] + [len(fitted_power_zero_acc) + 2, 19],
+        #     'line': {'color': 'purple'},
+        #     'name': 'Fitted Compensated Power',
+        # })
+        #
+        # graph.add_series({
+        #     'categories': [worksheet.name] + [2, 9] + [len(velocity_clean_zero) + 2, 9],
+        #         'values': [worksheet.name] + [2, 8] + [len(fitted_power_zero) + 2, 8],
+        #     'line': {'color': 'red'},
+        #     'name': 'Power Zero',
+        # })
 
         graph_2.add_series({
             'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
@@ -879,6 +905,7 @@ class Main(wx.Frame):
             value = value_raw.replace("[", "").replace("]", "")  # This will removes the useless characters
             value_list.append(value)
             time_values_raw.append(time_raw)
+
         """
         These subparts will be categorized according to their first character: When this is '10', this means the velocity is recorded in that line. When the first character is '19', this means power is recorded in that line. The other characters are not important for the functionality of this file, which means they will be left out.
         """
