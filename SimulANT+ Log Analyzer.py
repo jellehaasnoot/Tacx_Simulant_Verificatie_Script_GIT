@@ -380,36 +380,20 @@ class Main(wx.Frame):
         """
         Convert the raw data from the file to named lists for the FIRST file
         """
-        for i in range(round(max_velocity_high)):
-            dummy_velocity = []
-            dummy_power = []
-            dummy_time = []
-            for j in range(len(data_high) - 1):
-                if i <= data_high[j][0] < i + 1:
-                    dummy_velocity.append(data_high[j][0])
-                    dummy_power.append(data_high[j][1])
-                    dummy_time.append(data_high[j][2])
-                else:
-                    pass
-            if len(dummy_velocity) > 0 and len(dummy_power) > 0 and len(dummy_time) > 0:
-                index = dummy_power.index(max(dummy_power))
-                velocity_raw_high.append(dummy_velocity[index])
-                power_raw_high.append(dummy_power[index])
-                time_raw_high.append(dummy_time[index])
+        for j in range(len(data_high)):
+            if round(data_high[j][0]) == 0:
+                power_raw_high.append(0)
+                velocity_raw_high.append(0)
+                time_raw_high.append(data_high[j][2] * 2)
             else:
-                pass
+                power_raw_high.append(data_high[j][1])
+                velocity_raw_high.append(data_high[j][0])
+                time_raw_high.append(data_high[j][2] * 2)
 
-        for i in range(len(power_raw_high)):
-            if round(velocity_raw_high[i]) == 0:
-                power_clean_high.append(0)
-                velocity_clean_high.append(0)
-                time_clean_high.append(time_raw_high[i] * 2)
-            elif power_raw_high[i] - power_raw_high[i - 1] < -15:
-                pass
-            else:
-                power_clean_high.append(power_raw_high[i])
-                velocity_clean_high.append(velocity_raw_high[i])
-                time_clean_high.append(time_raw_high[i] * 2)
+        for i in range(power_raw_high.index(max(power_raw_high))):
+            power_clean_high.append(power_raw_high[i])
+            velocity_clean_high.append(velocity_raw_high[i])
+            time_clean_high.append(time_raw_high[i])
 
         """
         Make a fit for the data of the FIRST file 
@@ -447,36 +431,21 @@ class Main(wx.Frame):
         """
         Convert the raw data from the file to named lists for the SECOND file
         """
-        for i in range(round(max_velocity_low)):
-            dummy_velocity = []
-            dummy_power = []
-            dummy_time = []
-            for j in range(len(data_low) - 1):
-                if i <= data_low[j][0] < i + 1:
-                    dummy_velocity.append(data_low[j][0])
-                    dummy_power.append(data_low[j][1])
-                    dummy_time.append(data_low[j][2])
-                else:
-                    pass
-            if len(dummy_velocity) > 0 and len(dummy_power) > 0 and len(dummy_time) > 0:
-                index = dummy_power.index(max(dummy_power))
-                velocity_raw_low.append(dummy_velocity[index])
-                power_raw_low.append(dummy_power[index])
-                time_raw_low.append(dummy_time[index])
-            else:
-                pass
+        for j in range(len(data_low)):
+            if round(data_low[j][0]) == 0:
+                power_raw_low.append(0)
+                velocity_raw_low.append(0)
+                time_raw_low.append(data_low[j][2] * 2)
 
-        for i in range(len(power_raw_low)):
-            if round(velocity_raw_low[i]) == 0:
-                power_clean_low.append(0)
-                velocity_clean_low.append(0)
-                time_clean_low.append(time_raw_low[i] * 2)
-            elif power_raw_low[i] - power_raw_low[i - 1] < -15:
-                pass
             else:
-                power_clean_low.append(power_raw_low[i])
-                velocity_clean_low.append(velocity_raw_low[i])
-                time_clean_low.append(time_raw_low[i] * 2)
+                power_raw_low.append(data_low[j][1])
+                velocity_raw_low.append(data_low[j][0])
+                time_raw_low.append(data_low[j][2] * 2)
+
+        for i in range(power_raw_low.index(max(power_raw_low))):
+            power_clean_low.append(power_raw_low[i])
+            velocity_clean_low.append(velocity_raw_low[i])
+            time_clean_low.append(time_raw_low[i])
 
         """
         Make a fit for the data of the SECOND file 
@@ -631,15 +600,14 @@ class Main(wx.Frame):
         popt6, pcov = curve_fit(self.func_lin, array(time_clean_low), array(velocity_clean_low) / 3.6)
 
         for i in range(len(velocity_clean_high)):
-            power_flywheel_high.append(self.simulated_mass * velocity_clean_high[i] * popt5[0])
+            power_flywheel_high.append(self.simulated_mass * velocity_clean_high[i]/3.6 * popt5[0])
             power_clean_high_brake.append(fitted_power_high[i] - power_flywheel_high[i])
 
         for i in range(len(velocity_clean_low)):
-            power_flywheel_low.append(self.simulated_mass * velocity_clean_low[i] * popt6[0])
+            power_flywheel_low.append(self.simulated_mass * velocity_clean_low[i]/3.6 * popt6[0])
             power_clean_low_brake.append(fitted_power_low[i] - power_flywheel_low[i])
 
-        print(popt3, popt4)
-
+        print(popt5, popt6)
         """
         Initialize writing an excel file.
         """
