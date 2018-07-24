@@ -418,6 +418,7 @@ class Main(wx.Frame):
             else:
                 pass
 
+
         for i in range(len(power_raw_high)):
             if round(velocity_raw_high[i]) == 0:
                 power_clean_high.append(0)
@@ -538,7 +539,6 @@ class Main(wx.Frame):
         """
         Convert the raw data from the file to named lists for the THIRD file
         """
-
         for j in range(len(data_zero)):
             if round(data_zero[j][0]) == 0:
                 power_zero.append(0)
@@ -548,7 +548,6 @@ class Main(wx.Frame):
                 power_zero.append(data_zero[j][1])
                 velocity_zero.append(data_zero[j][0])
                 time_clean_zero.append(data_zero[j][2])
-        max_velocity_zero_index = velocity_zero.index(max(velocity_zero))
 
         """
         Convert the raw data from the file to named lists for the FOURTH file
@@ -562,7 +561,6 @@ class Main(wx.Frame):
                 power_zero_acc.append(data_zero_acc[j][1])
                 velocity_zero_acc.append(data_zero_acc[j][0])
                 time_clean_zero_acc.append(data_zero_acc[j][2])
-        max_velocity_zero_acc_index = velocity_zero_acc.index(max(velocity_zero_acc))
 
 
         """
@@ -574,14 +572,15 @@ class Main(wx.Frame):
         power_clean_zero_acc = []
         velocity_clean_zero_acc = []
 
-        for i in range(max_velocity_zero_index):
+        for i in range(len(power_zero)):
             power_clean_zero.append(power_zero[i])
-        for i in range(max_velocity_zero_index):
+        for i in range(len(power_zero)):
             velocity_clean_zero.append(velocity_zero[i])
-        for i in range(max_velocity_zero_acc_index):
+        for i in range(len(power_zero)):
             power_clean_zero_acc.append(power_zero_acc[i])
-        for i in range(max_velocity_zero_acc_index):
+        for i in range(len(power_zero)):
             velocity_clean_zero_acc.append(velocity_zero_acc[i])
+
 
         # Calculating the best possible fit, we only consider quadratic and linear fits at this moment. The error with
         # the original data is calculated and the best fit will be drawn. A dictionary is used to track the variable
