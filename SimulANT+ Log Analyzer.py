@@ -645,8 +645,8 @@ class Main(wx.Frame):
             if len(velocity_clean_zero_acc) < len(time_clean_zero_acc):
                 time_clean_zero_acc.pop()
 
-        popt4, pcov = curve_fit(self.func_lin, np.array(time_clean_zero_acc), np.array(velocity_clean_zero_acc) / 3.6)
-        fitted_velocity_zero_acc = self.func_lin(np.array(time_clean_zero_acc), *popt4)
+        popt4, pcov = curve_fit(self.func_lin, array(time_clean_zero_acc), array(velocity_clean_zero_acc) / 3.6)
+        fitted_velocity_zero_acc = self.func_lin(array(time_clean_zero_acc), *popt4)
 
         self.simulated_mass = []
         for i in range(len(fitted_velocity_zero_acc)):
@@ -661,8 +661,8 @@ class Main(wx.Frame):
         power_clean_low_brake = []
         power_clean_high_brake = []
 
-        popt5, pcov = curve_fit(self.func_lin, np.array(time_clean_high), np.array(velocity_clean_high) / 3.6)
-        popt6, pcov = curve_fit(self.func_lin, np.array(time_clean_low), np.array(velocity_clean_low) / 3.6)
+        popt5, pcov = curve_fit(self.func_lin, array(time_clean_high), array(velocity_clean_high) / 3.6)
+        popt6, pcov = curve_fit(self.func_lin, array(time_clean_low), array(velocity_clean_low) / 3.6)
 
         for i in range(len(velocity_clean_high)):
             power_flywheel_high.append(self.simulated_mass * velocity_clean_high[i] * popt5[0])
