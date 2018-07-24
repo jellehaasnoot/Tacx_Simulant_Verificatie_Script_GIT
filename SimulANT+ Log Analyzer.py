@@ -90,10 +90,11 @@ class Main(wx.Frame):
         self.data_panel_4_header_display.SetFont(self.font_header)
         # self.image_panel = wx.Panel(self.top_panel, -1, style=wx.BORDER_SIMPLE, size=())
 
-        self.checkbox = wx.CheckBox(self.top_panel, -1, 'User Input Simulated Mass', pos=(30, 802.5))
-        self.checkbox.SetValue(False)
+        self.checkbox_sim = wx.CheckBox(self.top_panel, -1, 'User Input Simulated Mass', pos=(30, 795))
+        self.checkbox_sim.SetValue(False)
 
-
+        self.checkbox_inertia = wx.CheckBox(self.top_panel, -1, 'User Input Moment of Inertia', pos=(30, 815))
+        self.checkbox_inertia.SetValue(False)
 
         # Set events
         self.Bind(wx.EVT_MENU, self.on_open, menu_file_open)
@@ -104,6 +105,7 @@ class Main(wx.Frame):
         self.open_xlsx_button.Bind(wx.EVT_BUTTON, self.on_xlsx_button)
         self.open_files_butten.Bind(wx.EVT_BUTTON, self.on_open)
         self.Bind(wx.EVT_CHECKBOX, self.on_check_sim_mass)
+        self.Bind(wx.EVT_CHECKBOX, self.on_check_inertia)
 
 
         # Set start-up message
@@ -173,9 +175,9 @@ class Main(wx.Frame):
 
         self.data_panel_4_display = wx.StaticText(self.some_data_panel_4,
                                                   label="Average power at 0 Watt programming - high acceleration:     " + str(
-                                                      self.power_zero_avg) + " W\n""Average velocity at 0 Watt programming:   " + str(
-                                                      self.velocity_zero_avg) + " km/h\n""Amount of received ANT+ messages:   " + str(
-                                                      len(self.velocity_list_zero)), pos=(4, 24))
+                                                      self.power_zero_acc_avg) + " W\n""Average velocity at 0 Watt programming:   " + str(
+                                                      self.velocity_zero_acc_avg) + " km/h\n""Amount of received ANT+ messages:   " + str(
+                                                      len(self.velocity_list_zero_acc)), pos=(4, 24))
         self.data_panel_4_display.SetFont(self.font_normal)
 
         xlsx_path_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(680, 50), pos=(10, 630))
@@ -633,7 +635,8 @@ class Main(wx.Frame):
         excel = xlsxwriter.Workbook(self.user_file_name + ".xlsx")
         graph = excel.add_chart({'type': 'scatter', 'subtype': 'straight'})
         graph_2 = excel.add_chart({'type': 'scatter', 'subtype': 'straight'})
-        worksheet = excel.add_worksheet()
+        worksheet_charts = excel.add_worksheet('Charts')
+        worksheet_data = excel.add_worksheet('Data')
 
         """
         Setting variables for excel file.
@@ -649,120 +652,125 @@ class Main(wx.Frame):
         graph_2.set_x_axis({'name': 'Time [s]'})
         graph_2.set_title({'name': '0 Watt acceleration ' + self.user_file_name})
         graph_2.set_size({'width': 1080, 'height': 720})
-        worksheet.set_column('A:H', 14)
+        worksheet_data.set_column('A:Q', 14)
 
         """
         Writing to excel file.
         """
-        worksheet.write('A1', 'Tested with highest gradient (without slip)', underline)
-        worksheet.write('A2', 'Velocity [km/h]', bold)
-        worksheet.write('B2', 'Power [W]', bold)
-        worksheet.write_column(2, 0, velocity_clean_high)
-        worksheet.write_column(2, 1, power_clean_high)
-        worksheet.write_column(2, 2, fitted_power_high)
+        worksheet_data.write('A1', 'Tested with highest gradient (without slip)', underline)
+        worksheet_data.write('A2', 'Velocity [km/h]', bold)
+        worksheet_data.write('B2', 'Power [W]', bold)
+        worksheet_data.write('C2', 'Fitted Power [W]', bold)
+        worksheet_data.write_column(2, 0, velocity_clean_high)
+        worksheet_data.write_column(2, 1, power_clean_high)
+        worksheet_data.write_column(2, 2, fitted_power_high)
 
-        worksheet.write('D1', 'Tested with lowest gradient (without slip)', underline)
-        worksheet.write('D2', 'Velocity [km/h]', bold)
-        worksheet.write('E2', 'Power [W]', bold)
-        worksheet.write_column(2, 3, velocity_clean_low)
-        worksheet.write_column(2, 4, power_clean_low)
-        worksheet.write_column(2, 5, fitted_power_low)
+        worksheet_data.write('D1', 'Tested with lowest gradient (without slip)', underline)
+        worksheet_data.write('D2', 'Velocity [km/h]', bold)
+        worksheet_data.write('E2', 'Power [W]', bold)
+        worksheet_data.write('F2', 'Fitted Power [W]', bold)
+        worksheet_data.write_column(2, 3, velocity_clean_low)
+        worksheet_data.write_column(2, 4, power_clean_low)
+        worksheet_data.write_column(2, 5, fitted_power_low)
 
-        worksheet.write('G1', 'Tested with 0 W program - low acceleration (without slip)', underline)
-        worksheet.write('G2', 'Time [s]', bold)
-        worksheet.write('H2', 'Power [W]', bold)
-        worksheet.write('I2', 'Fitted Power [W]', bold)
-        worksheet.write('J2', 'Velocity [km/h]', bold)
-        worksheet.write_column(2, 6, time_clean_zero)
-        worksheet.write_column(2, 7, power_clean_zero)
-        worksheet.write_column(2, 8, fitted_power_zero)
-        worksheet.write_column(2, 9, velocity_clean_zero)
+        worksheet_data.write('G1', 'Tested with 0 W program - low acceleration (without slip)', underline)
+        worksheet_data.write('G2', 'Time [s]', bold)
+        worksheet_data.write('H2', 'Power [W]', bold)
+        worksheet_data.write('I2', 'Fitted Power [W]', bold)
+        worksheet_data.write('J2', 'Velocity [km/h]', bold)
+        worksheet_data.write_column(2, 6, time_clean_zero)
+        worksheet_data.write_column(2, 7, power_clean_zero)
+        worksheet_data.write_column(2, 8, fitted_power_zero)
+        worksheet_data.write_column(2, 9, velocity_clean_zero)
 
-        worksheet.write('O1', 'Tested with 0 W program - high acceleration (without slip)', underline)
-        worksheet.write('O2', 'Time [s]', bold)
-        worksheet.write('P2', 'Power [km/h]', bold)
-        worksheet.write('Q2', 'Velocity [km/h]', bold)
-        worksheet.write('R2', 'Fitted Velocity [km/h]', bold)
-        worksheet.write('S2', 'Theor. Power [W]', bold)
-        worksheet.write_column(2, 14, time_clean_zero_acc)
-        worksheet.write_column(2, 15, power_clean_zero_acc)
-        worksheet.write_column(2, 16, velocity_clean_zero_acc)
-        worksheet.write_column(2, 17, fitted_velocity_zero_acc)
-        worksheet.write_column(2, 18, power_compensated)
-        worksheet.write_column(2, 19, fitted_power_zero_acc)
+        worksheet_data.write('L1', 'Tested with 0 W program - high acceleration (without slip)', underline)
+        worksheet_data.write('L2', 'Time [s]', bold)
+        worksheet_data.write('M2', 'Power [km/h]', bold)
+        worksheet_data.write('N2', 'Velocity [km/h]', bold)
+        worksheet_data.write('O2', 'Fitted Velocity [km/h]', bold)
+        worksheet_data.write('P2', 'Theor. Power [W]', bold)
+        worksheet_data.write('Q2', 'Fitted Compensated Power [W]', bold)
+        worksheet_data.write_column(2, 11, time_clean_zero_acc)
+        worksheet_data.write_column(2, 12, power_clean_zero_acc)
+        worksheet_data.write_column(2, 13, velocity_clean_zero_acc)
+        worksheet_data.write_column(2, 14, fitted_velocity_zero_acc)
+        worksheet_data.write_column(2, 15, power_compensated)
+        worksheet_data.write_column(2, 16, fitted_power_zero_acc)
 
-        worksheet.write_column(2, 100, power_clean_high_brake)
-        worksheet.write_column(2, 101, power_clean_low_brake)
+        worksheet_data.write('S2', 'Brake Power Trainer Upper Limit [W]', bold)
+        worksheet_data.write('T2', 'Brake Power Trainer Lower Limit [W]', bold)
+        worksheet_data.write_column(2, 18, power_clean_high_brake)
+        worksheet_data.write_column(2, 19, power_clean_low_brake)
 
         """
         Writing to graph.
         """
         graph.add_series({
-            'categories': [worksheet.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
-            'values': [worksheet.name] + [2, 4] + [len(power_clean_low) + 2, 4],
+            'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
+            'values': [worksheet_data.name] + [2, 4] + [len(power_clean_low) + 2, 4],
             'line': {'color': '#67bfe7', 'dash_type': 'dash'},
             'name': 'Lowest Gradient Power',
         })
         graph.add_series({
-            'categories': [worksheet.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
-            'values': [worksheet.name] + [2, 5] + [len(power_clean_low) + 2, 5],
+            'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
+            'values': [worksheet_data.name] + [2, 5] + [len(power_clean_low) + 2, 5],
             'line': {'color': '#67bfe7'},
             'name': 'Lowest Gradient Power',
         })
         graph.add_series({
-            'categories': [worksheet.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
-            'values': [worksheet.name] + [2, 101] + [len(power_clean_low) + 2, 101],
+            'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
+            'values': [worksheet_data.name] + [2, 19] + [len(power_clean_low) + 2, 19],
             'line': {'color': 'black'},
             'name': 'Lowest Gradient Power',
         })
         graph.add_series({
-            'categories': [worksheet.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
-            'values': [worksheet.name] + [2, 1] + [len(power_clean_high) + 2, 1],
+            'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
+            'values': [worksheet_data.name] + [2, 1] + [len(power_clean_high) + 2, 1],
             'line': {'color': '#67bfe7', 'dash_type': 'dash'},
             'name': 'Highest Gradient Power',
         })
         graph.add_series({
-            'categories': [worksheet.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
-            'values': [worksheet.name] + [2, 2] + [len(power_clean_high) + 2, 2],
+            'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
+            'values': [worksheet_data.name] + [2, 2] + [len(power_clean_high) + 2, 2],
             'line': {'color': '#67bfe7'},
             'name': 'Highest Gradient Power',
         })
         graph.add_series({
-            'categories': [worksheet.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
-            'values': [worksheet.name] + [2, 100] + [len(power_clean_high) + 2, 100],
+            'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
+            'values': [worksheet_data.name] + [2, 18] + [len(power_clean_high) + 2, 18],
             'line': {'color': 'black'},
             'name': 'Highest Gradient Power',
         })
         # graph.add_series({
-        #     'categories': [worksheet.name] + [2, 16] + [len(velocity_clean_zero_acc) + 2, 16],
-        #     'values': [worksheet.name] + [2, 18] + [len(power_compensated) + 2, 18],
+        #     'categories': [worksheet_data.name] + [2, 13] + [len(velocity_clean_zero_acc) + 2, 13],
+        #     'values': [worksheet_data.name] + [2, 15] + [len(power_compensated) + 2, 15],
         #     'line': {'color': 'black'},
         #     'name': 'Power vs. Velocity',
         # })
         # graph.add_series({
-        #     'categories': [worksheet.name] + [2, 16] + [len(velocity_clean_zero_acc) + 2, 16],
-        #     'values': [worksheet.name] + [2, 19] + [len(fitted_power_zero_acc) + 2, 19],
+        #     'categories': [worksheet_data.name] + [2, 13] + [len(velocity_clean_zero_acc) + 2, 13],
+        #     'values': [worksheet_data.name] + [2, 16] + [len(fitted_power_zero_acc) + 2, 16],
         #     'line': {'color': 'purple'},
         #     'name': 'Fitted Compensated Power',
         # })
         #
         # graph.add_series({
-        #     'categories': [worksheet.name] + [2, 9] + [len(velocity_clean_zero) + 2, 9],
-        #         'values': [worksheet.name] + [2, 8] + [len(fitted_power_zero) + 2, 8],
+        #     'categories': [worksheet_data.name] + [2, 9] + [len(velocity_clean_zero) + 2, 9],
+        #         'values': [worksheet_data.name] + [2, 8] + [len(fitted_power_zero) + 2, 8],
         #     'line': {'color': 'red'},
         #     'name': 'Power Zero',
         # })
 
         graph_2.add_series({
-            'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
-            'values': [worksheet.name] + [2, 7] + [len(power_clean_zero) + 2, 7],
+            'categories': [worksheet_data.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
+            'values': [worksheet_data.name] + [2, 7] + [len(power_clean_zero) + 2, 7],
             'line': {'color': '#ff0000'},
             'name': '0 W Program Low Acceleration Power',
         })
 
         graph_2.add_series({
-            'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
-            'values': [worksheet.name] + [2, 9] + [len(velocity_clean_zero) + 2, 9],
+            'categories': [worksheet_data.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
+            'values': [worksheet_data.name] + [2, 9] + [len(velocity_clean_zero) + 2, 9],
             'line': {'color': '#0000ff', 'dash_type': 'dash'},
             'name': '0 W Program Low Acceleration Velocity',
             'y2_axis': True,
@@ -770,29 +778,29 @@ class Main(wx.Frame):
 
 
         graph_2.add_series({
-            'categories': [worksheet.name] + [2, 14] + [len(time_clean_zero_acc) + 2, 14],
-            'values': [worksheet.name] + [2, 16] + [len(velocity_clean_zero_acc) + 2, 16],
+            'categories': [worksheet_data.name] + [2, 11] + [len(time_clean_zero_acc) + 2, 11],
+            'values': [worksheet_data.name] + [2, 13] + [len(velocity_clean_zero_acc) + 2, 13],
             'line': {'color': '#0000ff', 'dash_type': 'dash'},
             'name': '0 W Program High Acceleration Velocity',
             'y2_axis': True,
         })
 
         graph_2.add_series({
-            'categories': [worksheet.name] + [2, 14] + [len(time_clean_zero_acc) + 2, 14],
-            'values': [worksheet.name] + [2, 17] + [len(fitted_velocity_zero_acc) + 2, 17],
+            'categories': [worksheet_data.name] + [2, 11] + [len(time_clean_zero_acc) + 2, 11],
+            'values': [worksheet_data.name] + [2, 14] + [len(fitted_velocity_zero_acc) + 2, 14],
             'line': {'color': '#0000ff'},
             'name': '0 W Program Fitted Acceleration Velocity',
             'y2_axis': True,
         })
         graph_2.add_series({
-            'categories': [worksheet.name] + [2, 14] + [len(time_clean_zero_acc) + 2, 14],
-            'values': [worksheet.name] + [2, 18] + [len(power_compensated) + 2, 18],
+            'categories': [worksheet_data.name] + [2, 11] + [len(time_clean_zero_acc) + 2, 11],
+            'values': [worksheet_data.name] + [2, 15] + [len(power_compensated) + 2, 15],
             'line': {'color': '#ff0000'},
             'name': '0 W Program High Acceleration Power Compensated',
         })
 
-        worksheet.insert_chart('U2', graph)
-        worksheet.insert_chart('U40', graph_2)
+        worksheet_charts.insert_chart('B2', graph)
+        worksheet_charts.insert_chart('B40', graph_2)
         excel.close()
         self.panel_layout()
 
@@ -916,16 +924,41 @@ class Main(wx.Frame):
         return a * x + b
 
     def on_check_sim_mass(self, event):
-        if self.checkbox.GetValue():
+        if self.checkbox_sim.GetValue():
             self.sim_mass_dialog = wx.TextEntryDialog(self,
                                                             "What is the value for the simulated mass [kg] (use '.' as decimal separator): ",
                                                             "Enter simulated mass value...")
             self.sim_mass_dialog.CenterOnParent()
 
             if self.sim_mass_dialog.ShowModal() == wx.ID_CANCEL:
-                self.checkbox.SetValue(False)
+                self.checkbox_sim.SetValue(False)
                 return
             self.simulated_mass = float(self.sim_mass_dialog.GetValue())
+
+    def on_check_inertia(self, event):
+        if self.checkbox_inertia.GetValue():
+            self.inertia_dialog = wx.TextEntryDialog(self,
+                                                            "What is the value for the moment of inertia [kg * m^2] (use '.' as decimal separator): ",
+                                                            "Enter inertia value...")
+            self.inertia_dialog.CenterOnParent()
+
+            if self.inertia_dialog.ShowModal() == wx.ID_CANCEL:
+                self.checkbox_inertia.SetValue(False)
+                return
+
+            self.conversion_dialog = wx.TextEntryDialog(self,
+                                                            "What is the value for the conversion factor (use '.' as decimal separator, see README.txt for explanation): ",
+                                                            "Enter conversion value...")
+            self.conversion_dialog.CenterOnParent()
+
+            if self.conversion_dialog.ShowModal() == wx.ID_CANCEL:
+                self.checkbox_inertia.SetValue(False)
+                return
+
+            self.inertia = float(self.inertia_dialog.GetValue())
+            self.conversion = float(self.conversion_dialog.GetValue())
+
+            self.simulated_mass = (self.conversion ** 2) * self.inertia
 
 if __name__ == '__main__':
     Application = wx.App(False)
