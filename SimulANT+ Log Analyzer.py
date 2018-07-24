@@ -730,12 +730,12 @@ class Main(wx.Frame):
             'line': {'color': 'black'},
             'name': 'Highest Gradient Power',
         })
-        graph.add_series({
-            'categories': [worksheet_data.name] + [2, 9] + [len(velocity_clean_zero) + 2, 9],
-            'values': [worksheet_data.name] + [2, 10] + [len(power_clean_zero) + 2, 10],
-            'line': {'color': 'red'},
-            'name': 'Highest Gradient Power',
-        })
+        # graph.add_series({
+        #     'categories': [worksheet_data.name] + [2, 13] + [len(velocity_clean_zero_acc) + 2, 13],
+        #     'values': [worksheet_data.name] + [2, 12] + [len(power_clean_zero_acc) + 2, 12],
+        #     'line': {'color': 'red'},
+        #     'name': 'constant power',
+        # })
         # graph.add_series({
         #     'categories': [worksheet_data.name] + [2, 13] + [len(velocity_clean_zero_acc) + 2, 13],
         #     'values': [worksheet_data.name] + [2, 15] + [len(power_compensated) + 2, 15],
