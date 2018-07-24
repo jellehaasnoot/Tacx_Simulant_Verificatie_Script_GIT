@@ -609,13 +609,10 @@ class Main(wx.Frame):
             power_flywheel_low.append(float(self.simulated_mass) * velocity_clean_low[i] / 3.6 * popt6[0])
             power_clean_low_brake.append(fitted_power_low[i] - power_flywheel_low[i])
 
-<<<<<<< HEAD
-=======
         for i in range(len(velocity_clean_zero)):
-            power_flywheel_zero.append(self.simulated_mass * velocity_clean_zero[i]/3.6 * popt7[0])
+            power_flywheel_zero.append(float(self.simulated_mass) * velocity_clean_zero[i]/3.6 * popt7[0])
             power_clean_zero_brake.append(fitted_power_zero[i] - power_flywheel_zero[i])
 
->>>>>>> 33757f96ac383b36a7a81989d31e14572fb75891
         """
         Initialize writing an excel file.
         """
