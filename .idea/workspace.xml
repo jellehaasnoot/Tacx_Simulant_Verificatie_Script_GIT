@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6ee7abea-7152-40b0-9158-7e0d84e00cb4" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Flux.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/Flux.xlsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SimulANT+ Log Analyzer.py" beforeDir="false" afterPath="$PROJECT_DIR$/SimulANT+ Log Analyzer.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,11 +18,20 @@
       <file leaf-file-name="SimulANT+ Log Analyzer.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SimulANT+ Log Analyzer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="761" column="10" selection-start-line="761" selection-start-column="10" selection-end-line="761" selection-end-column="10" />
+            <state relative-caret-position="337">
+              <caret line="728" column="26" lean-forward="true" selection-start-line="728" selection-start-column="26" selection-end-line="728" selection-end-column="26" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ANTlogfileconverter.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ANTlogfileconverter.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="901">
+              <caret line="54" column="66" selection-start-line="54" selection-start-column="66" selection-end-line="54" selection-end-column="66" />
             </state>
           </provider>
         </entry>
@@ -195,10 +204,11 @@
     <configuration />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
+    <frame x="-8" y="-8" width="2576" height="1456" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16649105" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.28258604" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12450749" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.20545869" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="8" weight="0.22668688" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3995451" />
@@ -490,15 +500,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ANTlogfileconverter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="543">
-          <caret line="73" column="28" selection-start-line="73" selection-start-column="28" selection-end-line="73" selection-end-column="28" />
+        <state relative-caret-position="901">
+          <caret line="54" column="66" selection-start-line="54" selection-start-column="66" selection-end-line="54" selection-end-column="66" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SimulANT+ Log Analyzer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="761" column="10" selection-start-line="761" selection-start-column="10" selection-end-line="761" selection-end-column="10" />
+        <state relative-caret-position="337">
+          <caret line="728" column="26" lean-forward="true" selection-start-line="728" selection-start-column="26" selection-end-line="728" selection-end-column="26" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>

@@ -627,9 +627,7 @@ class Main(wx.Frame):
 
         simulated_mass = []
         coefficient_a = []
-        coefficient_b = []
-        deceleration_indices = []
-        deceleration = []
+
         for i in range(len(power_compensated) - 1):
             if velocity_clean_zero_acc[i] > 10 and velocity_clean_zero_acc[i] > velocity_clean_zero_acc[i + 1]:
                 coefficient_a = ((velocity_clean_zero_acc[i + 1] - velocity_clean_zero_acc[i]) / 3.6 / (time_clean_zero_acc[i + 1] - time_clean_zero_acc[i]))
@@ -639,18 +637,6 @@ class Main(wx.Frame):
             if velocity_clean_zero_acc[i] > 10 and velocity_clean_zero_acc[i] < velocity_clean_zero_acc[i + 1]:
                 coefficient_a = ((velocity_clean_zero_acc[i] - velocity_clean_zero_acc[i + 1]) / 3.6 / (time_clean_zero_acc[i] - time_clean_zero_acc[i + 1]))
                 simulated_mass.append(power_compensated[i] / (coefficient_a * velocity_clean_zero_acc[i] / 3.6))
-
-
-
-
-        #         deceleration_indices.append(velocity_clean_zero_acc.index(velocity_clean_zero_acc[i]))
-        #         deceleration.append(velocity_clean_zero_acc[i])
-        #
-        #
-        # for i in range(len(deceleration) - 1):
-        #     coefficient_a.append(((deceleration[i] - deceleration[i+1]) / 3.6) / (time_clean_zero_acc[deceleration_indices[i]] - time_clean_zero_acc[deceleration_indices[i+1]]))
-        #     coefficient_b.append((power_zero_acc[deceleration_indices[i]]) - coefficient_a[i] * time_clean_zero_acc[deceleration_indices[i]])
-        #     simulated_mass.append(power_compensated[deceleration_indices[i]] / (coefficient_a[i] * velocity_clean_zero_acc[deceleration_indices[i]] / 3.6))
 
         print(coefficient_a)
         print(simulated_mass)
@@ -701,14 +687,11 @@ class Main(wx.Frame):
         worksheet.write('G2', 'Time [s]', bold)
         worksheet.write('H2', 'Power [W]', bold)
         worksheet.write('I2', 'Fitted Power [W]', bold)
-        worksheet.write('J2', 'Calculated Power [W]', bold)
-        worksheet.write('K2', 'Filtered Calculated Power [W]', bold)
-        worksheet.write('L2', 'Velocity [km/h]', bold)
-        worksheet.write('M2', 'Fitted Velocity [km/h]', bold)
+        worksheet.write('J2', 'Velocity [km/h]', bold)
         worksheet.write_column(2, 6, time_clean_zero)
         worksheet.write_column(2, 7, power_clean_zero)
         worksheet.write_column(2, 8, fitted_power_zero)
-        worksheet.write_column(2, 11, velocity_clean_zero)
+        worksheet.write_column(2, 9, velocity_clean_zero)
 
         worksheet.write('O1', 'Tested with 0 W program - high acceleration (without slip)', underline)
         worksheet.write('O2', 'Time [s]', bold)
@@ -758,7 +741,7 @@ class Main(wx.Frame):
 
         graph_2.add_series({
             'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
-            'values': [worksheet.name] + [2, 11] + [len(velocity_clean_zero) + 2, 11],
+            'values': [worksheet.name] + [2, 9] + [len(velocity_clean_zero) + 2, 9],
             'line': {'color': '#0000ff', 'dash_type': 'dash'},
             'name': '0 W Program Low Acceleration Velocity',
             'y2_axis': True,
