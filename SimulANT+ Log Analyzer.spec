@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['SimulANT+ Log Analyzer.py'],
-             pathex=['C:\\Users\\Jelle\\PycharmProjects\\Tacx_Simulant_Verificatie_Script'],
+             pathex=['C:\\Users\\Jelle\\PycharmProjects\\Tacx_Simulant_Verificatie_Script_GIT\\Tacx_Simulant_Verificatie_Script'],
              binaries=[],
              datas=[],
              hiddenimports=[],

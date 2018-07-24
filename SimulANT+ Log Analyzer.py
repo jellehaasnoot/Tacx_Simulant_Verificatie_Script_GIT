@@ -2,8 +2,8 @@ import wx as wx
 from ValueConverter import ValueConverter
 import xlsxwriter
 import os
-import numpy as np
-from scipy import signal
+from numpy import mean
+from numpy import array
 from scipy.optimize import curve_fit
 
 
@@ -17,7 +17,7 @@ class Main(wx.Frame):
         :param title:
         """
         wx.Frame.__init__(self, parent, title=title,
-                          style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX), size=(720, 790))
+                          style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX), size=(720, 920))
         self.CreateStatusBar()
 
         self.top_panel = wx.Panel(self)
@@ -37,10 +37,10 @@ class Main(wx.Frame):
         self.SetMenuBar(menu_bar)
 
         # Creating buttons
-        self.exit_button = wx.Button(self.top_panel, -1, label='Exit', pos=(590, 665), size=(100, 30))
-        self.reset_button = wx.Button(self.top_panel, -1, label='Reset Program', pos=(480, 665), size=(100, 30))
-        self.open_xlsx_button = wx.Button(self.top_panel, -1, label='Open Excel File', pos=(370, 665), size=(100, 30))
-        self.open_files_butten = wx.Button(self.top_panel, -1, label='Open LOG\'s', pos=(260, 665), size=(100, 30))
+        self.exit_button = wx.Button(self.top_panel, -1, label='Exit', pos=(590, 795), size=(100, 30))
+        self.reset_button = wx.Button(self.top_panel, -1, label='Reset Program', pos=(480, 795), size=(100, 30))
+        self.open_xlsx_button = wx.Button(self.top_panel, -1, label='Open Excel File', pos=(370, 795), size=(100, 30))
+        self.open_files_butten = wx.Button(self.top_panel, -1, label='Open LOG\'s', pos=(260, 795), size=(100, 30))
 
         # Loading images
         # image_file_png = wx.Image("tacx-logo.png", wx.BITMAP_TYPE_ANY).ConvertToBitmap()
@@ -90,6 +90,11 @@ class Main(wx.Frame):
         self.data_panel_4_header_display.SetFont(self.font_header)
         # self.image_panel = wx.Panel(self.top_panel, -1, style=wx.BORDER_SIMPLE, size=())
 
+        self.checkbox = wx.CheckBox(self.top_panel, -1, 'User Input Simulated Mass', pos=(30, 802.5))
+        self.checkbox.SetValue(False)
+
+
+
         # Set events
         self.Bind(wx.EVT_MENU, self.on_open, menu_file_open)
         self.Bind(wx.EVT_MENU, self.on_about, menu_about)
@@ -98,6 +103,8 @@ class Main(wx.Frame):
         self.reset_button.Bind(wx.EVT_BUTTON, self.on_reset)
         self.open_xlsx_button.Bind(wx.EVT_BUTTON, self.on_xlsx_button)
         self.open_files_butten.Bind(wx.EVT_BUTTON, self.on_open)
+        self.Bind(wx.EVT_CHECKBOX, self.on_check_sim_mass)
+
 
         # Set start-up message
         welcome_dialog = wx.MessageDialog(self.top_panel,
@@ -171,7 +178,7 @@ class Main(wx.Frame):
                                                       len(self.velocity_list_zero)), pos=(4, 24))
         self.data_panel_4_display.SetFont(self.font_normal)
 
-        xlsx_path_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(680, 50), pos=(10, 610))
+        xlsx_path_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(680, 50), pos=(10, 630))
         self.xlsx_path_panel_header_display = wx.StaticText(xlsx_path_panel,
                                                             label="Path to " + self.user_file_name + ".xslx: ",
                                                             pos=(4, 0))
@@ -349,21 +356,21 @@ class Main(wx.Frame):
 
         # Calculating the averages of every file, this is not necessary for the calculations below, but this will give
         # a quick overview of the used files to the user.
-        self.velocity_high_avg = np.mean(self.velocity_list_high)
+        self.velocity_high_avg = mean(self.velocity_list_high)
         self.velocity_high_avg = round(float(self.velocity_high_avg), 1)
-        self.power_high_avg = np.mean(self.power_list_high)
+        self.power_high_avg = mean(self.power_list_high)
         self.power_high_avg = round(float(self.power_high_avg), 1)
-        self.velocity_low_avg = np.mean(self.velocity_list_low)
+        self.velocity_low_avg = mean(self.velocity_list_low)
         self.velocity_low_avg = round(float(self.velocity_low_avg), 1)
-        self.power_low_avg = np.mean(self.power_list_low)
+        self.power_low_avg = mean(self.power_list_low)
         self.power_low_avg = round(float(self.power_low_avg), 1)
-        self.velocity_zero_avg = np.mean(self.velocity_list_zero)
+        self.velocity_zero_avg = mean(self.velocity_list_zero)
         self.velocity_zero_avg = round(float(self.velocity_zero_avg), 1)
-        self.power_zero_avg = np.mean(self.power_list_zero)
+        self.power_zero_avg = mean(self.power_list_zero)
         self.power_zero_avg = round(float(self.power_zero_avg), 1)
-        self.velocity_zero_acc_avg = np.mean(self.velocity_list_zero_acc)
+        self.velocity_zero_acc_avg = mean(self.velocity_list_zero_acc)
         self.velocity_zero_acc_avg = round(float(self.velocity_zero_acc_avg), 1)
-        self.power_zero_acc_avg = np.mean(self.power_list_zero_acc)
+        self.power_zero_acc_avg = mean(self.power_list_zero_acc)
         self.power_zero_acc_avg = round(float(self.power_zero_acc_avg), 1)
 
         velocity_raw_high = []
@@ -436,8 +443,8 @@ class Main(wx.Frame):
         """
         error_lin_high = 0
         error_quadratic_high = 0
-        popt1_high, pcov = curve_fit(self.func_lin, np.array(velocity_clean_high), np.array(power_clean_high))
-        fitted_power_high_1 = self.func_lin(np.array(velocity_clean_high), *popt1_high)
+        popt1_high, pcov = curve_fit(self.func_lin, array(velocity_clean_high), array(power_clean_high))
+        fitted_power_high_1 = self.func_lin(array(velocity_clean_high), *popt1_high)
         for i in range(len(fitted_power_high_1)):
             if fitted_power_high_1[i] < 0:
                 fitted_power_high_1[i] = 0
@@ -445,8 +452,8 @@ class Main(wx.Frame):
             if fitted_power_high_1[i] > 0:
                 error_lin_high += abs(fitted_power_high_1[i] - power_clean_high[i])
 
-        popt2_high, pcov = curve_fit(self.func_quadratic, np.array(velocity_clean_high), np.array(power_clean_high))
-        fitted_power_high_2 = self.func_quadratic(np.array(velocity_clean_high), *popt2_high)
+        popt2_high, pcov = curve_fit(self.func_quadratic, array(velocity_clean_high), array(power_clean_high))
+        fitted_power_high_2 = self.func_quadratic(array(velocity_clean_high), *popt2_high)
         for i in range(len(fitted_power_high_2)):
             if fitted_power_high_2[i] < 0:
                 fitted_power_high_2[i] = 0
@@ -507,8 +514,8 @@ class Main(wx.Frame):
         """
         error_lin_low = 0
         error_quadratic_low = 0
-        popt1_low, pcov = curve_fit(self.func_lin, np.array(velocity_clean_low), np.array(power_clean_low))
-        fitted_power_low_1 = self.func_lin(np.array(velocity_clean_low), *popt1_low)
+        popt1_low, pcov = curve_fit(self.func_lin, array(velocity_clean_low), array(power_clean_low))
+        fitted_power_low_1 = self.func_lin(array(velocity_clean_low), *popt1_low)
         for i in range(len(fitted_power_low_1)):
             if fitted_power_low_1[i] < 0:
                 fitted_power_low_1[i] = 0
@@ -516,8 +523,8 @@ class Main(wx.Frame):
             if fitted_power_low_1[i] > 0:
                 error_lin_low += abs(fitted_power_low_1[i] - power_clean_low[i])
 
-        popt2_low, pcov = curve_fit(self.func_quadratic, np.array(velocity_clean_low), np.array(power_clean_low))
-        fitted_power_low_2 = self.func_quadratic(np.array(velocity_clean_low), *popt2_low)
+        popt2_low, pcov = curve_fit(self.func_quadratic, array(velocity_clean_low), array(power_clean_low))
+        fitted_power_low_2 = self.func_quadratic(array(velocity_clean_low), *popt2_low)
         for i in range(len(fitted_power_low_2)):
             if fitted_power_low_2[i] < 0:
                 fitted_power_low_2[i] = 0
@@ -593,8 +600,8 @@ class Main(wx.Frame):
         # with the highest value without a big if statement structure.
         error_lin = 0
         error_quadratic = 0
-        popt1, pcov = curve_fit(self.func_lin, np.array(velocity_clean_zero), np.array(power_clean_zero))
-        fitted_power_zero_1 = self.func_lin(np.array(velocity_clean_zero), *popt1)
+        popt1, pcov = curve_fit(self.func_lin, array(velocity_clean_zero), array(power_clean_zero))
+        fitted_power_zero_1 = self.func_lin(array(velocity_clean_zero), *popt1)
         for i in range(len(fitted_power_zero_1)):
             if fitted_power_zero_1[i] < 0:
                 fitted_power_zero_1[i] = 0
@@ -602,8 +609,8 @@ class Main(wx.Frame):
             if fitted_power_zero_1[i] > 0:
                 error_lin += abs(fitted_power_zero_1[i] - power_clean_zero[i])
 
-        popt2, pcov = curve_fit(self.func_quadratic, np.array(velocity_clean_zero), np.array(power_clean_zero))
-        fitted_power_zero_2 = self.func_quadratic(np.array(velocity_clean_zero), *popt2)
+        popt2, pcov = curve_fit(self.func_quadratic, array(velocity_clean_zero), array(power_clean_zero))
+        fitted_power_zero_2 = self.func_quadratic(array(velocity_clean_zero), *popt2)
         for i in range(len(fitted_power_zero_2)):
             if fitted_power_zero_2[i] < 0:
                 fitted_power_zero_2[i] = 0
@@ -630,8 +637,8 @@ class Main(wx.Frame):
                 power_to_substract = popt2[0] * velocity_clean_zero_acc[i] ** 2 + popt2[1] * velocity_clean_zero_acc[i] + popt2[2]
                 power_compensated.append(power_clean_zero_acc[i] - power_to_substract)
 
-        popt3, pcov = curve_fit(self.func_lin, np.array(velocity_clean_zero_acc) / 3.6, np.array(power_compensated))
-        fitted_power_zero_acc = self.func_lin(np.array(velocity_clean_zero_acc) / 3.6, *popt3)
+        popt3, pcov = curve_fit(self.func_lin, array(velocity_clean_zero_acc) / 3.6, array(power_compensated))
+        fitted_power_zero_acc = self.func_lin(array(velocity_clean_zero_acc) / 3.6, *popt3)
 
 
         for i in range(len(time_clean_zero_acc)):
@@ -678,6 +685,7 @@ class Main(wx.Frame):
         #         simulated_mass.append(power_compensated[i] / (coefficient_a * velocity_clean_zero_acc[i] / 3.6))
 
         # print(coefficient_a)
+
         print(popt3, popt4)
         """
         Initialize writing an excel file.
@@ -968,6 +976,18 @@ class Main(wx.Frame):
 
     def func_lin(self, x, a, b):
         return a * x + b
+
+    def on_check_sim_mass(self, event):
+        if self.checkbox.GetValue():
+            self.sim_mass_dialog = wx.TextEntryDialog(self,
+                                                            "What is the value for the simulated mass [kg] (use '.' as decimal separator): ",
+                                                            "Enter simulated mass value...")
+            self.sim_mass_dialog.CenterOnParent()
+
+            if self.sim_mass_dialog.ShowModal() == wx.ID_CANCEL:
+                self.checkbox.SetValue(False)
+                return
+            self.simulated_mass = float(self.sim_mass_dialog.GetValue())
 
 if __name__ == '__main__':
     Application = wx.App(False)
