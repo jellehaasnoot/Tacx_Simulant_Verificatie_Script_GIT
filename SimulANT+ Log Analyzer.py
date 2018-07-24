@@ -423,13 +423,13 @@ class Main(wx.Frame):
             if round(velocity_raw_high[i]) == 0:
                 power_clean_high.append(0)
                 velocity_clean_high.append(0)
-                time_clean_high.append(time_raw_high[i])
+                time_clean_high.append(time_raw_high[i] * 2)
             elif power_raw_high[i] - power_raw_high[i - 1] < -15:
                 pass
             else:
                 power_clean_high.append(power_raw_high[i])
                 velocity_clean_high.append(velocity_raw_high[i])
-                time_clean_high.append(time_raw_high[i])
+                time_clean_high.append(time_raw_high[i] * 2)
 
         """
         Make a fit for the data of the FIRST file 
@@ -493,13 +493,13 @@ class Main(wx.Frame):
             if round(velocity_raw_low[i]) == 0:
                 power_clean_low.append(0)
                 velocity_clean_low.append(0)
-                time_clean_low.append(time_raw_low[i])
+                time_clean_low.append(time_raw_low[i] * 2)
             elif power_raw_low[i] - power_raw_low[i - 1] < -15:
                 pass
             else:
                 power_clean_low.append(power_raw_low[i])
                 velocity_clean_low.append(velocity_raw_low[i])
-                time_clean_low.append(time_raw_low[i])
+                time_clean_low.append(time_raw_low[i] * 2)
 
 
         """
@@ -543,11 +543,11 @@ class Main(wx.Frame):
             if round(data_zero[j][0]) == 0:
                 power_zero.append(0)
                 velocity_zero.append(0)
-                time_clean_zero.append(data_zero[j][2])
+                time_clean_zero.append(data_zero[j][2] * 2)
             else:
                 power_zero.append(data_zero[j][1])
                 velocity_zero.append(data_zero[j][0])
-                time_clean_zero.append(data_zero[j][2])
+                time_clean_zero.append(data_zero[j][2] * 2)
 
         """
         Convert the raw data from the file to named lists for the FOURTH file
@@ -556,11 +556,11 @@ class Main(wx.Frame):
             if round(data_zero_acc[j][0]) == 0:
                 power_zero_acc.append(0)
                 velocity_zero_acc.append(0)
-                time_clean_zero_acc.append(data_zero_acc[j][2])
+                time_clean_zero_acc.append(data_zero_acc[j][2] * 2)
             else:
                 power_zero_acc.append(data_zero_acc[j][1])
                 velocity_zero_acc.append(data_zero_acc[j][0])
-                time_clean_zero_acc.append(data_zero_acc[j][2])
+                time_clean_zero_acc.append(data_zero_acc[j][2] * 2)
 
 
         """
@@ -571,16 +571,22 @@ class Main(wx.Frame):
         velocity_clean_zero = []
         power_clean_zero_acc = []
         velocity_clean_zero_acc = []
+        power_clean_zero_acc_dummy = []
+        velocity_clean_zero_acc_dummy = []
 
-        for i in range(len(power_zero)):
+        for i in range(power_zero.index(max(power_zero))):
             power_clean_zero.append(power_zero[i])
-        for i in range(len(power_zero)):
+        for i in range(power_zero.index(max(power_zero))):
             velocity_clean_zero.append(velocity_zero[i])
-        for i in range(len(power_zero_acc)):
-            power_clean_zero_acc.append(power_zero_acc[i])
-        for i in range(len(power_zero_acc)):
-            velocity_clean_zero_acc.append(velocity_zero_acc[i])
+        for i in range(power_zero_acc.index(max(power_zero_acc))):
+            power_clean_zero_acc_dummy.append(power_zero_acc[i])
+        for i in range(power_zero_acc.index(max(power_zero_acc))):
+            velocity_clean_zero_acc_dummy.append(velocity_zero_acc[i])
 
+        for i in range(len(power_clean_zero_acc_dummy)):
+            if power_clean_zero_acc_dummy[i] > 50:
+                power_clean_zero_acc.append(power_clean_zero_acc_dummy[i])
+                velocity_clean_zero_acc.append(velocity_clean_zero_acc_dummy[i])
 
         # Calculating the best possible fit, we only consider quadratic and linear fits at this moment. The error with
         # the original data is calculated and the best fit will be drawn. A dictionary is used to track the variable
@@ -615,32 +621,54 @@ class Main(wx.Frame):
         if lowest_error == '1':
             fitted_power_zero = fitted_power_zero_1
             for i in range(len(velocity_clean_zero_acc)):
-                power_to_substract = popt1[0] * velocity_clean_zero_acc[i] + popt1[1] / 3.6
+                power_to_substract = popt1[0] * velocity_clean_zero_acc[i] + popt1[1]
                 power_compensated.append(power_clean_zero_acc[i] - power_to_substract)
 
         elif lowest_error == '2':
             fitted_power_zero = fitted_power_zero_2
             for i in range(len(velocity_clean_zero_acc)):
-                power_to_substract = popt2[0] * velocity_clean_zero_acc[i] ** 2 + popt2[1] * velocity_clean_zero_acc[i] + popt2[2] / 3.6
+                power_to_substract = popt2[0] * velocity_clean_zero_acc[i] ** 2 + popt2[1] * velocity_clean_zero_acc[i] + popt2[2]
                 power_compensated.append(power_clean_zero_acc[i] - power_to_substract)
 
+        popt3, pcov = curve_fit(self.func_lin, np.array(velocity_clean_zero_acc) / 3.6, np.array(power_compensated))
+        fitted_power_zero_acc = self.func_lin(np.array(velocity_clean_zero_acc) / 3.6, *popt3)
+
+
+        for i in range(len(time_clean_zero_acc)):
+            if len(velocity_clean_zero_acc) < len(time_clean_zero_acc):
+                time_clean_zero_acc.pop()
+
+        print(len(velocity_clean_zero_acc))
+        print(len(time_clean_zero_acc))
+
+        popt4, pcov = curve_fit(self.func_lin, np.array(time_clean_zero_acc), np.array(velocity_clean_zero_acc) / 3.6)
+        fitted_velocity_zero_acc = self.func_lin(np.array(time_clean_zero_acc), *popt4)
+
+
+
+
+
         simulated_mass = []
-        coefficient_a = []
+        for i in range(len(fitted_velocity_zero_acc)):
+            simulated_mass.append(popt3[0] / popt4[0])
 
-        for i in range(len(power_compensated) - 1):
-            if velocity_clean_zero_acc[i] > 10 and velocity_clean_zero_acc[i] > velocity_clean_zero_acc[i + 1]:
-                coefficient_a = ((velocity_clean_zero_acc[i + 1] - velocity_clean_zero_acc[i]) / 3.6 / (time_clean_zero_acc[i + 1] - time_clean_zero_acc[i]))
-                simulated_mass.append(power_compensated[i] / (coefficient_a * velocity_clean_zero_acc[i] / 3.6))
+        # coefficient_a = []
+        #
+        # for i in range(len(power_compensated) - 1):
+        #     if velocity_clean_zero_acc[i] > 10 and velocity_clean_zero_acc[i] > velocity_clean_zero_acc[i + 1]:
+        #         coefficient_a = ((velocity_clean_zero_acc[i + 1] - velocity_clean_zero_acc[i]) / 3.6 / (time_clean_zero_acc[i + 1] - time_clean_zero_acc[i]))
+        #         simulated_mass.append(power_compensated[i] / (coefficient_a * velocity_clean_zero_acc[i] / 3.6))
+        #
+        # for i in range(len(power_compensated) - 1):
+        #     if velocity_clean_zero_acc[i] > 10 and velocity_clean_zero_acc[i] < velocity_clean_zero_acc[i + 1]:
+        #         coefficient_a = ((velocity_clean_zero_acc[i] - velocity_clean_zero_acc[i + 1]) / 3.6 / (time_clean_zero_acc[i] - time_clean_zero_acc[i + 1]))
+        #         simulated_mass.append(power_compensated[i] / (coefficient_a * velocity_clean_zero_acc[i] / 3.6))
 
-        for i in range(len(power_compensated) - 1):
-            if velocity_clean_zero_acc[i] > 10 and velocity_clean_zero_acc[i] < velocity_clean_zero_acc[i + 1]:
-                coefficient_a = ((velocity_clean_zero_acc[i] - velocity_clean_zero_acc[i + 1]) / 3.6 / (time_clean_zero_acc[i] - time_clean_zero_acc[i + 1]))
-                simulated_mass.append(power_compensated[i] / (coefficient_a * velocity_clean_zero_acc[i] / 3.6))
-
-        print(coefficient_a)
+        # print(coefficient_a)
         print(simulated_mass)
         print(np.mean(simulated_mass))
 
+        print(popt3, popt4)
         """
         Initialize writing an excel file.
         """
@@ -696,11 +724,14 @@ class Main(wx.Frame):
         worksheet.write('O2', 'Time [s]', bold)
         worksheet.write('P2', 'Power [km/h]', bold)
         worksheet.write('Q2', 'Velocity [km/h]', bold)
-        worksheet.write('R2', 'Theor. Power [W]', bold)
+        worksheet.write('R2', 'Fitted Velocity [km/h]', bold)
+        worksheet.write('S2', 'Theor. Power [W]', bold)
         worksheet.write_column(2, 14, time_clean_zero_acc)
         worksheet.write_column(2, 15, power_clean_zero_acc)
         worksheet.write_column(2, 16, velocity_clean_zero_acc)
-        worksheet.write_column(2, 17, power_compensated)
+        worksheet.write_column(2, 17, fitted_velocity_zero_acc)
+        worksheet.write_column(2, 18, power_compensated)
+        worksheet.write_column(2, 19, fitted_power_zero_acc)
 
         """
         Writing to graph.
@@ -729,13 +760,25 @@ class Main(wx.Frame):
             'line': {'color': '#67bfe7'},
             'name': 'Highest Gradient Power',
         })
-        graph.add_series({
-            'categories': [worksheet.name] + [2, 16] + [len(velocity_clean_zero_acc) + 2, 16],
-            'values': [worksheet.name] + [2, 15] + [len(power_clean_zero_acc) + 2, 15],
-            'line': {'color': 'black'},
-            'name': 'Power vs. Velocity',
-        })
-
+        # graph.add_series({
+        #     'categories': [worksheet.name] + [2, 16] + [len(velocity_clean_zero_acc) + 2, 16],
+        #     'values': [worksheet.name] + [2, 18] + [len(power_compensated) + 2, 18],
+        #     'line': {'color': 'black'},
+        #     'name': 'Power vs. Velocity',
+        # })
+        # graph.add_series({
+        #     'categories': [worksheet.name] + [2, 16] + [len(velocity_clean_zero_acc) + 2, 16],
+        #     'values': [worksheet.name] + [2, 19] + [len(fitted_power_zero_acc) + 2, 19],
+        #     'line': {'color': 'purple'},
+        #     'name': 'Fitted Compensated Power',
+        # })
+        #
+        # graph.add_series({
+        #     'categories': [worksheet.name] + [2, 9] + [len(velocity_clean_zero) + 2, 9],
+        #         'values': [worksheet.name] + [2, 8] + [len(fitted_power_zero) + 2, 8],
+        #     'line': {'color': 'red'},
+        #     'name': 'Power Zero',
+        # })
 
         graph_2.add_series({
             'categories': [worksheet.name] + [2, 6] + [len(time_clean_zero) + 2, 6],
@@ -764,14 +807,21 @@ class Main(wx.Frame):
 
         graph_2.add_series({
             'categories': [worksheet.name] + [2, 14] + [len(time_clean_zero_acc) + 2, 14],
-            'values': [worksheet.name] + [2, 17] + [len(power_compensated) + 2, 17],
+            'values': [worksheet.name] + [2, 17] + [len(fitted_velocity_zero_acc) + 2, 17],
+            'line': {'color': '#0000ff'},
+            'name': '0 W Program Fitted Acceleration Velocity',
+            'y2_axis': True,
+        })
+        graph_2.add_series({
+            'categories': [worksheet.name] + [2, 14] + [len(time_clean_zero_acc) + 2, 14],
+            'values': [worksheet.name] + [2, 18] + [len(power_compensated) + 2, 18],
             'line': {'color': '#ff0000'},
             'name': '0 W Program High Acceleration Power Compensated',
         })
 
 
         worksheet.insert_chart('U2', graph)
-        worksheet.insert_chart('U40', graph_2)
+        # worksheet.insert_chart('U40', graph_2)
         excel.close()
         self.panel_layout()
 
@@ -842,7 +892,6 @@ class Main(wx.Frame):
                 1] == '0' and speed:  # index waar snelheid in staat
                 speed = False
                 power = True
-                time = True
                 speed_values_raw = [value_list_characters[10], value_list_characters[11], value_list_characters[8],
                                     value_list_characters[9]]
                 speed_values_raw_string = "".join(speed_values_raw)
@@ -851,18 +900,11 @@ class Main(wx.Frame):
                 velocity = value_converter.bin_to_dec(velocity_bin) * 3.6 / 1000
                 velocity_list.append(velocity)
 
-                # time_values_raw = [value_list_characters[4], value_list_characters[5]]
-                # time_values_raw_string = "".join(time_values_raw)
-                # value_converter = ValueConverter()
-                # time_bin = value_converter.hex_to_bin(time_values_raw_string)
-                # time = value_converter.bin_to_dec(time_bin)
-                # time_list.append(time)
 
             elif value_list_characters[0] == '1' and value_list_characters[
                 1] == '9' and power:  # index waar power in staat
                 speed = True
                 power = False
-                time = False
                 power_values_raw = [value_list_characters[13], value_list_characters[10], value_list_characters[11]]
                 power_values_raw_string = "".join(power_values_raw)
                 value_converter = ValueConverter()
