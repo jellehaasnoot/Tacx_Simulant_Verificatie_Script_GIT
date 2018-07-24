@@ -1,7 +1,8 @@
 import wx as wx
 from ValueConverter import ValueConverter
 import xlsxwriter
-import os
+from os import path
+from os import startfile
 from numpy import mean
 from numpy import array
 from scipy.optimize import curve_fit
@@ -83,18 +84,15 @@ class Main(wx.Frame):
         self.data_panel_3_header_display = wx.StaticText(self.some_data_panel_3,
                                                          label="Some statistics about the third file: ", pos=(4, 2))
         self.data_panel_3_header_display.SetFont(self.font_header)
-        
+
         self.some_data_panel_4 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(680, 80), pos=(10, 530))
         self.data_panel_4_header_display = wx.StaticText(self.some_data_panel_4,
                                                          label="Some statistics about the fourth file: ", pos=(4, 2))
         self.data_panel_4_header_display.SetFont(self.font_header)
         # self.image_panel = wx.Panel(self.top_panel, -1, style=wx.BORDER_SIMPLE, size=())
 
-        self.checkbox_sim = wx.CheckBox(self.top_panel, -1, 'User Input Simulated Mass', pos=(30, 795))
-        self.checkbox_sim.SetValue(False)
-
-        self.checkbox_inertia = wx.CheckBox(self.top_panel, -1, 'User Input Moment of Inertia', pos=(30, 815))
-        self.checkbox_inertia.SetValue(False)
+        self.checkbox = wx.CheckBox(self.top_panel, -1, 'User Input Simulated Mass', pos=(30, 802.5))
+        self.checkbox.SetValue(False)
 
         # Set events
         self.Bind(wx.EVT_MENU, self.on_open, menu_file_open)
@@ -104,9 +102,9 @@ class Main(wx.Frame):
         self.reset_button.Bind(wx.EVT_BUTTON, self.on_reset)
         self.open_xlsx_button.Bind(wx.EVT_BUTTON, self.on_xlsx_button)
         self.open_files_butten.Bind(wx.EVT_BUTTON, self.on_open)
-        self.Bind(wx.EVT_CHECKBOX, self.on_check_sim_mass)
-        self.Bind(wx.EVT_CHECKBOX, self.on_check_inertia)
+        self.Bind(wx.EVT_CHECKBOX, self.on_check)
 
+        # if self.checkbox_sim.GetValue() == F
 
         # Set start-up message
         welcome_dialog = wx.MessageDialog(self.top_panel,
@@ -226,7 +224,8 @@ class Main(wx.Frame):
 
         # Opening File 3 with the use of a dialog. File 3 will contain the ANT+ data of the measurements with a power
         # goal of 0W, this will be used to see the residual brake power if no brake is used.
-        with wx.FileDialog(self, "Choose the third logged SimulANT+ file with the 0 W Power program - low acceleration...",
+        with wx.FileDialog(self,
+                           "Choose the third logged SimulANT+ file with the 0 W Power program - low acceleration...",
                            wildcard="Text files (*.txt)|*.txt|" "Comma Separated Value-files (*.csv)|*.csv",
                            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as prompted_dialog:
 
@@ -234,11 +233,12 @@ class Main(wx.Frame):
                 return
             self.pathname_3 = prompted_dialog.GetPath()
 
-        self.folder_pathname = os.path.dirname(self.pathname_3)
+        self.folder_pathname = path.dirname(self.pathname_3)
         # Opening File 4 with the use of a dialog. File 4 will contain the ANT+ data of the measurements with a power
         # goal of 0W. In contrary with the other files, the acceleration needs to be high. This way, it is possible to
         # calculate the simulated mass (inertia).
-        with wx.FileDialog(self, "Choose the third logged SimulANT+ file with the 0 W Power program - high acceleration...",
+        with wx.FileDialog(self,
+                           "Choose the third logged SimulANT+ file with the 0 W Power program - high acceleration...",
                            wildcard="Text files (*.txt)|*.txt|" "Comma Separated Value-files (*.csv)|*.csv",
                            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as prompted_dialog:
 
@@ -246,7 +246,7 @@ class Main(wx.Frame):
                 return
             self.pathname_4 = prompted_dialog.GetPath()
 
-        self.folder_pathname = os.path.dirname(self.pathname_4)
+        self.folder_pathname = path.dirname(self.pathname_4)
         # Retrieving the filename the user wants to use. This will be the file name of the new excel file which will be
         # created after running this program.
         self.user_file_name_dialog = wx.TextEntryDialog(self,
@@ -263,7 +263,6 @@ class Main(wx.Frame):
         # Analysing log file 1:
         self.logfile_analyser(self.pathname_1)
         data_high = []
-        max_velocity_high = max(velocity_list)
         if len(power_list) < len(velocity_list):
             velocity_list.pop()
         elif len(velocity_list) < len(power_list):
@@ -283,7 +282,6 @@ class Main(wx.Frame):
         # Analysing log file 2:
         self.logfile_analyser(self.pathname_2)
         data_low = []
-        max_velocity_low = max(velocity_list)
         if len(power_list) < len(velocity_list):
             velocity_list.pop()
         elif len(velocity_list) < len(power_list):
@@ -302,7 +300,6 @@ class Main(wx.Frame):
         # Analysing log file 3:
         self.logfile_analyser(self.pathname_3)
         data_zero = []
-        max_velocity_zero = max(velocity_list)
         if len(power_list) < len(velocity_list):
             velocity_list.pop()
         elif len(velocity_list) < len(power_list):
@@ -322,7 +319,6 @@ class Main(wx.Frame):
         # Analysing log file 4:
         self.logfile_analyser(self.pathname_4)
         data_zero_acc = []
-        max_velocity_zero_acc = max(velocity_list)
         if len(power_list) < len(velocity_list):
             velocity_list.pop()
         elif len(velocity_list) < len(power_list):
@@ -419,8 +415,8 @@ class Main(wx.Frame):
                 error_quadratic_high += abs(fitted_power_high_2[i] - power_clean_high[i])
 
         errors = {
-            '1' : error_lin_high,
-            '2' : error_quadratic_high
+            '1': error_lin_high,
+            '2': error_quadratic_high
         }
         lowest_error = min(errors, key=errors.get)
         if lowest_error == '1':
@@ -471,8 +467,8 @@ class Main(wx.Frame):
                 error_quadratic_low += abs(fitted_power_low_2[i] - power_clean_low[i])
 
         errors = {
-            '1' : error_lin_low,
-            '2' : error_quadratic_low
+            '1': error_lin_low,
+            '2': error_quadratic_low
         }
         lowest_error = min(errors, key=errors.get)
         if lowest_error == '1':
@@ -556,8 +552,8 @@ class Main(wx.Frame):
                 error_quadratic += abs(fitted_power_zero_2[i] - power_clean_zero[i])
 
         errors = {
-            '1' : error_lin,
-            '2' : error_quadratic
+            '1': error_lin,
+            '2': error_quadratic
         }
         lowest_error = min(errors, key=errors.get)
 
@@ -571,7 +567,8 @@ class Main(wx.Frame):
         elif lowest_error == '2':
             fitted_power_zero = fitted_power_zero_2
             for i in range(len(velocity_clean_zero_acc)):
-                power_to_substract = popt2[0] * velocity_clean_zero_acc[i] ** 2 + popt2[1] * velocity_clean_zero_acc[i] + popt2[2]
+                power_to_substract = popt2[0] * velocity_clean_zero_acc[i] ** 2 + popt2[1] * velocity_clean_zero_acc[
+                    i] + popt2[2]
                 power_compensated.append(power_clean_zero_acc[i] - power_to_substract)
 
         popt3, pcov = curve_fit(self.func_lin, array(velocity_clean_zero_acc) / 3.6, array(power_compensated))
@@ -584,14 +581,14 @@ class Main(wx.Frame):
         popt4, pcov = curve_fit(self.func_lin, array(time_clean_zero_acc), array(velocity_clean_zero_acc) / 3.6)
         fitted_velocity_zero_acc = self.func_lin(array(time_clean_zero_acc), *popt4)
 
-        self.simulated_mass = []
-        for i in range(len(fitted_velocity_zero_acc)):
-            self.simulated_mass.append(popt3[0] / popt4[0])
+        # if self.user_input == 0:
 
         """
         Calculation of the power which is needed to accelerate the flywheel. For the first and second file.
         """
-        self.simulated_mass = 22
+        if self.checkbox.GetValue() != True:
+            self.simulated_mass = popt3[0] / popt4[0]
+
         power_flywheel_high = []
         power_flywheel_low = []
         power_flywheel_zero = []
@@ -605,15 +602,15 @@ class Main(wx.Frame):
         popt7, pcov = curve_fit(self.func_lin, array(time_clean_zero), array(velocity_clean_zero) / 3.6)
 
         for i in range(len(velocity_clean_high)):
-            power_flywheel_high.append(self.simulated_mass * velocity_clean_high[i]/3.6 * popt5[0])
+            power_flywheel_high.append(float(self.simulated_mass) * velocity_clean_high[i] / 3.6 * popt5[0])
             power_clean_high_brake.append(fitted_power_high[i] - power_flywheel_high[i])
 
         for i in range(len(velocity_clean_low)):
-            power_flywheel_low.append(self.simulated_mass * velocity_clean_low[i]/3.6 * popt6[0])
+            power_flywheel_low.append(float(self.simulated_mass) * velocity_clean_low[i] / 3.6 * popt6[0])
             power_clean_low_brake.append(fitted_power_low[i] - power_flywheel_low[i])
 
         for i in range(len(velocity_clean_zero)):
-            power_flywheel_zero.append(self.simulated_mass * velocity_clean_zero[i]/3.6 * popt7[0])
+            power_flywheel_zero.append(float(self.simulated_mass) * velocity_clean_zero[i]/3.6 * popt7[0])
             power_clean_zero_brake.append(fitted_power_zero[i] - power_flywheel_zero[i])
 
         """
@@ -811,7 +808,7 @@ class Main(wx.Frame):
                                                  "\n"
                                                  "\n"
                                                  "Created by Tim de Jong and Jelle Haasnoot at Tacx B.V.",
-                                                 "About SimulANT+ Log Analyzer", wx.OK)
+                                           "About SimulANT+ Log Analyzer", wx.OK)
         prompted_dialog.ShowModal()
         prompted_dialog.Destroy()
 
@@ -900,8 +897,8 @@ class Main(wx.Frame):
             frame = Main(None, 'SimulANT+ Log Analyzer').Show()
 
     def on_xlsx_button(self, event):
-        if os.path.isfile(self.folder_pathname + "\\" + self.user_file_name + ".xlsx"):
-            os.startfile(self.folder_pathname + "\\" + self.user_file_name + ".xlsx")
+        if path.isfile(self.folder_pathname + "\\" + self.user_file_name + ".xlsx"):
+            startfile(self.folder_pathname + "\\" + self.user_file_name + ".xlsx")
         elif self.folder_pathname == "":
             no_file_dialog = wx.MessageDialog(self.top_panel,
                                               message="The file does not exist. Please try selecting files in File -> Open files...",
@@ -915,47 +912,47 @@ class Main(wx.Frame):
         return x ** m * c
 
     def func_quadratic(self, x, a, b, c):
-        return a * x**2 + b*x + c
+        return a * x ** 2 + b * x + c
 
     def func_lin(self, x, a, b):
         return a * x + b
 
-    def on_check_sim_mass(self, event):
-        if self.checkbox_sim.GetValue():
-            self.sim_mass_dialog = wx.TextEntryDialog(self,
-                                                            "What is the value for the simulated mass [kg] (use '.' as decimal separator): ",
-                                                            "Enter simulated mass value...")
-            self.sim_mass_dialog.CenterOnParent()
+    def on_check(self, event):
+        if self.checkbox.GetValue():
+            self.sim_dialog = wx.TextEntryDialog(self,
+                                                     "What is the value for simulated mass [kg]. Leave empty to be prompted for inertia (use '.' as decimal separator): ",
+                                                     "Enter simulated mass value...")
+            self.sim_dialog.CenterOnParent()
 
-            if self.sim_mass_dialog.ShowModal() == wx.ID_CANCEL:
-                self.checkbox_sim.SetValue(False)
-                return
-            self.simulated_mass = float(self.sim_mass_dialog.GetValue())
-
-    def on_check_inertia(self, event):
-        if self.checkbox_inertia.GetValue():
-            self.inertia_dialog = wx.TextEntryDialog(self,
-                                                            "What is the value for the moment of inertia [kg * m^2] (use '.' as decimal separator): ",
-                                                            "Enter inertia value...")
-            self.inertia_dialog.CenterOnParent()
-
-            if self.inertia_dialog.ShowModal() == wx.ID_CANCEL:
-                self.checkbox_inertia.SetValue(False)
+            if self.sim_dialog.ShowModal() == wx.ID_CANCEL:
+                self.checkbox.SetValue(False)
                 return
 
-            self.conversion_dialog = wx.TextEntryDialog(self,
+            self.simulated_mass = self.sim_dialog.GetValue()
+            if self.simulated_mass == "":
+                self.inertia_dialog = wx.TextEntryDialog(self,
+                                                         "If the previous screen was left empty, what is the value for the moment of inertia [kg * m^2] (use '.' as decimal separator): ",
+                                                         "Enter inertia value...")
+                self.inertia_dialog.CenterOnParent()
+
+                if self.inertia_dialog.ShowModal() == wx.ID_CANCEL:
+                    self.checkbox.SetValue(False)
+                    return
+
+                self.conversion_dialog = wx.TextEntryDialog(self,
                                                             "What is the value for the conversion factor (use '.' as decimal separator, see README.txt for explanation): ",
                                                             "Enter conversion value...")
-            self.conversion_dialog.CenterOnParent()
+                self.conversion_dialog.CenterOnParent()
 
-            if self.conversion_dialog.ShowModal() == wx.ID_CANCEL:
-                self.checkbox_inertia.SetValue(False)
-                return
+                if self.conversion_dialog.ShowModal() == wx.ID_CANCEL:
+                    self.checkbox.SetValue(False)
+                    return
 
-            self.inertia = float(self.inertia_dialog.GetValue())
-            self.conversion = float(self.conversion_dialog.GetValue())
+                self.inertia = float(self.inertia_dialog.GetValue())
+                self.conversion = float(self.conversion_dialog.GetValue())
 
-            self.simulated_mass = (self.conversion ** 2) * self.inertia
+                self.simulated_mass = (self.conversion ** 2) * self.inertia
+
 
 if __name__ == '__main__':
     Application = wx.App(False)
