@@ -17,7 +17,7 @@ class Main(wx.Frame):
         :param title:
         """
         wx.Frame.__init__(self, parent, title=title,
-                          style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX), size=(720, 790))
+                          style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX), size=(720, 920))
         self.CreateStatusBar()
 
         self.top_panel = wx.Panel(self)
@@ -37,10 +37,10 @@ class Main(wx.Frame):
         self.SetMenuBar(menu_bar)
 
         # Creating buttons
-        self.exit_button = wx.Button(self.top_panel, -1, label='Exit', pos=(590, 665), size=(100, 30))
-        self.reset_button = wx.Button(self.top_panel, -1, label='Reset Program', pos=(480, 665), size=(100, 30))
-        self.open_xlsx_button = wx.Button(self.top_panel, -1, label='Open Excel File', pos=(370, 665), size=(100, 30))
-        self.open_files_butten = wx.Button(self.top_panel, -1, label='Open LOG\'s', pos=(260, 665), size=(100, 30))
+        self.exit_button = wx.Button(self.top_panel, -1, label='Exit', pos=(590, 795), size=(100, 30))
+        self.reset_button = wx.Button(self.top_panel, -1, label='Reset Program', pos=(480, 795), size=(100, 30))
+        self.open_xlsx_button = wx.Button(self.top_panel, -1, label='Open Excel File', pos=(370, 795), size=(100, 30))
+        self.open_files_butten = wx.Button(self.top_panel, -1, label='Open LOG\'s', pos=(260, 795), size=(100, 30))
 
         # Loading images
         # image_file_png = wx.Image("tacx-logo.png", wx.BITMAP_TYPE_ANY).ConvertToBitmap()
@@ -90,6 +90,11 @@ class Main(wx.Frame):
         self.data_panel_4_header_display.SetFont(self.font_header)
         # self.image_panel = wx.Panel(self.top_panel, -1, style=wx.BORDER_SIMPLE, size=())
 
+        self.checkbox = wx.CheckBox(self.top_panel, -1, 'User Input Simulated Mass', pos=(30, 802.5))
+        self.checkbox.SetValue(False)
+
+
+
         # Set events
         self.Bind(wx.EVT_MENU, self.on_open, menu_file_open)
         self.Bind(wx.EVT_MENU, self.on_about, menu_about)
@@ -98,6 +103,8 @@ class Main(wx.Frame):
         self.reset_button.Bind(wx.EVT_BUTTON, self.on_reset)
         self.open_xlsx_button.Bind(wx.EVT_BUTTON, self.on_xlsx_button)
         self.open_files_butten.Bind(wx.EVT_BUTTON, self.on_open)
+        self.Bind(wx.EVT_CHECKBOX, self.on_check_sim_mass)
+
 
         # Set start-up message
         welcome_dialog = wx.MessageDialog(self.top_panel,
@@ -171,7 +178,7 @@ class Main(wx.Frame):
                                                       len(self.velocity_list_zero)), pos=(4, 24))
         self.data_panel_4_display.SetFont(self.font_normal)
 
-        xlsx_path_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(680, 50), pos=(10, 610))
+        xlsx_path_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(680, 50), pos=(10, 630))
         self.xlsx_path_panel_header_display = wx.StaticText(xlsx_path_panel,
                                                             label="Path to " + self.user_file_name + ".xslx: ",
                                                             pos=(4, 0))
@@ -941,6 +948,18 @@ class Main(wx.Frame):
 
     def func_lin(self, x, a, b):
         return a * x + b
+
+    def on_check_sim_mass(self, event):
+        if self.checkbox.GetValue():
+            self.sim_mass_dialog = wx.TextEntryDialog(self,
+                                                            "What is the value for the simulated mass [kg] (use '.' as decimal separator): ",
+                                                            "Enter simulated mass value...")
+            self.sim_mass_dialog.CenterOnParent()
+
+            if self.sim_mass_dialog.ShowModal() == wx.ID_CANCEL:
+                self.checkbox.SetValue(False)
+                return
+            self.simulated_mass = float(self.sim_mass_dialog.GetValue())
 
 if __name__ == '__main__':
     Application = wx.App(False)
