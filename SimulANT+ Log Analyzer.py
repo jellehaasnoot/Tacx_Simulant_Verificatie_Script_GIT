@@ -6,10 +6,8 @@ from os import path
 from os import startfile
 from numpy import mean
 from numpy import array
+import scipy
 from scipy.optimize import curve_fit
-
-# TODO: Gebouwde .exe verkleinen
-# TODO: README schrijven
 
 class Main(wx.Frame):
     def __init__(self, parent, title):
@@ -137,7 +135,7 @@ class Main(wx.Frame):
 
         # 7: Set start-up message
         welcome_dialog = wx.MessageDialog(self.top_panel,
-                                          message="Welcome to SimulANT+ Log Analyzer. \nIf you have read the README.txt, you're good to go. \nIf you haven't yet, please do.",
+                                          message="Welcome to SimulANT+ Log Analyzer. \nIf you have read the README.pdf, you're good to go. \nIf you haven't yet, please do.",
                                           caption="Welcome!")
         welcome_dialog.CenterOnParent()
         if welcome_dialog.ShowModal() == wx.OK:
@@ -237,6 +235,7 @@ class Main(wx.Frame):
         5: Close file
 
         """
+
         # Opening File 1 with the use of a dialog. File 1 will contain the ANT+ data of the measurements with a high
         # gradient (slope). This will be used to calculate the maximal brake power.
         with wx.FileDialog(self, "Choose the logged SimulANT+ file with the HIGHEST slope...",
@@ -465,13 +464,11 @@ class Main(wx.Frame):
         first_non_zero_power = first_non_zero_power[0]
 
         try:
-            poplin, pcov = curve_fit(self.func_lin, array([4, 10]), array([0, data_low[first_non_zero_power][1]]))
+            poplin, pcov = curve_fit(self.func_lin, array([4, 10]), array([0, data_low[first_non_zero_power][1]]), absolute_sigma=True)
         except Warning:
             pass
         except Exception:
             pass
-        # fitted_startup_power_low = self.func_lin(array(velocity_clean_const), *poplin)
-
 
         for j in range(len(data_low)):
             if round(data_low[j][0]) == 0:
@@ -811,14 +808,14 @@ class Main(wx.Frame):
             'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
             'values': [worksheet_data.name] + [2, 4] + [len(power_clean_low) + 2, 4],
             'line': {'color': '#67bfe7', 'dash_type': 'dash', 'width': 1.5},
-            'name': 'Lowest Gradient Power - ANT+',
+            'name': 'Lowest Gradient Power',
         })
 
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
             'values': [worksheet_data.name] + [2, 5] + [len(power_clean_low) + 2, 5],
             'line': {'color': '#67bfe7', 'width': 2},
-            'name': 'Fitted Lowest Gradient Power - ANT+',
+            'name': 'Fitted Lowest Gradient Power',
         })
 
         graph.add_series({
@@ -893,7 +890,7 @@ class Main(wx.Frame):
 
         worksheet_charts.insert_chart('B2', graph)
         graph.set_legend({'position': 'bottom'})
-        # worksheet_charts.insert_chart('B40', graph_2)
+        worksheet_charts.insert_chart('B40', graph_2)
         worksheet_charts.write('T2', 'Simulated Mass:', header)
         worksheet_charts.write('X2', str(round(float(self.simulated_mass), 2)), header)
         worksheet_charts.write_rich_string('Y2', header, '[kgm', superscript, '2', header, ']')
@@ -1083,7 +1080,6 @@ class Main(wx.Frame):
     def on_check_hover(self, event):
         self.statusbar.SetStatusText('Enable the option to use user-input simulated mass')
         event.Skip()
-
 
 if __name__ == '__main__':
     Application = wx.App(False)
