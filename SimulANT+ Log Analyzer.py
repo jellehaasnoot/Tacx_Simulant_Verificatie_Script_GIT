@@ -8,11 +8,8 @@ from numpy import mean
 from numpy import array
 from scipy.optimize import curve_fit
 
-# TODO: Koppeling grafieklabel en lijn kloppend maken
-# TODO: Schattingsberekening gesimuleerde massa proberen
 # TODO: Gebouwde .exe verkleinen
 # TODO: README schrijven
-# TODO: Lineare fit door moderate aanpassen - kan misschien nauwkeuriger
 
 class Main(wx.Frame):
     def __init__(self, parent, title):
@@ -67,7 +64,7 @@ class Main(wx.Frame):
         image_file_png = wx.Image(image_path, wx.BITMAP_TYPE_PNG)
         image_file_png.Rescale(image_file_png.GetWidth() * 0.2, image_file_png.GetHeight() * 0.2)
         image_file_png = wx.Bitmap(image_file_png)
-        self.image = wx.StaticBitmap(self.top_panel, -1, image_file_png, pos=(18, 710),
+        self.image = wx.StaticBitmap(self.top_panel, -1, image_file_png, pos=(18, 700),
                                      size=(image_file_png.GetWidth(), image_file_png.GetHeight()))
 
         # 5: Creating panels
@@ -116,6 +113,12 @@ class Main(wx.Frame):
         self.data_panel_4_header_display = wx.StaticText(self.some_data_panel_4,
                                                          label="Some statistics about the fourth file: ", pos=(4, 2))
         self.data_panel_4_header_display.SetFont(self.font_header)
+
+        self.xlsx_path_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 630))
+
+        self.sim_mass_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(428, 50), pos=(262, 730))
+        self.sim_mass_panel_header_display = wx.StaticText(self.sim_mass_panel, label="Simulated Mass (calculated / user-given): ", pos=(4, 2))
+        self.sim_mass_panel_header_display.SetFont(self.font_header)
 
         # 6: Set events
         self.Bind(wx.EVT_MENU, self.on_open, menu_file_open)
@@ -213,12 +216,14 @@ class Main(wx.Frame):
                                                       len(self.velocity_list_moderate_acc)), pos=(4, 24))
         self.data_panel_4_display.SetFont(self.font_normal)
 
-        xlsx_path_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 630))
-        self.xlsx_path_panel_header_display = wx.StaticText(xlsx_path_panel,
+        self.xlsx_path_panel_header_display = wx.StaticText(self.xlsx_path_panel,
                                                             label="Path to " + self.user_file_name + ".xslx: ",
                                                             pos=(4, 0))
         self.xlsx_path_panel_header_display.SetFont(self.font_header)
-        self.xlsx_path_panel_display = wx.StaticText(xlsx_path_panel, label=str(self.folder_pathname), pos=(4, 25))
+        self.xlsx_path_panel_display = wx.StaticText(self.xlsx_path_panel, label=str(self.folder_pathname), pos=(4, 25))
+
+        self.sim_mass_panel_display = wx.StaticText(self.sim_mass_panel, label=str(round(float(self.simulated_mass), 2)) + " [kg m^2]", pos=(4, 25))
+        self.sim_mass_panel_display.SetFont(self.font_normal)
 
     def on_open(self, e):
         """"
@@ -453,10 +458,30 @@ class Main(wx.Frame):
         """
         Convert the raw data from the file to named lists for the SECOND file
         """
+        first_non_zero_power = []
+        for i in range(len(data_low)):
+            if data_low[i][1] != 0:
+                first_non_zero_power.append([a[1] for a in data_low].index(data_low[i][1]))
+        first_non_zero_power = first_non_zero_power[0]
+
+        try:
+            poplin, pcov = curve_fit(self.func_lin, array([4, 10]), array([0, data_low[first_non_zero_power][1]]))
+        except Warning:
+            pass
+        except Exception:
+            pass
+        # fitted_startup_power_low = self.func_lin(array(velocity_clean_const), *poplin)
+
+
         for j in range(len(data_low)):
             if round(data_low[j][0]) == 0:
                 power_raw_low.append(0)
                 velocity_raw_low.append(0)
+                time_raw_low.append(data_low[j][2] * 2)
+
+            elif round(data_low[j][1]) == 0 and 4 <= data_low[j][0] <= 14:
+                power_raw_low.append(poplin[0] * data_low[j][0] + poplin[1])
+                velocity_raw_low.append(data_low[j][0])
                 time_raw_low.append(data_low[j][2] * 2)
 
             else:
@@ -505,17 +530,32 @@ class Main(wx.Frame):
         """
         Convert the raw data from the file to named lists for the THIRD file
         """
+        first_limit = 18
+        second_limit = 25.2
+        third_limit = 32.4
+        range_half = 3
         time_raw_const = []
         for j in range(len(data_const)):
-            if round(data_const[j][0]) == 0:
-                power_const.append(0)
-                velocity_const.append(0)
-                time_raw_const.append(data_const[j][2] * 2)
-            else:
+            if round(data_const[j][1]) == 0:
+                continue
+            elif (data_const[j][0]) <= first_limit - range_half:
+                continue
+            elif first_limit - range_half < (data_const[j][0]) < first_limit + range_half:
                 power_const.append(data_const[j][1])
                 velocity_const.append(data_const[j][0])
                 time_raw_const.append(data_const[j][2] * 2)
-
+            elif first_limit + range_half <= (data_const[j][0]) <= second_limit - range_half:
+                continue
+            elif second_limit - range_half < data_const[j][0] < second_limit + range_half:
+                power_const.append(data_const[j][1])
+                velocity_const.append(data_const[j][0])
+                time_raw_const.append(data_const[j][2] * 2)
+            elif second_limit + range_half <= (data_const[j][0]) <= third_limit - range_half:
+                continue
+            elif third_limit - range_half < data_const[j][0] < third_limit + range_half:
+                power_const.append(data_const[j][1])
+                velocity_const.append(data_const[j][0])
+                time_raw_const.append(data_const[j][2] * 2)
         """
         Convert the raw data from the file to named lists for the FOURTH file
         """
@@ -559,22 +599,20 @@ class Main(wx.Frame):
         # with the highest value without a big if statement structure.
         error_lin = 0
         error_quadratic = 0
-        fitted_power_const_1 = []
         popt1, pcov = curve_fit(self.func_lin, array(velocity_clean_const), array(power_clean_const))
-        fitted_power_const_1_dummy = self.func_lin(array(velocity_clean_const), *popt1)
-        for i in range(len(fitted_power_const_1_dummy)):
-            if fitted_power_const_1_dummy[i] >= 0:
-                fitted_power_const_1.append(fitted_power_const_1_dummy[i])
+        fitted_power_const_1 = self.func_lin(array(velocity_clean_const), *popt1)
+        for i in range(len(fitted_power_const_1)):
+            if fitted_power_const_1[i] < 0:
+                fitted_power_const_1[i] = 0
         for i in range(len(fitted_power_const_1)):
             if fitted_power_const_1[i] > 0:
                 error_lin += abs(fitted_power_const_1[i] - power_clean_const[i])
 
-        fitted_power_const_2 = []
         popt2, pcov = curve_fit(self.func_quadratic, array(velocity_clean_const), array(power_clean_const))
-        fitted_power_const_2_dummy = self.func_quadratic(array(velocity_clean_const), *popt2)
-        for i in range(len(fitted_power_const_2_dummy)):
-            if fitted_power_const_2_dummy[i] >= 0:
-                fitted_power_const_2.append(fitted_power_const_2_dummy[i])
+        fitted_power_const_2 = self.func_quadratic(array(velocity_clean_const), *popt2)
+        for i in range(len(fitted_power_const_2)):
+            if fitted_power_const_2[i] < 0:
+                fitted_power_const_2[i] = 0
         for i in range(len(fitted_power_const_2)):
             if fitted_power_const_2[i] > 0:
                 error_quadratic += abs(fitted_power_const_2[i] - power_clean_const[i])
@@ -585,22 +623,37 @@ class Main(wx.Frame):
         }
         lowest_error = min(errors, key=errors.get)
 
+        power_no_int_res_high_imd = []
+        power_no_int_res_high = []
         power_compensated = []
         if lowest_error == '1':
-            fitted_power_const = fitted_power_const_1
+            fitted_power_const = self.func_lin(array(velocity_clean_low), *popt1)
             for i in range(len(velocity_clean_moderate_acc)):
                 power_to_substract = popt1[0] * velocity_clean_moderate_acc[i] + popt1[1]
                 power_compensated.append(power_clean_moderate_acc[i] - power_to_substract)
+            for i in range(len(velocity_clean_high)):
+                power_to_substract = popt1[0] * velocity_clean_high[i] + popt1[1]
+                if power_to_substract >= 0:
+                    power_no_int_res_high_imd.append(fitted_power_high[i] - power_to_substract)
+                else:
+                    power_no_int_res_high_imd.append(0)
 
         elif lowest_error == '2':
-            fitted_power_const = fitted_power_const_2
+            fitted_power_const = self.func_quadratic(array(velocity_clean_low), *popt2)
             for i in range(len(velocity_clean_moderate_acc)):
                 power_to_substract = popt2[0] * velocity_clean_moderate_acc[i] ** 2 + popt2[1] * velocity_clean_moderate_acc[
                     i] + popt2[2]
                 power_compensated.append(power_clean_moderate_acc[i] - power_to_substract)
+            for i in range(len(velocity_clean_high)):
+                if power_to_substract >= 0:
+                    power_to_substract = popt2[0] * velocity_clean_high[i] ** 2 + popt2[1] * velocity_clean_high[
+                        i] + popt2[2]
+                    power_no_int_res_high_imd.append(fitted_power_high[i] - power_to_substract)
+                else:
+                    power_no_int_res_high_imd.append(0)
 
         popt3, pcov = curve_fit(self.func_lin, array(velocity_clean_moderate_acc) / 3.6, array(power_compensated))
-        fitted_power_moderate_acc = self.func_lin(array(velocity_clean_moderate_acc) / 3.6, *popt3)
+        fitted_compensated_power_moderate_acc = self.func_lin(array(velocity_clean_moderate_acc) / 3.6, *popt3)
 
         for i in range(len(time_clean_moderate_acc)):
             if len(velocity_clean_moderate_acc) < len(time_clean_moderate_acc):
@@ -618,16 +671,15 @@ class Main(wx.Frame):
             self.simulated_mass = popt3[0] / popt4[0]
 
         power_flywheel_high = []
+        power_flywheel_high_imd = []
         power_flywheel_low = []
-        power_flywheel_const = []
         power_clean_low_brake = []
         power_clean_high_brake = []
-        power_clean_const_brake = []
+
 
         # Acceleration needs to be constant to use this.
         popt5, pcov = curve_fit(self.func_lin, array(time_clean_high), array(velocity_clean_high) / 3.6)
         popt6, pcov = curve_fit(self.func_lin, array(time_clean_low), array(velocity_clean_low) / 3.6)
-        popt7, pcov = curve_fit(self.func_lin, array(time_clean_const), array(velocity_clean_const) / 3.6)
 
         for i in range(len(velocity_clean_high)):
             power_flywheel_high.append(float(self.simulated_mass) * velocity_clean_high[i] / 3.6 * popt5[0])
@@ -637,9 +689,9 @@ class Main(wx.Frame):
             power_flywheel_low.append(float(self.simulated_mass) * velocity_clean_low[i] / 3.6 * popt6[0])
             power_clean_low_brake.append(fitted_power_low[i] - power_flywheel_low[i])
 
-        for i in range(len(fitted_power_const)):
-            power_flywheel_const.append(float(self.simulated_mass) * velocity_clean_const[i] / 3.6 * popt7[0])
-            power_clean_const_brake.append(fitted_power_const[i] - power_flywheel_const[i])
+        for i in range(len(power_no_int_res_high_imd)):
+            power_flywheel_high_imd.append(float(self.simulated_mass) * velocity_clean_high[i] / 3.6 * popt5[0])
+            power_no_int_res_high.append(power_no_int_res_high_imd[i] - power_flywheel_high_imd[i])
 
         """
         Initialize writing an excel file.
@@ -708,87 +760,98 @@ class Main(wx.Frame):
         worksheet_data.write('O2', 'Fitted Velocity [km/h]', bold)
         worksheet_data.write('P2', 'Theor. Power [W]', bold)
         worksheet_data.write('Q2', 'Fitted Compensated Power [W]', bold)
+        worksheet_data.write('R2', 'Fitted Power', bold)
         worksheet_data.write_column(2, 11, time_clean_moderate_acc)
         worksheet_data.write_column(2, 12, power_clean_moderate_acc)
         worksheet_data.write_column(2, 13, velocity_clean_moderate_acc)
         worksheet_data.write_column(2, 14, fitted_velocity_moderate_acc)
         worksheet_data.write_column(2, 15, power_compensated)
-        worksheet_data.write_column(2, 16, fitted_power_moderate_acc)
+        worksheet_data.write_column(2, 16, fitted_compensated_power_moderate_acc)
+        # worksheet_data.write_column(2, 17, fitted_power_moderate_acc)
 
         worksheet_data.write('S2', 'Brake Power Trainer Upper Limit [W]', bold)
         worksheet_data.write('T2', 'Brake Power Trainer Lower Limit [W]', bold)
         worksheet_data.write_column(2, 18, power_clean_high_brake)
         worksheet_data.write_column(2, 19, power_clean_low_brake)
 
+        worksheet_data.write('V2', 'Brake Power Trainer No Internal Friction Higher Limit [W]')
+        worksheet_data.write_column(2, 21, power_no_int_res_high)
         """
         Writing to graph.
         """
         graph.add_series({
+            'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
+            'values': [worksheet_data.name] + [2, 1] + [len(power_clean_high) + 2, 1],
+            'line': {'color': '#67bfe7', 'dash_type': 'dash', 'width': 1.5},
+            'name': 'Highest Gradient Power',
+        })
+
+        graph.add_series({
+            'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
+            'values': [worksheet_data.name] + [2, 2] + [len(power_clean_high) + 2, 2],
+            'line': {'color': '#67bfe7', 'width': 2},
+            'name': 'Fitted Highest Gradient Power',
+        })
+
+        graph.add_series({
+            'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
+            'values': [worksheet_data.name] + [2, 18] + [len(power_clean_high) + 2, 18],
+            'line': {'color': 'black', 'width': 1.5},
+            'name': 'Highest Gradient Power - Without Flywheel Effects',
+        })
+
+        graph.add_series({
+            'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
+            'values': [worksheet_data.name] + [2, 21] + [len(power_no_int_res_high) + 2, 21],
+            'line': {'color': 'green', 'dash_type': 'dash', 'width': 2},
+            'name': 'Highest Gradient Power - Without Internal Friction - Without Flywheel Effects',
+        })
+
+        graph.add_series({
             'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
             'values': [worksheet_data.name] + [2, 4] + [len(power_clean_low) + 2, 4],
-            'line': {'color': '#67bfe7', 'dash_type': 'dash'},
+            'line': {'color': '#67bfe7', 'dash_type': 'dash', 'width': 1.5},
             'name': 'Lowest Gradient Power - ANT+',
         })
 
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
             'values': [worksheet_data.name] + [2, 5] + [len(power_clean_low) + 2, 5],
-            'line': {'color': '#67bfe7'},
-            'name': 'Lowest Gradient Power - ANT+',
+            'line': {'color': '#67bfe7', 'width': 2},
+            'name': 'Fitted Lowest Gradient Power - ANT+',
         })
 
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
             'values': [worksheet_data.name] + [2, 19] + [len(power_clean_low_brake) + 2, 19],
-            'line': {'color': 'black'},
+            'line': {'color': 'black', 'width': 1.5},
             'name': 'Lowest Gradient Power - Without Flywheel Effects',
         })
-
-        graph.add_series({
-            'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
-            'values': [worksheet_data.name] + [2, 1] + [len(power_clean_high) + 2, 1],
-            'line': {'color': '#67bfe7', 'dash_type': 'dash'},
-            'name': 'Highest Gradient Power - Without Flywheel Effects',
-        })
-
-        graph.add_series({
-            'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
-            'values': [worksheet_data.name] + [2, 2] + [len(power_clean_high) + 2, 2],
-            'line': {'color': '#67bfe7'},
-            'name': 'Highest Gradient Power',
-        })
-
-        graph.add_series({
-            'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
-            'values': [worksheet_data.name] + [2, 18] + [len(power_clean_high) + 2, 18],
-            'line': {'color': 'black'},
-            'name': 'Highest Gradient Power',
-        })
-        graph.add_series({
-            'categories': [worksheet_data.name] + [2, 13] + [len(velocity_clean_moderate_acc) + 2, 13],
-            'values': [worksheet_data.name] + [2, 12] + [len(power_clean_moderate_acc) + 2, 12],
-            'line': {'color': 'red'},
-            'name': 'Power Moderate Acceleration',
-        })
-        graph.add_series({
-            'categories': [worksheet_data.name] + [2, 13] + [len(velocity_clean_moderate_acc) + 2, 13],
-            'values': [worksheet_data.name] + [2, 15] + [len(power_compensated) + 2, 15],
-            'line': {'color': 'black'},
-            'name': 'Power compensated',
-        })
-        graph.add_series({
-            'categories': [worksheet_data.name] + [2, 13] + [len(velocity_clean_moderate_acc) + 2, 13],
-            'values': [worksheet_data.name] + [2, 16] + [len(fitted_power_moderate_acc) + 2, 16],
-            'line': {'color': 'purple'},
-            'name': 'Fitted Power Moderate Acceleration',
-        })
-
-        graph.add_series({
-            'categories': [worksheet_data.name] + [2, 9] + [len(velocity_clean_const) + 2, 9],
-                'values': [worksheet_data.name] + [2, 8] + [len(fitted_power_const) + 2, 8],
-            'line': {'color': 'red'},
-            'name': 'Fitted Power Constant Velocities',
-        })
+        # graph.add_series({
+        #     'categories': [worksheet_data.name] + [2, 13] + [len(velocity_clean_moderate_acc) + 2, 13],
+        #     'values': [worksheet_data.name] + [2, 12] + [len(power_clean_moderate_acc) + 2, 12],
+        #     'line': {'color': 'red'},
+        #     'name': 'Power Moderate Acceleration',
+        # })
+        # graph.add_series({
+        #     'categories': [worksheet_data.name] + [2, 13] + [len(velocity_clean_moderate_acc) + 2, 13],
+        #     'values': [worksheet_data.name] + [2, 15] + [len(power_compensated) + 2, 15],
+        #     'line': {'color': 'black'},
+        #     'name': 'Power Compensated with Steady-State friction',
+        # })
+        # graph.add_series({
+        #     'categories': [worksheet_data.name] + [2, 13] + [len(velocity_clean_moderate_acc) + 2, 13],
+        #     'values': [worksheet_data.name] + [2, 16] + [len(fitted_compensated_power_moderate_acc) + 2, 16],
+        #     'line': {'color': 'purple'},
+        #     'name': 'Fitted Compensated Power Moderate Acceleration',
+        # })
+        #
+        # graph.add_series({
+        #     'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
+        #     'values': [worksheet_data.name] + [2, 8] + [len(fitted_power_const) + 2, 8],
+        #     'line': {'color': 'red'},
+        #     'name': 'Fitted Power Constant Velocities',
+        # })
 
         graph_2.add_series({
             'categories': [worksheet_data.name] + [2, 6] + [len(time_clean_const) + 2, 6],
@@ -829,9 +892,10 @@ class Main(wx.Frame):
         })
 
         worksheet_charts.insert_chart('B2', graph)
-        worksheet_charts.insert_chart('B40', graph_2)
+        graph.set_legend({'position': 'bottom'})
+        # worksheet_charts.insert_chart('B40', graph_2)
         worksheet_charts.write('T2', 'Simulated Mass:', header)
-        worksheet_charts.write('X2', str(round(self.simulated_mass, 2)), header)
+        worksheet_charts.write('X2', str(round(float(self.simulated_mass), 2)), header)
         worksheet_charts.write_rich_string('Y2', header, '[kgm', superscript, '2', header, ']')
 
         try:
@@ -975,7 +1039,7 @@ class Main(wx.Frame):
                 self.checkbox.SetValue(False)
                 return
 
-            self.simulated_mass = float(self.sim_dialog.GetValue())
+            self.simulated_mass = self.sim_dialog.GetValue()
             if self.simulated_mass == "":
                 self.inertia_dialog = wx.TextEntryDialog(self,
                                                          "If the previous screen was left empty, what is the value for the moment of inertia [kg * m^2] (use '.' as decimal separator): ",
