@@ -269,7 +269,7 @@ class Main(wx.Frame):
         # goal of 0W. In contrary with the other files, the acceleration needs to be non-const, with a moderate acceleration. This way, it is possible to
         # calculate the simulated mass (inertia).
         with wx.FileDialog(self,
-                           "Choose the third logged SimulANT+ file with the 0 W Power program - moederate acceleration...",
+                           "Choose the third logged SimulANT+ file with the 0 W Power program - moderate acceleration...",
                            wildcard="Text files (*.txt)|*.txt|" "Comma Separated Value-files (*.csv)|*.csv",
                            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as prompted_dialog:
             if prompted_dialog.ShowModal() == wx.ID_CANCEL:
@@ -693,7 +693,7 @@ class Main(wx.Frame):
         """
         Initialize writing an excel file.
         """
-        excel = xlsxwriter.Workbook(self.user_file_name + ".xlsx")
+        excel = xlsxwriter.Workbook(self.folder_pathname + "\\" + self.user_file_name + ".xlsx")
         try:
             graph = excel.add_chart({'type': 'scatter', 'subtype': 'straight'})
         except Exception:

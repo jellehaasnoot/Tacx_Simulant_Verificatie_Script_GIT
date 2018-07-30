@@ -56,7 +56,7 @@ missing module named 'pkg_resources.extern.six.moves' - imported by pkg_resource
 missing module named pkg_resources.extern.appdirs - imported by pkg_resources.extern, pkg_resources, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
 missing module named pkg_resources.extern.packaging - imported by pkg_resources.extern, pkg_resources, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
 missing module named __main__ - imported by pkg_resources, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
-missing module named 'pkg_resources.extern.pyparsing' - imported by pkg_resources._vendor.packaging.markers, pkg_resources._vendor.packaging.requirements
+missing module named 'pkg_resources.extern.pyparsing' - imported by pkg_resources._vendor.packaging.requirements, pkg_resources._vendor.packaging.markers
 missing module named 'com.sun' - imported by pkg_resources._vendor.appdirs
 missing module named com - imported by pkg_resources._vendor.appdirs
 missing module named ordereddict - imported by pkg_resources._vendor.pyparsing, pyparsing
