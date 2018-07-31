@@ -85,11 +85,11 @@ class Main(wx.Frame):
                                                  pos=(4, 2))
         self.path_header_display.SetFont(self.font_header)
 
-        self.path_panel_4 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 190))
-        self.path_header_display = wx.StaticText(self.path_panel_4,
-                                                 label="Path to directory fourth selected LOG-file: ",
-                                                 pos=(4, 2))
-        self.path_header_display.SetFont(self.font_header)
+        # self.path_panel_4 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 190))
+        # self.path_header_display = wx.StaticText(self.path_panel_4,
+        #                                          label="Path to directory fourth selected LOG-file: ",
+        #                                          pos=(4, 2))
+        # self.path_header_display.SetFont(self.font_header)
 
         self.some_data_panel_1 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 80), pos=(10, 260))
         self.data_panel_1_header_display = wx.StaticText(self.some_data_panel_1,
@@ -106,10 +106,10 @@ class Main(wx.Frame):
                                                          label="Some statistics about the third file: ", pos=(4, 2))
         self.data_panel_3_header_display.SetFont(self.font_header)
 
-        self.some_data_panel_4 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 80), pos=(10, 530))
-        self.data_panel_4_header_display = wx.StaticText(self.some_data_panel_4,
-                                                         label="Some statistics about the fourth file: ", pos=(4, 2))
-        self.data_panel_4_header_display.SetFont(self.font_header)
+        # self.some_data_panel_4 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 80), pos=(10, 530))
+        # self.data_panel_4_header_display = wx.StaticText(self.some_data_panel_4,
+        #                                                  label="Some statistics about the fourth file: ", pos=(4, 2))
+        # self.data_panel_4_header_display.SetFont(self.font_header)
 
         self.xlsx_path_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 630))
 
@@ -182,8 +182,8 @@ class Main(wx.Frame):
         self.path_display = wx.StaticText(self.path_panel_3, label=str(path.dirname(self.pathname_3)), pos=(4, 25))
         self.path_display.SetFont(self.font_normal)
 
-        self.path_display = wx.StaticText(self.path_panel_4, label=str(path.dirname(self.pathname_4)), pos=(4, 25))
-        self.path_display.SetFont(self.font_normal)
+        # self.path_display = wx.StaticText(self.path_panel_4, label=str(path.dirname(self.pathname_4)), pos=(4, 25))
+        # self.path_display.SetFont(self.font_normal)
 
         self.data_panel_1_display = wx.StaticText(self.some_data_panel_1,
                                                   label="Average power at high slope:     " + str(
@@ -206,12 +206,12 @@ class Main(wx.Frame):
                                                       len(self.velocity_list_const)), pos=(4, 24))
         self.data_panel_3_display.SetFont(self.font_normal)
 
-        self.data_panel_4_display = wx.StaticText(self.some_data_panel_4,
-                                                  label="Average power at 0 Watt programming - moderate acceleration:     " + str(
-                                                      self.power_moderate_acc_avg) + " W\n""Average velocity at 0 Watt programming:   " + str(
-                                                      self.velocity_moderate_acc_avg) + " km/h\n""Amount of received ANT+ messages:   " + str(
-                                                      len(self.velocity_list_moderate_acc)), pos=(4, 24))
-        self.data_panel_4_display.SetFont(self.font_normal)
+        # self.data_panel_4_display = wx.StaticText(self.some_data_panel_4,
+        #                                           label="Average power at 0 Watt programming - moderate acceleration:     " + str(
+        #                                               self.power_moderate_acc_avg) + " W\n""Average velocity at 0 Watt programming:   " + str(
+        #                                               self.velocity_moderate_acc_avg) + " km/h\n""Amount of received ANT+ messages:   " + str(
+        #                                               len(self.velocity_list_moderate_acc)), pos=(4, 24))
+        # self.data_panel_4_display.SetFont(self.font_normal)
 
         self.xlsx_path_panel_header_display = wx.StaticText(self.xlsx_path_panel,
                                                             label="Path to " + self.user_file_name + ".xslx: ",
@@ -267,15 +267,15 @@ class Main(wx.Frame):
         # Opening File 4 with the use of a dialog. File 4 will contain the ANT+ data of the measurements with a power
         # goal of 0W. In contrary with the other files, the acceleration needs to be non-const, with a moderate acceleration. This way, it is possible to
         # calculate the simulated mass (inertia).
-        with wx.FileDialog(self,
-                           "Choose the third logged SimulANT+ file with the 0 W Power program - moderate acceleration...",
-                           wildcard="Text files (*.txt)|*.txt|" "Comma Separated Value-files (*.csv)|*.csv",
-                           style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as prompted_dialog:
-            if prompted_dialog.ShowModal() == wx.ID_CANCEL:
-                return
-            self.pathname_4 = prompted_dialog.GetPath()
-
-        self.folder_pathname = path.dirname(self.pathname_4)
+        # with wx.FileDialog(self,
+        #                    "Choose the third logged SimulANT+ file with the 0 W Power program - moderate acceleration...",
+        #                    wildcard="Text files (*.txt)|*.txt|" "Comma Separated Value-files (*.csv)|*.csv",
+        #                    style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as prompted_dialog:
+        #     if prompted_dialog.ShowModal() == wx.ID_CANCEL:
+        #         return
+        #     self.pathname_4 = prompted_dialog.GetPath()
+        #
+        # self.folder_pathname = path.dirname(self.pathname_4)
         # Retrieving the filename the user wants to use. This will be the file name of the new excel file which will be
         # created after running this program.
         self.user_file_name_dialog = wx.TextEntryDialog(self,
@@ -342,28 +342,30 @@ class Main(wx.Frame):
         for i in range(len(velocity_list)):
             data_const.append([velocity_list[i], power_list[i], velocity_time_list[i], power_time_list[i]])
 
+        self.velocity_list_const = velocity_list
         self.power_list_const = power_list
         self.time_list_const = time_list
-        self.velocity_list_moderate_acc = velocity_list
+
+        # self.power_list_const = power_list
+        # self.time_list_const = time_list
+        # self.velocity_list_const = velocity_list
 
         # Analysing log file 4:
-        self.logfile_analyser(self.pathname_4)
-        data_moderate_acc = []
-        if len(power_list) < len(velocity_list):
-            velocity_list.pop()
-            velocity_time_list.pop()
-        elif len(velocity_list) < len(power_list):
-            power_list.pop()
-            power_time_list.pop()
-        else:
-            pass
+        # self.logfile_analyser(self.pathname_4)
+        # data_moderate_acc = []
+        # if len(power_list) < len(velocity_list):
+        #     velocity_list.pop()
+        #     velocity_time_list.pop()
+        # elif len(velocity_list) < len(power_list):
+        #     power_list.pop()
+        #     power_time_list.pop()
+        # else:
+        #     pass
+        #
+        # for i in range(len(velocity_list)):
+        #     data_moderate_acc.append([velocity_list[i], power_list[i], velocity_time_list[i], power_time_list[i]])
+        #
 
-        for i in range(len(velocity_list)):
-            data_moderate_acc.append([velocity_list[i], power_list[i], velocity_time_list[i], power_time_list[i]])
-
-        self.velocity_list_const = velocity_list
-        self.power_list_moderate_acc = power_list
-        self.time_list_moderate_acc = time_list
 
         # Calculating the averages of every file, this is not necessary for the calculations below, but this will give
         # a quick overview of the used files to the user.
@@ -379,10 +381,10 @@ class Main(wx.Frame):
         self.velocity_const_avg = round(float(self.velocity_const_avg), 1)
         self.power_const_avg = mean(self.power_list_const)
         self.power_const_avg = round(float(self.power_const_avg), 1)
-        self.velocity_moderate_acc_avg = mean(self.velocity_list_moderate_acc)
-        self.velocity_moderate_acc_avg = round(float(self.velocity_moderate_acc_avg), 1)
-        self.power_moderate_acc_avg = mean(self.power_list_moderate_acc)
-        self.power_moderate_acc_avg = round(float(self.power_moderate_acc_avg), 1)
+        # self.velocity_moderate_acc_avg = mean(self.velocity_list_moderate_acc)
+        # self.velocity_moderate_acc_avg = round(float(self.velocity_moderate_acc_avg), 1)
+        # self.power_moderate_acc_avg = mean(self.power_list_moderate_acc)
+        # self.power_moderate_acc_avg = round(float(self.power_moderate_acc_avg), 1)
 
         velocity_raw_high = []
         power_raw_high = []
@@ -406,8 +408,8 @@ class Main(wx.Frame):
         power_time_clean_const = []
         velocity_moderate_acc = []
         power_moderate_acc = []
-        velocity_time_clean_moderate_acc = []
-        power_time_clean_moderate_acc = []
+        # velocity_time_clean_moderate_acc = []
+        # power_time_clean_moderate_acc = []
 
         """
         Convert the raw data from the file to named lists for the FIRST file
@@ -469,6 +471,7 @@ class Main(wx.Frame):
         first_non_zero_power = []
         for i in range(len(data_low)):
             if data_low[i][1] != 0:
+                first_non_zero_power.append([a[1] for a in data_low].index(data_low[i][1]))
                 first_non_zero_power.append([a[1] for a in data_low].index(data_low[i][1]))
         first_non_zero_power = first_non_zero_power[0]
 
@@ -561,21 +564,20 @@ class Main(wx.Frame):
 
         velocity_const.append(mean(velocity_const_1))
         power_const.append(mean(power_const_1))
-
         """
         Convert the raw data from the file to named lists for the FOURTH file
         """
-        for j in range(len(data_moderate_acc)):
-            if round(data_moderate_acc[j][0]) == 0:
-                power_moderate_acc.append(0)
-                velocity_moderate_acc.append(0)
-                velocity_time_clean_moderate_acc.append(data_moderate_acc[j][2])
-                power_time_clean_moderate_acc.append(data_moderate_acc[j][3])
-            else:
-                power_moderate_acc.append(data_moderate_acc[j][1])
-                velocity_moderate_acc.append(data_moderate_acc[j][0])
-                velocity_time_clean_moderate_acc.append(data_moderate_acc[j][2])
-                power_time_clean_moderate_acc.append(data_moderate_acc[j][3])
+        # for j in range(len(data_moderate_acc)):
+        #     if round(data_moderate_acc[j][0]) == 0:
+        #         power_moderate_acc.append(0)
+        #         velocity_moderate_acc.append(0)
+        #         velocity_time_clean_moderate_acc.append(data_moderate_acc[j][2])
+        #         power_time_clean_moderate_acc.append(data_moderate_acc[j][3])
+        #     else:
+        #         power_moderate_acc.append(data_moderate_acc[j][1])
+        #         velocity_moderate_acc.append(data_moderate_acc[j][0])
+        #         velocity_time_clean_moderate_acc.append(data_moderate_acc[j][2])
+        #         power_time_clean_moderate_acc.append(data_moderate_acc[j][3])
 
         """
         Start calculations on the THIRD AND FOURTH file to calculate the SIMULATED MASS.
@@ -583,8 +585,8 @@ class Main(wx.Frame):
         """
         power_clean_const = []
         velocity_clean_const = []
-        power_clean_moderate_acc = []
-        velocity_clean_moderate_acc = []
+        # power_clean_moderate_acc = []
+        # velocity_clean_moderate_acc = []
         power_clean_moderate_acc_dummy = []
         velocity_clean_moderate_acc_dummy = []
 
@@ -593,15 +595,15 @@ class Main(wx.Frame):
             velocity_clean_const.append(velocity_const[i])
             velocity_time_clean_const.append(velocity_time_raw_const[i])
             power_time_clean_const.append(power_time_raw_const[i])
-        for i in range(power_moderate_acc.index(max(power_moderate_acc))):
-            power_clean_moderate_acc_dummy.append(power_moderate_acc[i])
-        for i in range(power_moderate_acc.index(max(power_moderate_acc))):
-            velocity_clean_moderate_acc_dummy.append(velocity_moderate_acc[i])
+        # for i in range(power_moderate_acc.index(max(power_moderate_acc))):
+        #     power_clean_moderate_acc_dummy.append(power_moderate_acc[i])
+        # for i in range(power_moderate_acc.index(max(power_moderate_acc))):
+        #     velocity_clean_moderate_acc_dummy.append(velocity_moderate_acc[i])
 
-        for i in range(len(power_clean_moderate_acc_dummy)):
-            if power_clean_moderate_acc_dummy[i] > 50:
-                power_clean_moderate_acc.append(power_clean_moderate_acc_dummy[i])
-                velocity_clean_moderate_acc.append(velocity_clean_moderate_acc_dummy[i])
+        # for i in range(len(power_clean_moderate_acc_dummy)):
+        #     if power_clean_moderate_acc_dummy[i] > 50:
+        #         power_clean_moderate_acc.append(power_clean_moderate_acc_dummy[i])
+        #         velocity_clean_moderate_acc.append(velocity_clean_moderate_acc_dummy[i])
 
         # Calculating the best possible fit, we only consider quadratic and linear fits at this moment. The error with
         # the original data is calculated and the best fit will be drawn. A dictionary is used to track the variable
@@ -620,9 +622,9 @@ class Main(wx.Frame):
         for i in range(len(fitted_power_const)):
             if fitted_power_const[i] < 0:
                 fitted_power_const[i] = 0
-        for i in range(len(velocity_clean_moderate_acc)):
-            power_to_substract = popt1[0] * velocity_clean_moderate_acc[i]
-            power_compensated.append(power_clean_moderate_acc[i] - power_to_substract)
+        # for i in range(len(velocity_clean_moderate_acc)):
+        #     power_to_substract = popt1[0] * velocity_clean_moderate_acc[i]
+        #     power_compensated.append(power_clean_moderate_acc[i] - power_to_substract)
         for i in range(len(velocity_clean_high)):
             power_to_substract = popt1[0] * velocity_clean_high[i]
             # if power_to_substract >= 0:
@@ -630,15 +632,15 @@ class Main(wx.Frame):
              # else:
                     # power_no_int_res_high_imd.append(0)
 
-        popt3, pcov = curve_fit(self.func_lin, array(velocity_clean_moderate_acc) / 3.6, array(power_compensated))
-        fitted_compensated_power_moderate_acc = self.func_lin(array(velocity_clean_moderate_acc) / 3.6, *popt3)
-
-        for i in range(len(velocity_time_clean_moderate_acc)):
-            if len(velocity_clean_moderate_acc) < len(velocity_time_clean_moderate_acc):
-                velocity_time_clean_moderate_acc.pop()
-
+        # popt3, pcov = curve_fit(self.func_lin, array(velocity_clean_moderate_acc) / 3.6, array(power_compensated))
+        # fitted_compensated_power_moderate_acc = self.func_lin(array(velocity_clean_moderate_acc) / 3.6, *popt3)
+        #
+        # for i in range(len(velocity_time_clean_moderate_acc)):
+        #     if len(velocity_clean_moderate_acc) < len(velocity_time_clean_moderate_acc):
+        #         velocity_time_clean_moderate_acc.pop()
+        #
         popt4, pcov = curve_fit(self.func_lin, array(velocity_time_clean_low), array(velocity_clean_low) / 3.6)
-        fitted_velocity_moderate_acc = self.func_lin(array(velocity_time_clean_moderate_acc), *popt4)
+        # fitted_velocity_moderate_acc = self.func_lin(array(velocity_time_clean_moderate_acc), *popt4)
 
 
         """
@@ -746,22 +748,22 @@ class Main(wx.Frame):
         worksheet_data.write_column(2, 8, fitted_power_const)
         worksheet_data.write_column(2, 9, velocity_clean_const)
 
-        worksheet_data.write('L1', 'Tested with 0 W program - moderate acceleration (without slip)', underline)
-        worksheet_data.write('L2', 'Time [s]', bold)
-        worksheet_data.write('M2', 'Power [km/h]', bold)
-        worksheet_data.write('N2', 'Velocity [km/h]', bold)
-        worksheet_data.write('O2', 'Fitted Velocity [km/h]', bold)
-        worksheet_data.write('P2', 'Theor. Power [W]', bold)
-        worksheet_data.write('Q2', 'Fitted Compensated Power [W]', bold)
-        worksheet_data.write('R2', 'Fitted Power', bold)
-        worksheet_data.write_column(2, 11, velocity_time_clean_moderate_acc)
-        worksheet_data.write_column(2, 22, power_time_clean_moderate_acc)
-        worksheet_data.write_column(2, 12, power_clean_moderate_acc)
-        worksheet_data.write_column(2, 13, velocity_clean_moderate_acc)
-        worksheet_data.write_column(2, 14, fitted_velocity_moderate_acc)
-        worksheet_data.write_column(2, 15, power_compensated)
-        worksheet_data.write_column(2, 16, fitted_compensated_power_moderate_acc)
-        # worksheet_data.write_column(2, 17, fitted_power_moderate_acc)
+        # worksheet_data.write('L1', 'Tested with 0 W program - moderate acceleration (without slip)', underline)
+        # worksheet_data.write('L2', 'Time [s]', bold)
+        # worksheet_data.write('M2', 'Power [km/h]', bold)
+        # worksheet_data.write('N2', 'Velocity [km/h]', bold)
+        # worksheet_data.write('O2', 'Fitted Velocity [km/h]', bold)
+        # worksheet_data.write('P2', 'Theor. Power [W]', bold)
+        # worksheet_data.write('Q2', 'Fitted Compensated Power [W]', bold)
+        # worksheet_data.write('R2', 'Fitted Power', bold)
+        # worksheet_data.write_column(2, 11, velocity_time_clean_moderate_acc)
+        # worksheet_data.write_column(2, 22, power_time_clean_moderate_acc)
+        # worksheet_data.write_column(2, 12, power_clean_moderate_acc)
+        # worksheet_data.write_column(2, 13, velocity_clean_moderate_acc)
+        # worksheet_data.write_column(2, 14, fitted_velocity_moderate_acc)
+        # worksheet_data.write_column(2, 15, power_compensated)
+        # worksheet_data.write_column(2, 16, fitted_compensated_power_moderate_acc)
+        # # worksheet_data.write_column(2, 17, fitted_power_moderate_acc)
 
         worksheet_data.write('S2', 'Brake Power Trainer Upper Limit [W]', bold)
         worksheet_data.write('T2', 'Brake Power Trainer Lower Limit [W]', bold)
@@ -889,28 +891,28 @@ class Main(wx.Frame):
             'y2_axis': True,
         })
 
-        graph_2.add_series({
-            'categories': [worksheet_data.name] + [2, 11] + [len(velocity_time_clean_moderate_acc) + 2, 11],
-            'values': [worksheet_data.name] + [2, 13] + [len(velocity_clean_moderate_acc) + 2, 13],
-            'line': {'color': '#0000ff', 'dash_type': 'dash'},
-            'name': 'Velocity Moderate Acceleration',
-            'y2_axis': True,
-        })
-
-        graph_2.add_series({
-            'categories': [worksheet_data.name] + [2, 11] + [len(velocity_time_clean_moderate_acc) + 2, 11],
-            'values': [worksheet_data.name] + [2, 14] + [len(fitted_velocity_moderate_acc) + 2, 14],
-            'line': {'color': '#0000ff'},
-            'name': 'Fitted Velocity Moderate Acceleration',
-            'y2_axis': True,
-        })
-
-        graph_2.add_series({
-            'categories': [worksheet_data.name] + [2, 22] + [len(power_time_clean_moderate_acc) + 2, 22],
-            'values': [worksheet_data.name] + [2, 15] + [len(power_compensated) + 2, 15],
-            'line': {'color': '#ff0000'},
-            'name': 'Moderate Acceleration Power Compensated',
-        })
+        # graph_2.add_series({
+        #     'categories': [worksheet_data.name] + [2, 11] + [len(velocity_time_clean_moderate_acc) + 2, 11],
+        #     'values': [worksheet_data.name] + [2, 13] + [len(velocity_clean_moderate_acc) + 2, 13],
+        #     'line': {'color': '#0000ff', 'dash_type': 'dash'},
+        #     'name': 'Velocity Moderate Acceleration',
+        #     'y2_axis': True,
+        # })
+        #
+        # graph_2.add_series({
+        #     'categories': [worksheet_data.name] + [2, 11] + [len(velocity_time_clean_moderate_acc) + 2, 11],
+        #     'values': [worksheet_data.name] + [2, 14] + [len(fitted_velocity_moderate_acc) + 2, 14],
+        #     'line': {'color': '#0000ff'},
+        #     'name': 'Fitted Velocity Moderate Acceleration',
+        #     'y2_axis': True,
+        # })
+        #
+        # graph_2.add_series({
+        #     'categories': [worksheet_data.name] + [2, 22] + [len(power_time_clean_moderate_acc) + 2, 22],
+        #     'values': [worksheet_data.name] + [2, 15] + [len(power_compensated) + 2, 15],
+        #     'line': {'color': '#ff0000'},
+        #     'name': 'Moderate Acceleration Power Compensated',
+        # })
 
         worksheet_charts.insert_chart('B2', graph)
         graph.set_legend({'position': 'bottom'})
