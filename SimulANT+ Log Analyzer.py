@@ -7,7 +7,7 @@ from os import startfile
 from numpy import mean
 from numpy import array
 from scipy.optimize import curve_fit
-#
+
 class Main(wx.Frame):
     def __init__(self, parent, title):
         """
@@ -435,6 +435,9 @@ class Main(wx.Frame):
         """
         Calculate errors and make a fit for the data of the FIRST file 
         """
+        global fitted_power_high
+        global fitted_power_low
+
         error_lin_high = 0
         error_quadratic_high = 0
         popt1_high, pcov = curve_fit(self.func_lin, array(velocity_clean_high), array(power_clean_high))
@@ -510,6 +513,10 @@ class Main(wx.Frame):
         """
         Calculate errors and make a fit for the data of the SECOND file 
         """
+        global index_low_below_zero_1
+        global index_low_below_zero_2
+
+        index_low_below_zero_1 = 0
         error_lin_low = 0
         error_quadratic_low = 0
         popt1_low, pcov = curve_fit(self.func_lin, array(velocity_clean_low), array(power_clean_low))
@@ -518,16 +525,19 @@ class Main(wx.Frame):
             if fitted_power_low_1[i] < 0:
                 fitted_power_low_1[i] = 0
                 index_low_below_zero_1 = i
+
         for i in range(len(fitted_power_low_1)):
             if fitted_power_low_1[i] > 0:
                 error_lin_low += abs(fitted_power_low_1[i] - power_clean_low[i])
 
+        index_low_below_zero_2 = 0
         popt2_low, pcov = curve_fit(self.func_quadratic, array(velocity_clean_low), array(power_clean_low))
         fitted_power_low_2 = self.func_quadratic(array(velocity_clean_low), *popt2_low)
         for i in range(len(fitted_power_low_2)):
             if fitted_power_low_2[i] < 0:
                 fitted_power_low_2[i] = 0
                 index_low_below_zero_2 = i
+
         for i in range(len(fitted_power_low_2)):
             if fitted_power_low_2[i] > 0:
                 error_quadratic_low += abs(fitted_power_low_2[i] - power_clean_low[i])
@@ -537,6 +547,8 @@ class Main(wx.Frame):
             '2': error_quadratic_low
         }
         lowest_error = min(errors, key=errors.get)
+        global index_low_below_zero
+
         if lowest_error == '1':
             fitted_power_low = fitted_power_low_1
             index_low_below_zero = index_low_below_zero_1
@@ -547,7 +559,7 @@ class Main(wx.Frame):
         """
         Convert the raw data from the file to named lists for the THIRD file
         """
-        first_limit = 32.4
+        first_limit = 43.2
         range_half = 0.5
         velocity_time_raw_const = []
         power_const_1 = []
@@ -555,6 +567,7 @@ class Main(wx.Frame):
         velocity_const_1 = []
         velocity_const = [velocity_clean_low[index_low_below_zero]]
         power_time_raw_const = []
+
         for j in range(len(data_const)):
             if first_limit - range_half < (data_const[j][0]) < first_limit + range_half:
                 power_const_1.append(data_const[j][1])
@@ -589,6 +602,7 @@ class Main(wx.Frame):
         # velocity_clean_moderate_acc = []
         power_clean_moderate_acc_dummy = []
         velocity_clean_moderate_acc_dummy = []
+
 
         for i in range(len(power_const)):
             power_clean_const.append(power_const[i])
@@ -647,7 +661,7 @@ class Main(wx.Frame):
         Calculation of the power which is needed to accelerate the flywheel. For the first and second file.
         """
         power_flywheel = []
-        self.simulated_mass = []
+        self.simulated_mass_guess = []
         j = 0
         if self.checkbox.GetValue() != True:
             for i in range(len(fitted_power_const)):
@@ -656,18 +670,18 @@ class Main(wx.Frame):
                     if (velocity_clean_low[i] * popt4[0]) == 0:
                         continue
                     else:
-                        self.simulated_mass.append(power_flywheel[j] / (velocity_clean_low[i]/3.6 * popt4[0]))
+                        self.simulated_mass_guess.append(power_flywheel[j] / (velocity_clean_low[i]/3.6 * popt4[0]))
+                        self.simulated_mass = 0
                     j += 1
 
-        print(self.simulated_mass)
-        print(mean(self.simulated_mass))
-        self.simulated_mass = mean(self.simulated_mass)
+        #TODO Guessen enzo
+
+        self.simulated_mass_guess = mean(self.simulated_mass)
         power_flywheel_high = []
         power_flywheel_high_imd = []
         power_flywheel_low = []
         power_clean_low_brake = []
         power_clean_high_brake = []
-
 
         # Acceleration needs to be constant to use this.
         popt5, pcov = curve_fit(self.func_lin, array(velocity_time_clean_high), array(velocity_clean_high) / 3.6)
@@ -685,6 +699,9 @@ class Main(wx.Frame):
             power_flywheel_high_imd.append(float(self.simulated_mass) * velocity_clean_high[i] / 3.6 * popt5[0])
             power_no_int_res_high.append(power_no_int_res_high_imd[i] - power_flywheel_high_imd[i])
 
+        for i in range(len(power_no_int_res_high)):
+            if power_no_int_res_high[i] < 0:
+                power_no_int_res_high[i] = 0
 
         """
         Initialize writing an excel file.
