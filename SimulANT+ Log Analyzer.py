@@ -6,7 +6,6 @@ from os import path
 from os import startfile
 from numpy import mean
 from numpy import array
-import scipy
 from scipy.optimize import curve_fit
 
 class Main(wx.Frame):
@@ -601,8 +600,7 @@ class Main(wx.Frame):
         for i in range(len(fitted_power_const_1)):
             if fitted_power_const_1[i] < 0:
                 fitted_power_const_1[i] = 0
-        for i in range(len(fitted_power_const_1)):
-            if fitted_power_const_1[i] > 0:
+            else:
                 error_lin += abs(fitted_power_const_1[i] - power_clean_const[i])
 
         popt2, pcov = curve_fit(self.func_quadratic, array(velocity_clean_const), array(power_clean_const))
@@ -610,8 +608,7 @@ class Main(wx.Frame):
         for i in range(len(fitted_power_const_2)):
             if fitted_power_const_2[i] < 0:
                 fitted_power_const_2[i] = 0
-        for i in range(len(fitted_power_const_2)):
-            if fitted_power_const_2[i] > 0:
+            else:
                 error_quadratic += abs(fitted_power_const_2[i] - power_clean_const[i])
 
         errors = {
@@ -642,9 +639,9 @@ class Main(wx.Frame):
                     i] + popt2[2]
                 power_compensated.append(power_clean_moderate_acc[i] - power_to_substract)
             for i in range(len(velocity_clean_high)):
-                if power_to_substract >= 0:
-                    power_to_substract = popt2[0] * velocity_clean_high[i] ** 2 + popt2[1] * velocity_clean_high[
+                power_to_substract = popt2[0] * velocity_clean_high[i] ** 2 + popt2[1] * velocity_clean_high[
                         i] + popt2[2]
+                if power_to_substract >= 0:
                     power_no_int_res_high_imd.append(fitted_power_high[i] - power_to_substract)
                 else:
                     power_no_int_res_high_imd.append(0)
@@ -843,12 +840,12 @@ class Main(wx.Frame):
         #     'name': 'Fitted Compensated Power Moderate Acceleration',
         # })
         #
-        # graph.add_series({
-        #     'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
-        #     'values': [worksheet_data.name] + [2, 8] + [len(fitted_power_const) + 2, 8],
-        #     'line': {'color': 'red'},
-        #     'name': 'Fitted Power Constant Velocities',
-        # })
+        graph.add_series({
+            'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
+            'values': [worksheet_data.name] + [2, 8] + [len(fitted_power_const) + 2, 8],
+            'line': {'color': 'red'},
+            'name': 'Fitted Power Constant Velocities',
+        })
 
         graph_2.add_series({
             'categories': [worksheet_data.name] + [2, 6] + [len(time_clean_const) + 2, 6],

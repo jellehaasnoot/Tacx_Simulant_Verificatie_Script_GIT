@@ -56,7 +56,7 @@ missing module named 'pkg_resources.extern.six.moves' - imported by pkg_resource
 missing module named pkg_resources.extern.appdirs - imported by pkg_resources.extern, pkg_resources, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
 missing module named pkg_resources.extern.packaging - imported by pkg_resources.extern, pkg_resources, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
 missing module named __main__ - imported by pkg_resources, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
-missing module named 'pkg_resources.extern.pyparsing' - imported by pkg_resources._vendor.packaging.requirements, pkg_resources._vendor.packaging.markers
+missing module named 'pkg_resources.extern.pyparsing' - imported by pkg_resources._vendor.packaging.markers, pkg_resources._vendor.packaging.requirements
 missing module named 'com.sun' - imported by pkg_resources._vendor.appdirs
 missing module named com - imported by pkg_resources._vendor.appdirs
 missing module named ordereddict - imported by pkg_resources._vendor.pyparsing, pyparsing
@@ -89,7 +89,7 @@ missing module named numpy.core.integer - imported by numpy.core, numpy.fft.help
 missing module named __builtin__ - imported by numpy.core.numerictypes, numpy.core.numeric, numpy.distutils.misc_util, numpy.lib.function_base, numpy.lib._iotools, numpy.ma.core, numpy, scipy._lib.six, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py, pkg_resources._vendor.pyparsing, pyparsing
 missing module named StringIO - imported by numpy.lib.utils, numpy.testing._private.utils, numpy.lib.format, scipy._lib.six, six, xlsxwriter.compatibility, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py, pkg_resources._vendor.six
 missing module named cffi - imported by scipy._lib._ccallback, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
-missing module named org - imported by pickle, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
+missing module named 'org.python' - imported by pickle, setuptools.sandbox, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py, xml.sax
 missing module named readline - imported by cmd, code, pdb, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
 excluded module named _frozen_importlib - imported by importlib, importlib.abc, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
 missing module named _frozen_importlib_external - imported by importlib._bootstrap, importlib, importlib.abc, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
@@ -100,7 +100,7 @@ missing module named vms_lib - imported by platform, C:\Users\Jelle\PycharmProje
 missing module named termios - imported by tty, getpass, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
 missing module named grp - imported by shutil, tarfile, pathlib, distutils.archive_util, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
 missing module named pwd - imported by posixpath, shutil, tarfile, http.server, webbrowser, pathlib, distutils.util, distutils.archive_util, netrc, getpass, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
-missing module named 'org.python' - imported by copy, setuptools.sandbox, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py, xml.sax
+missing module named org - imported by copy, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
 missing module named _dummy_threading - imported by dummy_threading, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
 missing module named pytest - imported by numpy.testing._private.pytesttester, scipy._lib._testutils, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py, matplotlib
 missing module named psutil - imported by scipy._lib._testutils, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
