@@ -431,7 +431,7 @@ class Main(wx.Frame):
             power_time_clean_high.append(power_time_raw_high[i])
 
         """
-        Make a fit for the data of the FIRST file 
+        Calculate errors and make a fit for the data of the FIRST file 
         """
         error_lin_high = 0
         error_quadratic_high = 0
@@ -505,7 +505,7 @@ class Main(wx.Frame):
             power_time_clean_low.append(power_time_raw_low[i])
 
         """
-        Make a fit for the data of the SECOND file 
+        Calculate errors and make a fit for the data of the SECOND file 
         """
         error_lin_low = 0
         error_quadratic_low = 0
@@ -630,6 +630,33 @@ class Main(wx.Frame):
              # else:
                     # power_no_int_res_high_imd.append(0)
 
+        if lowest_error == '1':
+            fitted_power_const = self.func_lin(array(velocity_clean_low), *popt1)
+
+            for i in range(len(velocity_clean_moderate_acc)):
+                power_to_substract = popt1[0] * velocity_clean_moderate_acc[i] + popt1[1]
+                power_compensated.append(power_clean_moderate_acc[i] - power_to_substract)
+            for i in range(len(velocity_clean_high)):
+                power_to_substract = popt1[0] * velocity_clean_high[i] + popt1[1]
+                # if power_to_substract >= 0:
+                power_no_int_res_high_imd.append(fitted_power_high[i] - power_to_substract)
+                # else:
+                    # power_no_int_res_high_imd.append(0)
+
+        elif lowest_error == '2':
+            fitted_power_const = self.func_quadratic(array(velocity_clean_low), *popt2)
+
+            for i in range(len(velocity_clean_moderate_acc)):
+                power_to_substract = popt2[0] * velocity_clean_moderate_acc[i] ** 2 + popt2[1] * velocity_clean_moderate_acc[
+                    i] + popt2[2]
+                power_compensated.append(power_clean_moderate_acc[i] - power_to_substract)
+            for i in range(len(velocity_clean_high)):
+                power_to_substract = popt2[0] * velocity_clean_high[i] ** 2 + popt2[1] * velocity_clean_high[
+                        i] + popt2[2]
+                # if power_to_substract >= 0:
+                power_no_int_res_high_imd.append(fitted_power_high[i] - power_to_substract)
+                # else:
+                #     power_no_int_res_high_imd.append(0)
 
         popt3, pcov = curve_fit(self.func_lin, array(velocity_clean_moderate_acc) / 3.6, array(power_compensated))
         fitted_compensated_power_moderate_acc = self.func_lin(array(velocity_clean_moderate_acc) / 3.6, *popt3)
@@ -846,6 +873,13 @@ class Main(wx.Frame):
         #     'values': [worksheet_data.name] + [2, 16] + [len(fitted_compensated_power_moderate_acc) + 2, 16],
         #     'line': {'color': 'purple'},
         #     'name': 'Fitted Compensated Power Moderate Acceleration',
+        # })
+        #
+        # graph.add_series({
+        #     'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
+        #     'values': [worksheet_data.name] + [2, 8] + [len(fitted_power_const) + 2, 8],
+        #     'line': {'color': 'red'},
+        #     'name': 'Fitted Power Constant Velocities',
         # })
 
         graph.add_series({
