@@ -7,7 +7,7 @@ from os import startfile
 from numpy import mean
 from numpy import array
 from scipy.optimize import curve_fit
-
+#
 class Main(wx.Frame):
     def __init__(self, parent, title):
         """
