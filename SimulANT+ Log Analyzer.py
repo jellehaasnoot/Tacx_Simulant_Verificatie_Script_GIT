@@ -547,8 +547,8 @@ class Main(wx.Frame):
         """
         Convert the raw data from the file to named lists for the THIRD file
         """
-        first_limit = 12 * 3.6  # TODO: in README zetten, ook andere wijzingen doorvoeren!
-        range_half = 0.2
+        first_limit = 32.4
+        range_half = 0.5
         velocity_time_raw_const = []
         power_const_1 = []
         power_const = [0]
@@ -651,7 +651,7 @@ class Main(wx.Frame):
         j = 0
         if self.checkbox.GetValue() != True:
             for i in range(len(fitted_power_const)):
-                if 40 > velocity_clean_low[i] > 20:
+                if velocity_clean_low[i] > 15:
                     power_flywheel.append(fitted_power_low[i] - fitted_power_const[i])
                     if (velocity_clean_low[i] * popt4[0]) == 0:
                         continue
