@@ -32,12 +32,16 @@ def logfile_analyser(logfile):
     Dit deel splitst de gesorteerde regels in delen (delen zijn de stukken die zich tussen 2 spaties bevinden). Daarna wordt
     het hexadecimale getal uit deze zin gefilterd.
     """
+    time_value = []
     for i in range(len(sentences)):
         sentence = sentences[i].split()
         index = sentence.index("Rx:")
         value_raw = sentence[index+1]
         value = value_raw.replace("[", "").replace("]", "")     # This will removes the useless characters
         value_list.append(value)
+        time_value.append(sentence[index-2])
+
+    print(time_value)
 
     """
     Deze waardes worden gesorteerd per indexatie in het begin van het hexadecimale getal, in de index '10' staat de snelheid
