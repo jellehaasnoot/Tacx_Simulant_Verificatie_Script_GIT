@@ -68,48 +68,16 @@ class Main(wx.Frame):
         self.font_header = wx.Font(12, family=wx.DECORATIVE, style=wx.NORMAL, weight=wx.BOLD)
         self.font_normal = wx.Font(10, family=wx.DECORATIVE, style=wx.NORMAL, weight=wx.NORMAL)
 
-        self.path_panel_1 = wx.Panel(self.top_panel, -1, style=wx.TAB_TRAVERSAL | wx.SUNKEN_BORDER, size=(685, 50),
-                                     pos=(10, 10))
-        self.path_header_display = wx.StaticText(self.path_panel_1, label="Path to directory first selected LOG-file: ",
-                                                 pos=(4, 2))
-        self.path_header_display.SetFont(self.font_header)
+        self.panel_titles = ["Path to directory first selected LOG-file: ", "Path to directory second selected LOG-file: ", "Path to directory third selected LOG-file: "]
+        self.statistics_titles = ["Some statistics about the first file: ", "Some statistics about the second file: ", "Some statistics about the third file: "]
+        for i in range(len(self.panel_titles)):
+            self.path_panel = wx.Panel(self.top_panel, -1, style=wx.TAB_TRAVERSAL | wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 10 + i * 55))
+            self.path_panel_header = wx.StaticText(self.path_panel, label=self.panel_titles[i], pos=(4, 2))
+            self.path_panel_header.SetFont(self.font_header)
 
-        self.path_panel_2 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 70))
-        self.path_header_display = wx.StaticText(self.path_panel_2,
-                                                 label="Path to directory second selected LOG-file: ",
-                                                 pos=(4, 2))
-        self.path_header_display.SetFont(self.font_header)
-
-        self.path_panel_3 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 130))
-        self.path_header_display = wx.StaticText(self.path_panel_3, label="Path to directory third selected LOG-file: ",
-                                                 pos=(4, 2))
-        self.path_header_display.SetFont(self.font_header)
-
-        # self.path_panel_4 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 190))
-        # self.path_header_display = wx.StaticText(self.path_panel_4,
-        #                                          label="Path to directory fourth selected LOG-file: ",
-        #                                          pos=(4, 2))
-        # self.path_header_display.SetFont(self.font_header)
-
-        self.some_data_panel_1 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 80), pos=(10, 260))
-        self.data_panel_1_header_display = wx.StaticText(self.some_data_panel_1,
-                                                         label="Some statistics about the first file: ", pos=(4, 2))
-        self.data_panel_1_header_display.SetFont(self.font_header)
-
-        self.some_data_panel_2 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 80), pos=(10, 350))
-        self.data_panel_2_header_display = wx.StaticText(self.some_data_panel_2,
-                                                         label="Some statistics about the second file: ", pos=(4, 2))
-        self.data_panel_2_header_display.SetFont(self.font_header)
-
-        self.some_data_panel_3 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 80), pos=(10, 440))
-        self.data_panel_3_header_display = wx.StaticText(self.some_data_panel_3,
-                                                         label="Some statistics about the third file: ", pos=(4, 2))
-        self.data_panel_3_header_display.SetFont(self.font_header)
-
-        # self.some_data_panel_4 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 80), pos=(10, 530))
-        # self.data_panel_4_header_display = wx.StaticText(self.some_data_panel_4,
-        #                                                  label="Some statistics about the fourth file: ", pos=(4, 2))
-        # self.data_panel_4_header_display.SetFont(self.font_header)
+            self.data_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 80), pos=(10, 260 + i * 90))
+            self.data_panel_header = wx.StaticText(self.data_panel, label=self.statistics_titles[i], pos=(4, 2))
+            self.data_panel_header.SetFont(self.font_header)
 
         self.xlsx_path_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 630))
 
@@ -167,48 +135,17 @@ class Main(wx.Frame):
         Assign panels to the main panel. This includes the path to both files and some basic data about the files.
         New fonts are created to create some diversity on the screen, making the application more appealing to look at.
         """
+        for i in range(len(self.panel_titles)):
+            self.path_display_panel = wx.Panel(self.top_panel, -1, style=wx.NO_BORDER, size=(685, 25), pos=(14, 35 + i * 55))
+            self.path_display = wx.StaticText(self.path_display_panel, label=str(path.dirname(self.pathname[i])), pos=(4, 2))
+
+        data_display_strings = ["Average power at high slope / power:     ", "Average velocity at high slope / power:   ", "Amount of received ANT+ messages:   "]
+        for i in range(len(self.panel_titles)):
+            self.data_display_panel = wx.Panel(self.top_panel, -1, style=wx.NO_BORDER, size=(685, 60), pos=(18, 285 + i * 90))
+            self.data_display = wx.StaticText(self.data_display_panel, label=data_display_strings[0] + str(self.all_averages[i][0]) + "W\n" + data_display_strings[1] + str(self.all_averages[i][1]) + "km/h\n" + data_display_strings[2] + str(self.all_averages[i][2]))
+            self.data_display.SetFont(self.font_normal)
 
         # Create panels
-        self.path_display = wx.StaticText(self.path_panel_1, label=str(path.dirname(self.pathname[0])), pos=(4, 25))
-        self.path_display.SetFont(self.font_normal)
-
-        self.path_display = wx.StaticText(self.path_panel_2, label=str(path.dirname(self.pathname[1]), pos=(4, 25))
-        self.path_display.SetFont(self.font_normal)
-
-        self.path_display = wx.StaticText(self.path_panel_3, label=str(path.dirname(self.pathname[2])), pos=(4, 25))
-        self.path_display.SetFont(self.font_normal)
-
-        # self.path_display = wx.StaticText(self.path_panel_4, label=str(path.dirname(self.pathname_4)), pos=(4, 25))
-        # self.path_display.SetFont(self.font_normal)
-
-        self.data_panel_1_display = wx.StaticText(self.some_data_panel_1,
-                                                  label="Average power at high slope / power:     " + str(
-                                                      self.power_high_avg) + " W\n" + "Average velocity at high slope / power:   " + str(
-                                                      self.velocity_high_avg) + " km/h\n" + "Amount of received ANT+ messages:   " + str(
-                                                      len(self.velocity_list_high)), pos=(4, 24))
-        self.data_panel_1_display.SetFont(self.font_normal)
-
-        self.data_panel_2_display = wx.StaticText(self.some_data_panel_2,
-                                                  label="Average power at low (negative) slope:     " + str(
-                                                      self.power_low_avg) + " W\n""Average velocity at low (negative) slope:   " + str(
-                                                      self.velocity_low_avg) + " km/h\n""Amount of received ANT+ messages:   " + str(
-                                                      len(self.velocity_list_low)), pos=(4, 24))
-        self.data_panel_2_display.SetFont(self.font_normal)
-
-        self.data_panel_3_display = wx.StaticText(self.some_data_panel_3,
-                                                  label="Average power at 0 Watt programming - constant velocities:     " + str(
-                                                      self.power_const_avg) + " W\n""Average velocity at 0 Watt programming:   " + str(
-                                                      self.velocity_const_avg) + " km/h\n""Amount of received ANT+ messages:   " + str(
-                                                      len(self.velocity_list_const)), pos=(4, 24))
-        self.data_panel_3_display.SetFont(self.font_normal)
-
-        # self.data_panel_4_display = wx.StaticText(self.some_data_panel_4,
-        #                                           label="Average power at 0 Watt programming - moderate acceleration:     " + str(
-        #                                               self.power_moderate_acc_avg) + " W\n""Average velocity at 0 Watt programming:   " + str(
-        #                                               self.velocity_moderate_acc_avg) + " km/h\n""Amount of received ANT+ messages:   " + str(
-        #                                               len(self.velocity_list_moderate_acc)), pos=(4, 24))
-        # self.data_panel_4_display.SetFont(self.font_normal)
-
         self.xlsx_path_panel_header_display = wx.StaticText(self.xlsx_path_panel,
                                                             label="Path to " + self.user_file_name + ".xslx: ",
                                                             pos=(4, 0))
@@ -326,21 +263,30 @@ class Main(wx.Frame):
 
         # Calculating the averages of every file, this is not necessary for the calculations below, but this will give
         # a quick overview of the used files to the user.
-        self.velocity_high_avg = mean(self.velocity_list_high)
-        self.velocity_high_avg = round(float(self.velocity_high_avg), 1)
+        self.all_averages = [[], [], []]
+
         self.power_high_avg = mean(self.power_list_high)
-        self.power_high_avg = round(float(self.power_high_avg), 1)
-        self.velocity_low_avg = mean(self.velocity_list_low)
-        self.velocity_low_avg = round(float(self.velocity_low_avg), 1)
+        self.all_averages[0].append(round(float(self.power_high_avg), 1))
+        self.velocity_high_avg = mean(self.velocity_list_high)
+        self.all_averages[0].append(round(float(self.velocity_high_avg), 1))
+        self.all_averages[0].append(len(self.velocity_list_high))
+
         self.power_low_avg = mean(self.power_list_low)
-        self.power_low_avg = round(float(self.power_low_avg), 1)
-        self.velocity_const_avg = mean(self.velocity_list_const)
-        self.velocity_const_avg = round(float(self.velocity_const_avg), 1)
+        self.all_averages[1].append(round(float(self.power_low_avg), 1))
+        self.velocity_low_avg = mean(self.velocity_list_low)
+        self.all_averages[1].append(round(float(self.velocity_low_avg), 1))
+        self.all_averages[1].append(len(self.velocity_list_low))
+
         self.power_const_avg = mean(self.power_list_const)
-        self.power_const_avg = round(float(self.power_const_avg), 1)
+        self.all_averages[2].append(round(float(self.power_const_avg), 1))
+        self.velocity_const_avg = mean(self.velocity_list_const)
+        self.all_averages[2].append(round(float(self.velocity_const_avg), 1))
+        self.all_averages[2].append(len(self.velocity_list_const))
+        self.all_averages = array(self.all_averages)
+
         # TODO: turn on when fourth file is used
         # self.power_avg = mean(self.power_list_power)
-        # self.power_avg = round(float(self.power_avg), 1)
+        # self.all_averages.append(round(float(self.power_avg), 1))
 
         # Some constants needed for the next part of code
         global index_low_below_zero_1, index_low_below_zero_2, index_low_below_zero, fitted_power_high, fitted_power_low, poplin
