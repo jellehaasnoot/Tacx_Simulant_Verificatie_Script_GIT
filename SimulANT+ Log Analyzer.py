@@ -370,7 +370,7 @@ class Main(wx.Frame):
         index_low_below_zero_2 = 0
         error_lin_high = 0
         error_quadratic_high = 0
-        first_limit = 32.4
+        first_limit = 12*3.6
         range_half = 0.5
 
         # Convert the raw data from the file to named lists for the FIRST file. This file gives the information for the
@@ -557,7 +557,7 @@ class Main(wx.Frame):
                         self.simulated_mass_guess.append(power_flywheel[j] / (velocity_clean_low[i]/3.6 * popt4[0]))
                     j += 1
             self.simulated_mass_guess = mean(self.simulated_mass_guess)
-            if 0 > self.simulated_mass_guess > 40:
+            if 0 > self.simulated_mass_guess:
                 self.simulated_mass_guess = 0
 
         popt5, pcov = curve_fit(self.func_lin, array(velocity_time_clean_high), array(velocity_clean_high) / 3.6)
