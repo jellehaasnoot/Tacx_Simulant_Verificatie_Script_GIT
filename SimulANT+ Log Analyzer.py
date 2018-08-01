@@ -186,8 +186,8 @@ class Main(wx.Frame):
         # self.path_display.SetFont(self.font_normal)
 
         self.data_panel_1_display = wx.StaticText(self.some_data_panel_1,
-                                                  label="Average power at high slope:     " + str(
-                                                      self.power_high_avg) + " W\n" + "Average velocity at high slope:   " + str(
+                                                  label="Average power at high slope / power:     " + str(
+                                                      self.power_high_avg) + " W\n" + "Average velocity at high slope / power:   " + str(
                                                       self.velocity_high_avg) + " km/h\n" + "Amount of received ANT+ messages:   " + str(
                                                       len(self.velocity_list_high)), pos=(4, 24))
         self.data_panel_1_display.SetFont(self.font_normal)
@@ -237,7 +237,7 @@ class Main(wx.Frame):
 
         # Opening File 1 with the use of a dialog. File 1 will contain the ANT+ data of the measurements with a high
         # gradient (slope). This will be used to calculate the maximal brake power.
-        with wx.FileDialog(self, "Choose the logged SimulANT+ file with the HIGHEST slope...",
+        with wx.FileDialog(self, "Choose the logged SimulANT+ file with the HIGHEST slope / power...",
                            wildcard="Text files (*.txt)|*.txt|" "Comma Separated Value-files (*.csv)|*.csv",
                            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as prompted_dialog:
             if prompted_dialog.ShowModal() == wx.ID_CANCEL:
@@ -559,7 +559,7 @@ class Main(wx.Frame):
         """
         Convert the raw data from the file to named lists for the THIRD file
         """
-        first_limit = 43.2
+        first_limit = 32.4
         range_half = 0.5
         velocity_time_raw_const = []
         power_const_1 = []
@@ -676,7 +676,7 @@ class Main(wx.Frame):
 
         #TODO Guessen enzo
 
-        self.simulated_mass_guess = mean(self.simulated_mass)
+        self.simulated_mass_guess = mean(self.simulated_mass_guess)
         power_flywheel_high = []
         power_flywheel_high_imd = []
         power_flywheel_low = []
