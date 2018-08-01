@@ -161,9 +161,6 @@ class Main(wx.Frame):
         self.power_list_low = []
         self.power_list_high = []
         self.power_list_const = []
-        self.time_list_high = []
-        self.time_list_low = []
-        self.time_list_const = []
 
     def panel_layout(self):
         """
@@ -172,13 +169,13 @@ class Main(wx.Frame):
         """
 
         # Create panels
-        self.path_display = wx.StaticText(self.path_panel_1, label=str(path.dirname(self.pathname_1)), pos=(4, 25))
+        self.path_display = wx.StaticText(self.path_panel_1, label=str(path.dirname(self.pathname[0])), pos=(4, 25))
         self.path_display.SetFont(self.font_normal)
 
-        self.path_display = wx.StaticText(self.path_panel_2, label=str(path.dirname(self.pathname_2)), pos=(4, 25))
+        self.path_display = wx.StaticText(self.path_panel_2, label=str(path.dirname(self.pathname[1])), pos=(4, 25))
         self.path_display.SetFont(self.font_normal)
 
-        self.path_display = wx.StaticText(self.path_panel_3, label=str(path.dirname(self.pathname_3)), pos=(4, 25))
+        self.path_display = wx.StaticText(self.path_panel_3, label=str(path.dirname(self.pathname[2])), pos=(4, 25))
         self.path_display.SetFont(self.font_normal)
 
         # self.path_display = wx.StaticText(self.path_panel_4, label=str(path.dirname(self.pathname_4)), pos=(4, 25))
@@ -240,7 +237,10 @@ class Main(wx.Frame):
         # (negative) gradient (slope). This will be used to calculate the minimal brake power. Opening File 3 with the
         # use of a dialog. File 3 will contain the ANT+ data of the measurements with a power goal of 0W while cycling
         # at some multiple constant velocities. This will be used to see the residual brake power if no brake is used.
-        # TODO: add description for the fourth power file if necessary
+        # Opening File 4 with the use of a dialog. File 4 will contain the ANT+ data of the measurements with a power
+        # goal of 0W while cycling at some multiple constant velocities. This will be measured with an external power
+        # meter, this way the accuracy can be calculated.
+        # TODO: add "Choose the fourth logged SimulANT+ file with the 0 W Power program - Power meter ...." to dummy_strings
         self.pathname = []
         dummy_strings = ["Choose the logged SimulANT+ file with the HIGHEST slope / power...",
                          "Choose the second logged SimulANT+ file with the LOWEST (negative) slope...",
@@ -253,26 +253,12 @@ class Main(wx.Frame):
                     return
                 self.pathname.append(prompted_dialog.GetPath())
 
-        # Opening File 4 with the use of a dialog. File 43 will contain the ANT+ data of the measurements with a power
-        # goal of 0W while cycling at some multiple constant velocities. This will be measured with an external power
-        # meter, this way the accuracy can be calculated
-        # TODO: uncomment if file is used
-        # with wx.FileDialog(self,
-        #                    "Choose the fourth logged SimulANT+ file with the 0 W Power program - Power meter ....",
-        #                    wildcard="Text files (*.txt)|*.txt|" "Comma Separated Value-files (*.csv)|*.csv",
-        #                    style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as prompted_dialog:
-        #
-        #     if prompted_dialog.ShowModal() == wx.ID_CANCEL:
-        #         return
-        #     self.pathname_4 = prompted_dialog.GetPath()
-        # self.folder_pathname_4 = path.dirname(self.pathname_4)
-
         # Naming the excel file which will be made by the program.
         self.user_file_name_dialog = wx.TextEntryDialog(self,
                                                         "What do you want the .xslx file to be named? Enter here: ",
                                                         "Enter file name...")
+        self.folder_pathname = path.dirname(self.pathname[2])
         self.user_file_name_dialog.CenterOnParent()
-
         if self.user_file_name_dialog.ShowModal() == wx.ID_CANCEL:
             return
         self.user_file_name = self.user_file_name_dialog.GetValue()
@@ -280,65 +266,44 @@ class Main(wx.Frame):
         # Analyse the log-files. This will be used to retrieve the data from the four selected log files above. This
         # will be done by ANTlogfileconverter.py. Raw data will be stored in data_.... and used in further calculations.
         # Analysing log file 1:
-        self.logfile_analyser(self.pathname[0])
-        data_high = []
-        if len(power_list) < len(velocity_list):
-            velocity_list.pop()
-            velocity_time_list.pop()
-        elif len(velocity_list) < len(power_list):
-            power_list.pop()
-            power_time_list.pop()
-        else:
-            pass
+        self.velocity_list = []
+        self.power_list = []
+        data = []
 
-        for i in range(len(velocity_list)):
-            data_high.append([velocity_list[i], power_list[i], velocity_time_list[i], power_time_list[i]])
+        for j in range(3):
+            data_dummy = []
+            self.logfile_analyser(self.pathname[j])
+            if len(power_list) < len(velocity_list):
+                velocity_list.pop()
+                velocity_time_list.pop()
+            elif len(velocity_list) < len(power_list):
+                power_list.pop()
+                power_time_list.pop()
+            else:
+                pass
 
-        self.velocity_list_high = velocity_list
-        self.power_list_high = power_list
-        self.time_list_high = time_list
+            for i in range(len(velocity_list)):
+                data_dummy.append([velocity_list[i], power_list[i], velocity_time_list[i], power_time_list[i]])
 
-        # Analysing log file 2:
-        self.logfile_analyser(self.pathname[1])
-        data_low = []
-        if len(power_list) < len(velocity_list):
-            velocity_list.pop()
-            velocity_time_list.pop()
-        elif len(velocity_list) < len(power_list):
-            power_list.pop()
-            power_time_list.pop()
-        else:
-            pass
+            data.append(data_dummy)
+            self.velocity_list.append(velocity_list)
+            self.power_list.append(power_list)
 
-        for i in range(len(velocity_list)):
-            data_low.append([velocity_list[i], power_list[i], velocity_time_list[i], power_time_list[i]])
-            
-        self.velocity_list_low = velocity_list
-        self.power_list_low = power_list
-        self.time_list_low = time_list
+        data_high = data[0]
+        data_low = data[1]
+        data_const = data[2]
 
-        # Analysing log file 3:
-        self.logfile_analyser(self.pathname[2])
-        data_const = []
-        if len(power_list) < len(velocity_list):
-            velocity_list.pop()
-            velocity_time_list.pop()
-        elif len(velocity_list) < len(power_list):
-            power_list.pop()
-            power_time_list.pop()
-        else:
-            pass
-
-        for i in range(len(velocity_list)):
-            data_const.append([velocity_list[i], power_list[i], velocity_time_list[i], power_time_list[i]])
-
-        self.velocity_list_const = velocity_list
-        self.power_list_const = power_list
-        self.time_list_const = time_list
+        self.velocity_list_high = self.velocity_list[0]
+        self.power_list_high = self.power_list[0]
+        self.velocity_list_low = self.velocity_list[1]
+        self.power_list_low = self.power_list[1]
+        self.velocity_list_const = self.velocity_list[2]
+        self.power_list_const = self.power_list[2]
 
         # analysing log file 4:
         # TODO: Change the logfile analyser to take the right values (which are different, because this is a power
         # TODO: meter. Also uncomment the code below to use when the Logfile_analyser has been changed.
+        # TODO: KAN NIET IN DE LOOP IN VERBAND MET DE ANDERE PARAMETERS DIE HIER GEBRUIKT WORDEN!!!
         # self.logfile_analyser(self.pathname[3])
         # data_power = []
         #
@@ -420,7 +385,7 @@ class Main(wx.Frame):
         index_low_below_zero_2 = 0
         error_lin_high = 0
         error_quadratic_high = 0
-        first_limit = 12*3.6
+        first_limit = 9*3.6
         range_half = 0.5
 
         # Convert the raw data from the file to named lists for the FIRST file. This file gives the information for the
@@ -867,16 +832,16 @@ class Main(wx.Frame):
         # worksheet_charts.write('X4', str(round(float(precision_trainer_max), 2)), header)
         # worksheet_charts.write_rich_string('Y4', header, '[%]')
 
-        try:
-            excel.close()
-        except Exception:
-            excel_open_dialog = wx.MessageDialog(self.top_panel, style=wx.ICON_ERROR,
-                                                 message="Excel seems to be still running. It needs to be closed for this application to be able to save a new file.\n\nNo new file will be saved. Please restart the program.",
-                                                 caption="Error!")
-            excel_open_dialog.CenterOnParent()
-            if excel_open_dialog.ShowModal() == wx.OK:
-                excel_open_dialog.Destroy()
-
+        # try:
+        #     excel.close()
+        # except Exception:
+        #     excel_open_dialog = wx.MessageDialog(self.top_panel, style=wx.ICON_ERROR,
+        #                                          message="Excel seems to be still running. It needs to be closed for this application to be able to save a new file.\n\nNo new file will be saved. Please restart the program.",
+        #                                          caption="Error!")
+        #     excel_open_dialog.CenterOnParent()
+        #     if excel_open_dialog.ShowModal() == wx.OK:
+        #         excel_open_dialog.Destroy()
+        excel.close()
         self.panel_layout()
 
     def on_about(self, e):
