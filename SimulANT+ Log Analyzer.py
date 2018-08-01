@@ -157,7 +157,6 @@ class Main(wx.Frame):
     def panel_layout(self):
         """
         Assign panels to the main panel. This includes the path to both files and some basic data about the files.
-
         New fonts are created to create some diversity on the screen, making the application more appealing to look at.
         """
 
@@ -211,7 +210,6 @@ class Main(wx.Frame):
         3: Retrieve the pathname and the entire file
         4: Prepare for possible exceptions
         5: Close file
-
         """
 
         # Opening File 1 with the use of a dialog. File 1 will contain the ANT+ data of the measurements with a high
@@ -243,6 +241,20 @@ class Main(wx.Frame):
                 return
             self.pathname_3 = prompted_dialog.GetPath()
         self.folder_pathname = path.dirname(self.pathname_3)
+
+        # Opening File 4 with the use of a dialog. File 43 will contain the ANT+ data of the measurements with a power
+        # goal of 0W while cycling at some multiple constant velocities. This will be measured with an external power
+        # meter, this way the accuracy can be calculated
+        # TODO: uncomment if file is used
+        # with wx.FileDialog(self,
+        #                    "Choose the fourth logged SimulANT+ file with the 0 W Power program - Power meter ....",
+        #                    wildcard="Text files (*.txt)|*.txt|" "Comma Separated Value-files (*.csv)|*.csv",
+        #                    style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as prompted_dialog:
+        #
+        #     if prompted_dialog.ShowModal() == wx.ID_CANCEL:
+        #         return
+        #     self.pathname_4 = prompted_dialog.GetPath()
+        # self.folder_pathname_4 = path.dirname(self.pathname_4)
 
         # Naming the excel file which will be made by the program.
         self.user_file_name_dialog = wx.TextEntryDialog(self,
@@ -313,6 +325,29 @@ class Main(wx.Frame):
         self.power_list_const = power_list
         self.time_list_const = time_list
 
+        # analysing log file 4:
+        # TODO: Change the logfile analyser to take the right values (which are different, because this is a power
+        # TODO: meter. Also uncomment the code below to use when the Logfile_analyser has been changed.
+        # self.logfile_analyser(self.pathname_4)
+        # data_power = []
+        #
+        # if len(power_list) < len(cadence_list):
+        #     cadence_list.pop()
+        #     cadence_time_list.pop()
+        # elif len(cadence_list) < len(power_list):
+        #     power_list.pop()
+        #     power_time_list.pop()
+        # else:
+        #     pass
+        #
+        # for i in range(len(velocity_list)):
+        #     data_power.append([cadence_list[i], power_list[i], cadence_time_list[i], power_time_list[i]])
+        # TODO: bespreken hoe dit gedaan moet worden, nu gemaakt voor constante snelheid, dit betekent dat de 3e test op
+        # TODO: 12 m/s dubbel wordt getest en wordt gekeken of de vermogens overeen komen, dit kan dan ook voor
+        # TODO: meerdere punten gedaan worden, nu is het slechts voor 1 punt gedaan!
+        # self.power_list_power = power_list
+        # self.time_list_power = time_list
+
         # Calculating the averages of every file, this is not necessary for the calculations below, but this will give
         # a quick overview of the used files to the user.
         self.velocity_high_avg = mean(self.velocity_list_high)
@@ -327,6 +362,9 @@ class Main(wx.Frame):
         self.velocity_const_avg = round(float(self.velocity_const_avg), 1)
         self.power_const_avg = mean(self.power_list_const)
         self.power_const_avg = round(float(self.power_const_avg), 1)
+        # TODO: turn on when fourth file is used
+        # self.power_avg = mean(self.power_list_power)
+        # self.power_avg = round(float(self.power_avg), 1)
 
         # Some constants needed for the next part of code
         global index_low_below_zero_1, index_low_below_zero_2, index_low_below_zero, fitted_power_high, fitted_power_low
@@ -363,6 +401,7 @@ class Main(wx.Frame):
         power_flywheel_low = []
         power_clean_low_brake = []
         power_clean_high_brake = []
+        power_trainer = []
         power_const = [0]
         index_low_below_zero_1 = 0
         error_lin_low = 0
@@ -501,6 +540,9 @@ class Main(wx.Frame):
 
         # Convert the raw data from the file to named lists for the THIRD file. This file will be used to calculate the
         #  basic resistance and simulated mass if this is not given by the user.
+        # TODO: If more data points are required for the calculation of the precision of the trainer, this can be
+        # TODO: duplicated with another variable for the first limit. for example another 2 points at 6m/s and 9 m/s.
+        # TODO: Uncomment the power_trainer variable if the fourth file is added.
         velocity_const = [velocity_clean_low[index_low_below_zero]]
         for j in range(len(data_const)):
             if first_limit - range_half < (data_const[j][0]) < first_limit + range_half:
@@ -508,9 +550,28 @@ class Main(wx.Frame):
                 velocity_const_1.append(data_const[j][0])
                 velocity_time_raw_const.append(data_const[j][2])
                 power_time_raw_const.append(data_const[j][3])
+        # power_trainer.append(mean(power_const1))
 
         velocity_const.append(mean(velocity_const_1))
         power_const.append(mean(power_const_1))
+
+        # Convert the raw data from the file to named lists for the FOURTH file. This file will be used to calculate the
+        # precision of the trainer.
+        # TODO: uncomment and if more data points are required, this can be duplicated with another variable for the
+        # TODO: first limit. for example another 2 points at 6m/s and 9m/s.
+        # for j in range(len(data_const)):
+        #     if first_limit - range_half < (data_const[j][0]) < first_limit + range_half:
+        #         power_const_1.append(data_const[j][1])
+        #         power_time_raw_const.append(data_const[j][3])
+        # power_meter.append(mean(power_const_1))
+
+        # The calculations below are used to calculate the precision of the trainer at the three data points, these will
+        # be shown as variables in the excel file.
+        # TODO: uncomment
+        # for i in range(power_meter):
+        #     precision_trainer_power = (abs(power_meter[i] - power_trainer[i]))/power_meter[i] * 100
+        # precision_trainer_max = max(precision_trainer_power)
+        # precision_trainer_mean = mean(precision_trainer_power)
 
         # Start calculations on the THIRD file to calculate the SIMULATED MASS. This includes fitting the
         # data.
@@ -787,6 +848,13 @@ class Main(wx.Frame):
         worksheet_charts.write('T2', 'Simulated Mass:', header)
         worksheet_charts.write('X2', str(round(float(self.simulated_mass_guess), 2)), header)
         worksheet_charts.write_rich_string('Y2', header, '[kgm', superscript, '2', header, ']')
+        # TODO: uncomment (only uncomment mean if there are more measurements. 
+        # worksheet_charts.write('T3', 'Minimal precision:', header)
+        # worksheet_charts.write('X3', str(round(float(precision_trainer_mean), 2)), header)
+        # worksheet_charts.write_rich_string('Y3', header, '[%]')
+        # worksheet_charts.write('T4', 'Mean precision:', header)
+        # worksheet_charts.write('X4', str(round(float(precision_trainer_max), 2)), header)
+        # worksheet_charts.write_rich_string('Y4', header, '[%]')
 
         try:
             excel.close()
