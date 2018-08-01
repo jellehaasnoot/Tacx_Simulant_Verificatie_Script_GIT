@@ -388,7 +388,7 @@ class Main(wx.Frame):
         # self.power_avg = round(float(self.power_avg), 1)
 
         # Some constants needed for the next part of code
-        global index_low_below_zero_1, index_low_below_zero_2, index_low_below_zero, fitted_power_high, fitted_power_low
+        global index_low_below_zero_1, index_low_below_zero_2, index_low_below_zero, fitted_power_high, fitted_power_low, poplin
         velocity_raw_high = []
         power_raw_high = []
         velocity_time_raw_high = []
