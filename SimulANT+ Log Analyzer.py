@@ -676,7 +676,6 @@ class Main(wx.Frame):
             self.simulated_mass_guess = mean(self.simulated_mass_guess)
 
         #TODO Guessen enzo
-        print(self.simulated_mass_guess)
         power_flywheel_high = []
         power_flywheel_high_imd = []
         power_flywheel_low = []
