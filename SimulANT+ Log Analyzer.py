@@ -222,6 +222,7 @@ class Main(wx.Frame):
         self.sim_mass_panel_display.SetFont(self.font_normal)
 
     def on_open(self, e):
+        # TODO: POP-UP REGELEN + CODE OPGESCHONEN
         """"
         This function is used to open LOG-files, selected by the user.
 
@@ -233,35 +234,24 @@ class Main(wx.Frame):
         5: Close file
         """
 
-        # Opening File 1 with the use of a dialog. File 1 will contain the ANT+ data of the measurements with a high
-        # gradient (slope). This will be used to calculate the maximal brake power.
-        with wx.FileDialog(self, "Choose the logged SimulANT+ file with the HIGHEST slope / power...",
-                           wildcard="Text files (*.txt)|*.txt|" "Comma Separated Value-files (*.csv)|*.csv",
-                           style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as prompted_dialog:
-            if prompted_dialog.ShowModal() == wx.ID_CANCEL:
-                return
-            self.pathname_1 = prompted_dialog.GetPath()
-
-        # Opening File 2 with the use of a dialog. File 2 will contain the ANT+ data of the measurements with a low
-        # (negative) gradient (slope). This will be used to calculate the minimal brake power.
-        with wx.FileDialog(self, "Choose the second logged SimulANT+ file with the LOWEST (negative) slope...",
-                           wildcard="Text files (*.txt)|*.txt|" "Comma Separated Value-files (*.csv)|*.csv",
-                           style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as prompted_dialog:
-            if prompted_dialog.ShowModal() == wx.ID_CANCEL:
-                return
-            self.pathname_2 = prompted_dialog.GetPath()
-
-        # Opening File 3 with the use of a dialog. File 3 will contain the ANT+ data of the measurements with a power
-        # goal of 0W while cycling at some multiple constant velocities. This will be used to see the residual brake power if no brake is used.
-        with wx.FileDialog(self,
-                           "Choose the third logged SimulANT+ file with the 0 W Power program - constant velocities...",
-                           wildcard="Text files (*.txt)|*.txt|" "Comma Separated Value-files (*.csv)|*.csv",
-                           style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as prompted_dialog:
-
-            if prompted_dialog.ShowModal() == wx.ID_CANCEL:
-                return
-            self.pathname_3 = prompted_dialog.GetPath()
-        self.folder_pathname = path.dirname(self.pathname_3)
+        # Opening all files with the use of a dialog. Add a question to dummy_strings to make this code open more files.
+        # File 1 will contain the ANT+ data of the measurements with a high gradient (slope). This will be used to
+        # calculate the maximal brake power. File 2 will contain the ANT+ data of the measurements with a low
+        # (negative) gradient (slope). This will be used to calculate the minimal brake power. Opening File 3 with the
+        # use of a dialog. File 3 will contain the ANT+ data of the measurements with a power goal of 0W while cycling
+        # at some multiple constant velocities. This will be used to see the residual brake power if no brake is used.
+        # TODO: add description for the fourth power file if necessary
+        self.pathname = []
+        dummy_strings = ["Choose the logged SimulANT+ file with the HIGHEST slope / power...",
+                         "Choose the second logged SimulANT+ file with the LOWEST (negative) slope...",
+                         "Choose the third logged SimulANT+ file with the 0 W Power program - constant velocities..."]
+        for i in range(len(dummy_strings)):
+            with wx.FileDialog(self, dummy_strings[i],
+                               wildcard="Text files (*.txt)|*.txt|" "Comma Separated Value-files (*.csv)|*.csv",
+                               style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as prompted_dialog:
+                if prompted_dialog.ShowModal() == wx.ID_CANCEL:
+                    return
+                self.pathname.append(prompted_dialog.GetPath())
 
         # Opening File 4 with the use of a dialog. File 43 will contain the ANT+ data of the measurements with a power
         # goal of 0W while cycling at some multiple constant velocities. This will be measured with an external power
@@ -290,7 +280,7 @@ class Main(wx.Frame):
         # Analyse the log-files. This will be used to retrieve the data from the four selected log files above. This
         # will be done by ANTlogfileconverter.py. Raw data will be stored in data_.... and used in further calculations.
         # Analysing log file 1:
-        self.logfile_analyser(self.pathname_1)
+        self.logfile_analyser(self.pathname[0])
         data_high = []
         if len(power_list) < len(velocity_list):
             velocity_list.pop()
@@ -309,7 +299,7 @@ class Main(wx.Frame):
         self.time_list_high = time_list
 
         # Analysing log file 2:
-        self.logfile_analyser(self.pathname_2)
+        self.logfile_analyser(self.pathname[1])
         data_low = []
         if len(power_list) < len(velocity_list):
             velocity_list.pop()
@@ -328,7 +318,7 @@ class Main(wx.Frame):
         self.time_list_low = time_list
 
         # Analysing log file 3:
-        self.logfile_analyser(self.pathname_3)
+        self.logfile_analyser(self.pathname[2])
         data_const = []
         if len(power_list) < len(velocity_list):
             velocity_list.pop()
@@ -349,7 +339,7 @@ class Main(wx.Frame):
         # analysing log file 4:
         # TODO: Change the logfile analyser to take the right values (which are different, because this is a power
         # TODO: meter. Also uncomment the code below to use when the Logfile_analyser has been changed.
-        # self.logfile_analyser(self.pathname_4)
+        # self.logfile_analyser(self.pathname[3])
         # data_power = []
         #
         # if len(power_list) < len(cadence_list):
@@ -562,7 +552,7 @@ class Main(wx.Frame):
         # Convert the raw data from the file to named lists for the THIRD file. This file will be used to calculate the
         #  basic resistance and simulated mass if this is not given by the user.
         # TODO: If more data points are required for the calculation of the precision of the trainer, this can be
-        # TODO: duplicated with another variable for the first limit. for example another 2 points at 6m/s and 9 m/s.
+        # TODO: duplicated with another variable for the first limit. for example another 2 points at 6 m/s and 9 m/s.
         # TODO: Uncomment the power_trainer variable if the fourth file is added.
         velocity_const = [velocity_clean_low[index_low_below_zero]]
         for j in range(len(data_const)):
@@ -1078,5 +1068,6 @@ class Main(wx.Frame):
 
 if __name__ == '__main__':
     Application = wx.App(False)
-    frame = Main(None, 'SimulANT+ Log Analyzer').Show()
+    frame = Main(None, 'SimulANT+ Log Analyzer                                                                       '
+                       '                                                    [v1.0]').Show()
     Application.MainLoop()
