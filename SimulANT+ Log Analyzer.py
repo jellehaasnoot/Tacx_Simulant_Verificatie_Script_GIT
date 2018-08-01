@@ -661,9 +661,9 @@ class Main(wx.Frame):
         Calculation of the power which is needed to accelerate the flywheel. For the first and second file.
         """
         power_flywheel = []
-        self.simulated_mass_guess = []
         j = 0
         if self.checkbox.GetValue() != True:
+            self.simulated_mass_guess = []
             for i in range(len(fitted_power_const)):
                 if velocity_clean_low[i] > 15:
                     power_flywheel.append(fitted_power_low[i] - fitted_power_const[i])
