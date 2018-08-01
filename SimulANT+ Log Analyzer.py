@@ -671,13 +671,11 @@ class Main(wx.Frame):
                         continue
                     else:
                         self.simulated_mass_guess.append(power_flywheel[j] / (velocity_clean_low[i]/3.6 * popt4[0]))
-                        self.simulated_mass = 0
                     j += 1
+            self.simulated_mass_guess = mean(self.simulated_mass_guess)
+            if 0 > self.simulated_mass_guess > 40:
+                self.simulated_mass_guess = 0
 
-        #TODO Guessen enzo
-
-        self.simulated_mass_guess = mean(self.simulated_mass_guess)
-        print(self.simulated_mass_guess)
         power_flywheel_high = []
         power_flywheel_high_imd = []
         power_flywheel_low = []
