@@ -343,7 +343,7 @@ class Main(wx.Frame):
         # for i in range(len(velocity_list)):
         #     data_power.append([cadence_list[i], power_list[i], cadence_time_list[i], power_time_list[i]])
         # TODO: bespreken hoe dit gedaan moet worden, nu gemaakt voor constante snelheid, dit betekent dat de 3e test op
-        # TODO: 12 m/s dubbel wordt getest en wordt gekeken of de vermogens overeen komen, dit kan dan ook voor
+        # TODO: 12 m/s dubbel wordt opgenomen en wordt gekeken of de vermogens overeen komen, dit kan dan ook voor
         # TODO: meerdere punten gedaan worden, nu is het slechts voor 1 punt gedaan!
         # self.power_list_power = power_list
         # self.time_list_power = time_list
@@ -848,7 +848,7 @@ class Main(wx.Frame):
         worksheet_charts.write('T2', 'Simulated Mass:', header)
         worksheet_charts.write('X2', str(round(float(self.simulated_mass_guess), 2)), header)
         worksheet_charts.write_rich_string('Y2', header, '[kgm', superscript, '2', header, ']')
-        # TODO: uncomment (only uncomment mean if there are more measurements. 
+        # TODO: uncomment (only uncomment mean if there are more measurements.
         # worksheet_charts.write('T3', 'Minimal precision:', header)
         # worksheet_charts.write('X3', str(round(float(precision_trainer_mean), 2)), header)
         # worksheet_charts.write_rich_string('Y3', header, '[%]')
