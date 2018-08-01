@@ -169,13 +169,13 @@ class Main(wx.Frame):
         """
 
         # Create panels
-        self.path_display = wx.StaticText(self.path_panel_1, label=str(path.dirname(self.pathname_1)), pos=(4, 25))
+        self.path_display = wx.StaticText(self.path_panel_1, label=str(path.dirname(self.pathname[0])), pos=(4, 25))
         self.path_display.SetFont(self.font_normal)
 
-        self.path_display = wx.StaticText(self.path_panel_2, label=str(path.dirname(self.pathname_2), pos=(4, 25))
+        self.path_display = wx.StaticText(self.path_panel_2, label=str(path.dirname(self.pathname[1]), pos=(4, 25))
         self.path_display.SetFont(self.font_normal)
 
-        self.path_display = wx.StaticText(self.path_panel_3, label=str(path.dirname(self.pathname_3)), pos=(4, 25))
+        self.path_display = wx.StaticText(self.path_panel_3, label=str(path.dirname(self.pathname[2])), pos=(4, 25))
         self.path_display.SetFont(self.font_normal)
 
         # self.path_display = wx.StaticText(self.path_panel_4, label=str(path.dirname(self.pathname_4)), pos=(4, 25))
@@ -832,16 +832,15 @@ class Main(wx.Frame):
         # worksheet_charts.write('X4', str(round(float(precision_trainer_max), 2)), header)
         # worksheet_charts.write_rich_string('Y4', header, '[%]')
 
-        # try:
-        #     excel.close()
-        # except Exception:
-        #     excel_open_dialog = wx.MessageDialog(self.top_panel, style=wx.ICON_ERROR,
-        #                                          message="Excel seems to be still running. It needs to be closed for this application to be able to save a new file.\n\nNo new file will be saved. Please restart the program.",
-        #                                          caption="Error!")
-        #     excel_open_dialog.CenterOnParent()
-        #     if excel_open_dialog.ShowModal() == wx.OK:
-        #         excel_open_dialog.Destroy()
-        excel.close()
+        try:
+            excel.close()
+        except Exception:
+            excel_open_dialog = wx.MessageDialog(self.top_panel, style=wx.ICON_ERROR,
+                                                 message="Excel seems to be still running. It needs to be closed for this application to be able to save a new file.\n\nNo new file will be saved. Please restart the program.",
+                                                 caption="Error!")
+            excel_open_dialog.CenterOnParent()
+            if excel_open_dialog.ShowModal() == wx.OK:
+                excel_open_dialog.Destroy()
         self.panel_layout()
 
     def on_about(self, e):
