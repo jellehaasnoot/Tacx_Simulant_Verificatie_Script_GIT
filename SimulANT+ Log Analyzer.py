@@ -85,6 +85,12 @@ class Main(wx.Frame):
                                                  pos=(4, 2))
         self.path_header_display.SetFont(self.font_header)
 
+        # self.path_panel_4 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 190))
+        # self.path_header_display = wx.StaticText(self.path_panel_4,
+        #                                          label="Path to directory fourth selected LOG-file: ",
+        #                                          pos=(4, 2))
+        # self.path_header_display.SetFont(self.font_header)
+
         self.some_data_panel_1 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 80), pos=(10, 260))
         self.data_panel_1_header_display = wx.StaticText(self.some_data_panel_1,
                                                          label="Some statistics about the first file: ", pos=(4, 2))
@@ -99,6 +105,11 @@ class Main(wx.Frame):
         self.data_panel_3_header_display = wx.StaticText(self.some_data_panel_3,
                                                          label="Some statistics about the third file: ", pos=(4, 2))
         self.data_panel_3_header_display.SetFont(self.font_header)
+
+        # self.some_data_panel_4 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 80), pos=(10, 530))
+        # self.data_panel_4_header_display = wx.StaticText(self.some_data_panel_4,
+        #                                                  label="Some statistics about the fourth file: ", pos=(4, 2))
+        # self.data_panel_4_header_display.SetFont(self.font_header)
 
         self.xlsx_path_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 630))
 
@@ -170,6 +181,9 @@ class Main(wx.Frame):
         self.path_display = wx.StaticText(self.path_panel_3, label=str(path.dirname(self.pathname_3)), pos=(4, 25))
         self.path_display.SetFont(self.font_normal)
 
+        # self.path_display = wx.StaticText(self.path_panel_4, label=str(path.dirname(self.pathname_4)), pos=(4, 25))
+        # self.path_display.SetFont(self.font_normal)
+
         self.data_panel_1_display = wx.StaticText(self.some_data_panel_1,
                                                   label="Average power at high slope / power:     " + str(
                                                       self.power_high_avg) + " W\n" + "Average velocity at high slope / power:   " + str(
@@ -190,6 +204,13 @@ class Main(wx.Frame):
                                                       self.velocity_const_avg) + " km/h\n""Amount of received ANT+ messages:   " + str(
                                                       len(self.velocity_list_const)), pos=(4, 24))
         self.data_panel_3_display.SetFont(self.font_normal)
+
+        # self.data_panel_4_display = wx.StaticText(self.some_data_panel_4,
+        #                                           label="Average power at 0 Watt programming - moderate acceleration:     " + str(
+        #                                               self.power_moderate_acc_avg) + " W\n""Average velocity at 0 Watt programming:   " + str(
+        #                                               self.velocity_moderate_acc_avg) + " km/h\n""Amount of received ANT+ messages:   " + str(
+        #                                               len(self.velocity_list_moderate_acc)), pos=(4, 24))
+        # self.data_panel_4_display.SetFont(self.font_normal)
 
         self.xlsx_path_panel_header_display = wx.StaticText(self.xlsx_path_panel,
                                                             label="Path to " + self.user_file_name + ".xslx: ",
