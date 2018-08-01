@@ -85,12 +85,6 @@ class Main(wx.Frame):
                                                  pos=(4, 2))
         self.path_header_display.SetFont(self.font_header)
 
-        # self.path_panel_4 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 190))
-        # self.path_header_display = wx.StaticText(self.path_panel_4,
-        #                                          label="Path to directory fourth selected LOG-file: ",
-        #                                          pos=(4, 2))
-        # self.path_header_display.SetFont(self.font_header)
-
         self.some_data_panel_1 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 80), pos=(10, 260))
         self.data_panel_1_header_display = wx.StaticText(self.some_data_panel_1,
                                                          label="Some statistics about the first file: ", pos=(4, 2))
@@ -105,11 +99,6 @@ class Main(wx.Frame):
         self.data_panel_3_header_display = wx.StaticText(self.some_data_panel_3,
                                                          label="Some statistics about the third file: ", pos=(4, 2))
         self.data_panel_3_header_display.SetFont(self.font_header)
-
-        # self.some_data_panel_4 = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 80), pos=(10, 530))
-        # self.data_panel_4_header_display = wx.StaticText(self.some_data_panel_4,
-        #                                                  label="Some statistics about the fourth file: ", pos=(4, 2))
-        # self.data_panel_4_header_display.SetFont(self.font_header)
 
         self.xlsx_path_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 630))
 
@@ -182,9 +171,6 @@ class Main(wx.Frame):
         self.path_display = wx.StaticText(self.path_panel_3, label=str(path.dirname(self.pathname_3)), pos=(4, 25))
         self.path_display.SetFont(self.font_normal)
 
-        # self.path_display = wx.StaticText(self.path_panel_4, label=str(path.dirname(self.pathname_4)), pos=(4, 25))
-        # self.path_display.SetFont(self.font_normal)
-
         self.data_panel_1_display = wx.StaticText(self.some_data_panel_1,
                                                   label="Average power at high slope / power:     " + str(
                                                       self.power_high_avg) + " W\n" + "Average velocity at high slope / power:   " + str(
@@ -205,13 +191,6 @@ class Main(wx.Frame):
                                                       self.velocity_const_avg) + " km/h\n""Amount of received ANT+ messages:   " + str(
                                                       len(self.velocity_list_const)), pos=(4, 24))
         self.data_panel_3_display.SetFont(self.font_normal)
-
-        # self.data_panel_4_display = wx.StaticText(self.some_data_panel_4,
-        #                                           label="Average power at 0 Watt programming - moderate acceleration:     " + str(
-        #                                               self.power_moderate_acc_avg) + " W\n""Average velocity at 0 Watt programming:   " + str(
-        #                                               self.velocity_moderate_acc_avg) + " km/h\n""Amount of received ANT+ messages:   " + str(
-        #                                               len(self.velocity_list_moderate_acc)), pos=(4, 24))
-        # self.data_panel_4_display.SetFont(self.font_normal)
 
         self.xlsx_path_panel_header_display = wx.StaticText(self.xlsx_path_panel,
                                                             label="Path to " + self.user_file_name + ".xslx: ",
@@ -264,20 +243,8 @@ class Main(wx.Frame):
                 return
             self.pathname_3 = prompted_dialog.GetPath()
         self.folder_pathname = path.dirname(self.pathname_3)
-        # Opening File 4 with the use of a dialog. File 4 will contain the ANT+ data of the measurements with a power
-        # goal of 0W. In contrary with the other files, the acceleration needs to be non-const, with a moderate acceleration. This way, it is possible to
-        # calculate the simulated mass (inertia).
-        # with wx.FileDialog(self,
-        #                    "Choose the third logged SimulANT+ file with the 0 W Power program - moderate acceleration...",
-        #                    wildcard="Text files (*.txt)|*.txt|" "Comma Separated Value-files (*.csv)|*.csv",
-        #                    style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as prompted_dialog:
-        #     if prompted_dialog.ShowModal() == wx.ID_CANCEL:
-        #         return
-        #     self.pathname_4 = prompted_dialog.GetPath()
-        #
-        # self.folder_pathname = path.dirname(self.pathname_4)
-        # Retrieving the filename the user wants to use. This will be the file name of the new excel file which will be
-        # created after running this program.
+
+        # Naming the excel file which will be made by the program.
         self.user_file_name_dialog = wx.TextEntryDialog(self,
                                                         "What do you want the .xslx file to be named? Enter here: ",
                                                         "Enter file name...")
@@ -346,27 +313,6 @@ class Main(wx.Frame):
         self.power_list_const = power_list
         self.time_list_const = time_list
 
-        # self.power_list_const = power_list
-        # self.time_list_const = time_list
-        # self.velocity_list_const = velocity_list
-
-        # Analysing log file 4:
-        # self.logfile_analyser(self.pathname_4)
-        # data_moderate_acc = []
-        # if len(power_list) < len(velocity_list):
-        #     velocity_list.pop()
-        #     velocity_time_list.pop()
-        # elif len(velocity_list) < len(power_list):
-        #     power_list.pop()
-        #     power_time_list.pop()
-        # else:
-        #     pass
-        #
-        # for i in range(len(velocity_list)):
-        #     data_moderate_acc.append([velocity_list[i], power_list[i], velocity_time_list[i], power_time_list[i]])
-        #
-
-
         # Calculating the averages of every file, this is not necessary for the calculations below, but this will give
         # a quick overview of the used files to the user.
         self.velocity_high_avg = mean(self.velocity_list_high)
@@ -381,11 +327,9 @@ class Main(wx.Frame):
         self.velocity_const_avg = round(float(self.velocity_const_avg), 1)
         self.power_const_avg = mean(self.power_list_const)
         self.power_const_avg = round(float(self.power_const_avg), 1)
-        # self.velocity_moderate_acc_avg = mean(self.velocity_list_moderate_acc)
-        # self.velocity_moderate_acc_avg = round(float(self.velocity_moderate_acc_avg), 1)
-        # self.power_moderate_acc_avg = mean(self.power_list_moderate_acc)
-        # self.power_moderate_acc_avg = round(float(self.power_moderate_acc_avg), 1)
 
+        # Some constants needed for the next part of code
+        global index_low_below_zero_1, index_low_below_zero_2, index_low_below_zero, fitted_power_high, fitted_power_low
         velocity_raw_high = []
         power_raw_high = []
         velocity_time_raw_high = []
@@ -402,18 +346,35 @@ class Main(wx.Frame):
         velocity_clean_low = []
         velocity_time_clean_low = []
         power_time_clean_low = []
-        velocity_const = []
-        power_const = []
         velocity_time_clean_const = []
         power_time_clean_const = []
-        velocity_moderate_acc = []
-        power_moderate_acc = []
-        # velocity_time_clean_moderate_acc = []
-        # power_time_clean_moderate_acc = []
+        power_clean_const = []
+        velocity_clean_const = []
+        first_non_zero_power = []
+        power_no_int_res_high_imd = []
+        power_no_int_res_high = []
+        velocity_time_raw_const = []
+        power_const_1 = []
+        velocity_const_1 = []
+        power_time_raw_const = []
+        power_flywheel = []
+        power_flywheel_high = []
+        power_flywheel_high_imd = []
+        power_flywheel_low = []
+        power_clean_low_brake = []
+        power_clean_high_brake = []
+        power_const = [0]
+        index_low_below_zero_1 = 0
+        error_lin_low = 0
+        error_quadratic_low = 0
+        index_low_below_zero_2 = 0
+        error_lin_high = 0
+        error_quadratic_high = 0
+        first_limit = 32.4
+        range_half = 0.5
 
-        """
-        Convert the raw data from the file to named lists for the FIRST file
-        """
+        # Convert the raw data from the file to named lists for the FIRST file. This file gives the information for the
+        # maximal braking power.
         for j in range(len(data_high)):
             if round(data_high[j][0]) == 0:
                 power_raw_high.append(0)
@@ -432,14 +393,8 @@ class Main(wx.Frame):
             velocity_time_clean_high.append(velocity_time_raw_high[i])
             power_time_clean_high.append(power_time_raw_high[i])
 
-        """
-        Calculate errors and make a fit for the data of the FIRST file 
-        """
-        global fitted_power_high
-        global fitted_power_low
-
-        error_lin_high = 0
-        error_quadratic_high = 0
+        # Calculate errors and make a fit for the data of the FIRST file. This fit will be the main information in the
+        # P-v plot.
         popt1_high, pcov = curve_fit(self.func_lin, array(velocity_clean_high), array(power_clean_high))
         fitted_power_high_1 = self.func_lin(array(velocity_clean_high), *popt1_high)
         for i in range(len(fitted_power_high_1)):
@@ -468,10 +423,8 @@ class Main(wx.Frame):
         elif lowest_error == '2':
             fitted_power_high = fitted_power_high_2
 
-        """
-        Convert the raw data from the file to named lists for the SECOND file
-        """
-        first_non_zero_power = []
+        # Convert the raw data from the file to named lists for the SECOND file. The second file gives the information
+        # for the lowest slope gradient and therefore lowest resistance.
         for i in range(len(data_low)):
             if data_low[i][1] != 0:
                 first_non_zero_power.append([a[1] for a in data_low].index(data_low[i][1]))
@@ -510,34 +463,24 @@ class Main(wx.Frame):
             velocity_time_clean_low.append(velocity_time_raw_low[i])
             power_time_clean_low.append(power_time_raw_low[i])
 
-        """
-        Calculate errors and make a fit for the data of the SECOND file 
-        """
-        global index_low_below_zero_1
-        global index_low_below_zero_2
-
-        index_low_below_zero_1 = 0
-        error_lin_low = 0
-        error_quadratic_low = 0
+        # Calculate errors and make a fit for the data of the SECOND file. This fit will be the main information
+        # in the P-v plot.
         popt1_low, pcov = curve_fit(self.func_lin, array(velocity_clean_low), array(power_clean_low))
         fitted_power_low_1 = self.func_lin(array(velocity_clean_low), *popt1_low)
         for i in range(len(fitted_power_low_1)):
             if fitted_power_low_1[i] < 0:
                 fitted_power_low_1[i] = 0
                 index_low_below_zero_1 = i
-
         for i in range(len(fitted_power_low_1)):
             if fitted_power_low_1[i] > 0:
                 error_lin_low += abs(fitted_power_low_1[i] - power_clean_low[i])
 
-        index_low_below_zero_2 = 0
         popt2_low, pcov = curve_fit(self.func_quadratic, array(velocity_clean_low), array(power_clean_low))
         fitted_power_low_2 = self.func_quadratic(array(velocity_clean_low), *popt2_low)
         for i in range(len(fitted_power_low_2)):
             if fitted_power_low_2[i] < 0:
                 fitted_power_low_2[i] = 0
                 index_low_below_zero_2 = i
-
         for i in range(len(fitted_power_low_2)):
             if fitted_power_low_2[i] > 0:
                 error_quadratic_low += abs(fitted_power_low_2[i] - power_clean_low[i])
@@ -556,18 +499,9 @@ class Main(wx.Frame):
             fitted_power_low = fitted_power_low_2
             index_low_below_zero = index_low_below_zero_2
 
-        """
-        Convert the raw data from the file to named lists for the THIRD file
-        """
-        first_limit = 32.4
-        range_half = 0.5
-        velocity_time_raw_const = []
-        power_const_1 = []
-        power_const = [0]
-        velocity_const_1 = []
+        # Convert the raw data from the file to named lists for the THIRD file. This file will be used to calculate the
+        #  basic resistance and simulated mass if this is not given by the user.
         velocity_const = [velocity_clean_low[index_low_below_zero]]
-        power_time_raw_const = []
-
         for j in range(len(data_const)):
             if first_limit - range_half < (data_const[j][0]) < first_limit + range_half:
                 power_const_1.append(data_const[j][1])
@@ -577,47 +511,14 @@ class Main(wx.Frame):
 
         velocity_const.append(mean(velocity_const_1))
         power_const.append(mean(power_const_1))
-        """
-        Convert the raw data from the file to named lists for the FOURTH file
-        """
-        # for j in range(len(data_moderate_acc)):
-        #     if round(data_moderate_acc[j][0]) == 0:
-        #         power_moderate_acc.append(0)
-        #         velocity_moderate_acc.append(0)
-        #         velocity_time_clean_moderate_acc.append(data_moderate_acc[j][2])
-        #         power_time_clean_moderate_acc.append(data_moderate_acc[j][3])
-        #     else:
-        #         power_moderate_acc.append(data_moderate_acc[j][1])
-        #         velocity_moderate_acc.append(data_moderate_acc[j][0])
-        #         velocity_time_clean_moderate_acc.append(data_moderate_acc[j][2])
-        #         power_time_clean_moderate_acc.append(data_moderate_acc[j][3])
 
-        """
-        Start calculations on the THIRD AND FOURTH file to calculate the SIMULATED MASS.
-        This includes fitting the data. 
-        """
-        power_clean_const = []
-        velocity_clean_const = []
-        # power_clean_moderate_acc = []
-        # velocity_clean_moderate_acc = []
-        power_clean_moderate_acc_dummy = []
-        velocity_clean_moderate_acc_dummy = []
-
-
+        # Start calculations on the THIRD file to calculate the SIMULATED MASS. This includes fitting the
+        # data.
         for i in range(len(power_const)):
             power_clean_const.append(power_const[i])
             velocity_clean_const.append(velocity_const[i])
             velocity_time_clean_const.append(velocity_time_raw_const[i])
             power_time_clean_const.append(power_time_raw_const[i])
-        # for i in range(power_moderate_acc.index(max(power_moderate_acc))):
-        #     power_clean_moderate_acc_dummy.append(power_moderate_acc[i])
-        # for i in range(power_moderate_acc.index(max(power_moderate_acc))):
-        #     velocity_clean_moderate_acc_dummy.append(velocity_moderate_acc[i])
-
-        # for i in range(len(power_clean_moderate_acc_dummy)):
-        #     if power_clean_moderate_acc_dummy[i] > 50:
-        #         power_clean_moderate_acc.append(power_clean_moderate_acc_dummy[i])
-        #         velocity_clean_moderate_acc.append(velocity_clean_moderate_acc_dummy[i])
 
         # Calculating the best possible fit, we only consider quadratic and linear fits at this moment. The error with
         # the original data is calculated and the best fit will be drawn. A dictionary is used to track the variable
@@ -628,39 +529,22 @@ class Main(wx.Frame):
             if fitted_power_const_1[i] < 0:
                 fitted_power_const_1[i] = 0
 
-        power_no_int_res_high_imd = []
-        power_no_int_res_high = []
-        power_compensated = []
-
         fitted_power_const = self.func_lin(array(velocity_clean_low), *popt1)
         for i in range(len(fitted_power_const)):
             if fitted_power_const[i] < 0:
                 fitted_power_const[i] = 0
-        # for i in range(len(velocity_clean_moderate_acc)):
-        #     power_to_substract = popt1[0] * velocity_clean_moderate_acc[i]
-        #     power_compensated.append(power_clean_moderate_acc[i] - power_to_substract)
         for i in range(len(velocity_clean_high)):
             power_to_substract = popt1[0] * velocity_clean_high[i]
-            # if power_to_substract >= 0:
             power_no_int_res_high_imd.append(fitted_power_high[i] - power_to_substract)
-             # else:
-                    # power_no_int_res_high_imd.append(0)
 
-        # popt3, pcov = curve_fit(self.func_lin, array(velocity_clean_moderate_acc) / 3.6, array(power_compensated))
-        # fitted_compensated_power_moderate_acc = self.func_lin(array(velocity_clean_moderate_acc) / 3.6, *popt3)
-        #
-        # for i in range(len(velocity_time_clean_moderate_acc)):
-        #     if len(velocity_clean_moderate_acc) < len(velocity_time_clean_moderate_acc):
-        #         velocity_time_clean_moderate_acc.pop()
-        #
         popt4, pcov = curve_fit(self.func_lin, array(velocity_time_clean_low), array(velocity_clean_low) / 3.6)
-        # fitted_velocity_moderate_acc = self.func_lin(array(velocity_time_clean_moderate_acc), *popt4)
 
 
-        """
-        Calculation of the power which is needed to accelerate the flywheel. For the first and second file.
-        """
-        power_flywheel = []
+        # Calculation of the power which is needed to accelerate the flywheel. For the first and second file. The
+        # simulated mass will also be calculated if there is no user input. If the simulated mass is out of given
+        # bounds, the used simulated mass will be zero. Acceleration will be assumed constant, otherwise it is not
+        # possible to calculate the needed values, because of the fluctuations in he trainers' output data. There will
+        # also be a plot for the maximum brake force when substracting all the internal resistances.
         j = 0
         if self.checkbox.GetValue() != True:
             self.simulated_mass_guess = []
@@ -676,36 +560,24 @@ class Main(wx.Frame):
             if 0 > self.simulated_mass_guess > 40:
                 self.simulated_mass_guess = 0
 
-        power_flywheel_high = []
-        power_flywheel_high_imd = []
-        power_flywheel_low = []
-        power_clean_low_brake = []
-        power_clean_high_brake = []
-
-        # Acceleration needs to be constant to use this. #
-        #
         popt5, pcov = curve_fit(self.func_lin, array(velocity_time_clean_high), array(velocity_clean_high) / 3.6)
         popt6, pcov = curve_fit(self.func_lin, array(velocity_time_clean_low), array(velocity_clean_low) / 3.6)
 
         for i in range(len(velocity_clean_high)):
             power_flywheel_high.append(float(self.simulated_mass_guess) * velocity_clean_high[i] / 3.6 * popt5[0])
             power_clean_high_brake.append(fitted_power_high[i] - power_flywheel_high[i])
-
         for i in range(len(velocity_clean_low)):
             power_flywheel_low.append(float(self.simulated_mass_guess) * velocity_clean_low[i] / 3.6 * popt6[0])
             power_clean_low_brake.append(fitted_power_low[i] - power_flywheel_low[i])
-
         for i in range(len(power_no_int_res_high_imd)):
             power_flywheel_high_imd.append(float(self.simulated_mass_guess) * velocity_clean_high[i] / 3.6 * popt5[0])
             power_no_int_res_high.append(power_no_int_res_high_imd[i] - power_flywheel_high_imd[i])
-
         for i in range(len(power_no_int_res_high)):
             if power_no_int_res_high[i] < 0:
                 power_no_int_res_high[i] = 0
 
-        """
-        Initialize writing an excel file.
-        """
+        # Initialize writing an excel file. This file will be used to store all the necessary information which is
+        # analysed in the code.
         excel = xlsxwriter.Workbook(self.folder_pathname + "\\" + self.user_file_name + ".xlsx")
         try:
             graph = excel.add_chart({'type': 'scatter', 'subtype': 'straight'})
@@ -715,9 +587,7 @@ class Main(wx.Frame):
         worksheet_charts = excel.add_worksheet('Charts')
         worksheet_data = excel.add_worksheet('Data')
 
-        """
-        Setting variables for excel file.
-        """
+        # Setting variables for excel file.
         bold = excel.add_format({'bold': True})
         underline = excel.add_format({'bold': True, 'underline': True})
         header = excel.add_format({'bold': True, 'font_size': 24})
@@ -734,9 +604,7 @@ class Main(wx.Frame):
         worksheet_data.set_column('A:Q', 14)
         worksheet_charts.set_column('X:X', 16)
 
-        """
-        Writing to excel file.
-        """
+        # Writing to excel file.
         worksheet_data.write('A1', 'Tested with highest gradient (without slip)', underline)
         worksheet_data.write('A2', 'Velocity [km/h]', bold)
         worksheet_data.write('B2', 'Power [W]', bold)
@@ -765,23 +633,6 @@ class Main(wx.Frame):
         worksheet_data.write_column(2, 8, fitted_power_const)
         worksheet_data.write_column(2, 9, velocity_clean_const)
 
-        # worksheet_data.write('L1', 'Tested with 0 W program - moderate acceleration (without slip)', underline)
-        # worksheet_data.write('L2', 'Time [s]', bold)
-        # worksheet_data.write('M2', 'Power [km/h]', bold)
-        # worksheet_data.write('N2', 'Velocity [km/h]', bold)
-        # worksheet_data.write('O2', 'Fitted Velocity [km/h]', bold)
-        # worksheet_data.write('P2', 'Theor. Power [W]', bold)
-        # worksheet_data.write('Q2', 'Fitted Compensated Power [W]', bold)
-        # worksheet_data.write('R2', 'Fitted Power', bold)
-        # worksheet_data.write_column(2, 11, velocity_time_clean_moderate_acc)
-        # worksheet_data.write_column(2, 22, power_time_clean_moderate_acc)
-        # worksheet_data.write_column(2, 12, power_clean_moderate_acc)
-        # worksheet_data.write_column(2, 13, velocity_clean_moderate_acc)
-        # worksheet_data.write_column(2, 14, fitted_velocity_moderate_acc)
-        # worksheet_data.write_column(2, 15, power_compensated)
-        # worksheet_data.write_column(2, 16, fitted_compensated_power_moderate_acc)
-        # # worksheet_data.write_column(2, 17, fitted_power_moderate_acc)
-
         worksheet_data.write('S2', 'Brake Power Trainer Upper Limit [W]', bold)
         worksheet_data.write('T2', 'Brake Power Trainer Lower Limit [W]', bold)
         worksheet_data.write_column(2, 18, power_clean_high_brake)
@@ -789,9 +640,8 @@ class Main(wx.Frame):
 
         worksheet_data.write('V2', 'Brake Power Trainer No Internal Friction Higher Limit [W]')
         worksheet_data.write_column(2, 21, power_no_int_res_high)
-        """
-        Writing to graph.
-        """
+
+        # Writing to graph.
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
             'values': [worksheet_data.name] + [2, 1] + [len(power_clean_high) + 2, 1],
@@ -979,25 +829,19 @@ class Main(wx.Frame):
         speed = True
         power = True
 
-        """
-        The log-file is opened here. 
-        """
+        # The log-file is opened here.
         log = open(logfile)
         with open(logfile) as f:
             for lines, l in enumerate(f):
                 pass
 
-        """
-        The important lines will be retrieved from the log-file here, by looking at the lines which start with 'Rx'. These are received messages. 
-        """
+        # The important lines will be retrieved from the log-file here, by looking at the lines which start with 'Rx'. These are received messages.
         for n in range(lines):
             sentence = log.readline()
             if "Rx:" in sentence:
                 sentences.append(sentence)
 
-        """
-        This part splits the retrieved lines in subparts, after which the hexadecimals will be read. 
-        """
+        # This part splits the retrieved lines in subparts, after which the hexadecimals will be read.
         for i in range(len(sentences)):
             sentence = sentences[i].split()
             index = sentence.index("Rx:")
@@ -1007,9 +851,7 @@ class Main(wx.Frame):
             value_list.append(value)
             time_values_raw.append(time_raw)
 
-        """
-        These subparts will be categorized according to their first character: When this is '10', this means the velocity is recorded in that line. When the first character is '19', this means power is recorded in that line. The other characters are not important for the functionality of this file, which means they will be left out.
-        """
+        # These subparts will be categorized according to their first character: When this is '10', this means the velocity is recorded in that line. When the first character is '19', this means power is recorded in that line. The other characters are not important for the functionality of this file, which means they will be left out.
         for i in range(len(value_list)):
             value_list_characters = list(value_list[i])
 
