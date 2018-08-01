@@ -682,7 +682,8 @@ class Main(wx.Frame):
         power_clean_low_brake = []
         power_clean_high_brake = []
 
-        # Acceleration needs to be constant to use this.
+        # Acceleration needs to be constant to use this. #
+        #
         popt5, pcov = curve_fit(self.func_lin, array(velocity_time_clean_high), array(velocity_clean_high) / 3.6)
         popt6, pcov = curve_fit(self.func_lin, array(velocity_time_clean_low), array(velocity_clean_low) / 3.6)
 
