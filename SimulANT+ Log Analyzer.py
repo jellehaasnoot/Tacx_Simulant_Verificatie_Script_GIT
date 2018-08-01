@@ -169,13 +169,13 @@ class Main(wx.Frame):
         """
 
         # Create panels
-        self.path_display = wx.StaticText(self.path_panel_1, label=str(path.dirname(self.pathname[0])), pos=(4, 25))
+        self.path_display = wx.StaticText(self.path_panel_1, label=str(path.dirname(self.pathname_1)), pos=(4, 25))
         self.path_display.SetFont(self.font_normal)
 
-        self.path_display = wx.StaticText(self.path_panel_2, label=str(path.dirname(self.pathname[1])), pos=(4, 25))
+        self.path_display = wx.StaticText(self.path_panel_2, label=str(path.dirname(self.pathname_2), pos=(4, 25))
         self.path_display.SetFont(self.font_normal)
 
-        self.path_display = wx.StaticText(self.path_panel_3, label=str(path.dirname(self.pathname[2])), pos=(4, 25))
+        self.path_display = wx.StaticText(self.path_panel_3, label=str(path.dirname(self.pathname_3)), pos=(4, 25))
         self.path_display.SetFont(self.font_normal)
 
         # self.path_display = wx.StaticText(self.path_panel_4, label=str(path.dirname(self.pathname_4)), pos=(4, 25))
