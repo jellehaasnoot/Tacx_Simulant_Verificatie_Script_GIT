@@ -201,6 +201,7 @@ class Main(wx.Frame):
         self.sim_mass_panel_display.SetFont(self.font_normal)
 
     def on_open(self, e):
+        # TODO: POP-UP REGELEN + CODE OPGESCHONEN
         """"
         This function is used to open LOG-files, selected by the user.
 
@@ -541,7 +542,7 @@ class Main(wx.Frame):
         # Convert the raw data from the file to named lists for the THIRD file. This file will be used to calculate the
         #  basic resistance and simulated mass if this is not given by the user.
         # TODO: If more data points are required for the calculation of the precision of the trainer, this can be
-        # TODO: duplicated with another variable for the first limit. for example another 2 points at 6m/s and 9 m/s.
+        # TODO: duplicated with another variable for the first limit. for example another 2 points at 6 m/s and 9 m/s.
         # TODO: Uncomment the power_trainer variable if the fourth file is added.
         velocity_const = [velocity_clean_low[index_low_below_zero]]
         for j in range(len(data_const)):
@@ -1057,5 +1058,6 @@ class Main(wx.Frame):
 
 if __name__ == '__main__':
     Application = wx.App(False)
-    frame = Main(None, 'SimulANT+ Log Analyzer').Show()
+    frame = Main(None, 'SimulANT+ Log Analyzer                                                                       '
+                       '                                                    [v1.0]').Show()
     Application.MainLoop()
