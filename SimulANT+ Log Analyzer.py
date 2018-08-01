@@ -136,12 +136,12 @@ class Main(wx.Frame):
         New fonts are created to create some diversity on the screen, making the application more appealing to look at.
         """
         for i in range(len(self.panel_titles)):
-            self.path_display_panel = wx.Panel(self.top_panel, -1, style=wx.NO_BORDER, size=(685, 25), pos=(14, 35 + i * 55))
+            self.path_display_panel = wx.Panel(self.top_panel, -1, style=wx.NO_BORDER, size=(660, 22), pos=(14, 35 + i * 55))
             self.path_display = wx.StaticText(self.path_display_panel, label=str(path.dirname(self.pathname[i])), pos=(4, 2))
 
         data_display_strings = ["Average power at high slope / power:     ", "Average velocity at high slope / power:   ", "Amount of received ANT+ messages:   "]
         for i in range(len(self.panel_titles)):
-            self.data_display_panel = wx.Panel(self.top_panel, -1, style=wx.NO_BORDER, size=(685, 60), pos=(18, 285 + i * 90))
+            self.data_display_panel = wx.Panel(self.top_panel, -1, style=wx.NO_BORDER, size=(660, 50), pos=(18, 285 + i * 90))
             self.data_display = wx.StaticText(self.data_display_panel, label=data_display_strings[0] + str(self.all_averages[i][0]) + "W\n" + data_display_strings[1] + str(self.all_averages[i][1]) + "km/h\n" + data_display_strings[2] + str(self.all_averages[i][2]))
             self.data_display.SetFont(self.font_normal)
 
@@ -156,7 +156,6 @@ class Main(wx.Frame):
         self.sim_mass_panel_display.SetFont(self.font_normal)
 
     def on_open(self, e):
-        # TODO: POP-UP REGELEN + CODE OPGESCHONEN
         """"
         This function is used to open LOG-files, selected by the user.
 
@@ -289,7 +288,7 @@ class Main(wx.Frame):
         # self.all_averages.append(round(float(self.power_avg), 1))
 
         # Some constants needed for the next part of code
-        global index_low_below_zero_1, index_low_below_zero_2, index_low_below_zero, fitted_power_high, fitted_power_low, poplin
+        global index_low_below_zero_1, index_low_below_zero_2, index_low_below_zero, fitted_power_high, fitted_power_low, poplin, graph
         velocity_raw_high = []
         power_raw_high = []
         velocity_time_raw_high = []
@@ -566,7 +565,6 @@ class Main(wx.Frame):
             graph = excel.add_chart({'type': 'scatter', 'subtype': 'straight'})
         except Exception:
             print('NO')
-        graph_2 = excel.add_chart({'type': 'scatter', 'subtype': 'straight'})
         worksheet_charts = excel.add_worksheet('Charts')
         worksheet_data = excel.add_worksheet('Data')
 
@@ -579,11 +577,6 @@ class Main(wx.Frame):
         graph.set_x_axis({'name': 'Velocity [km/h]'})
         graph.set_title({'name': 'Operating range ' + self.user_file_name})
         graph.set_size({'width': 1080, 'height': 720})
-        graph_2.set_y_axis({'name': 'Power [W]'})
-        graph_2.set_y2_axis({'name': 'Velocity [km/h]'})
-        graph_2.set_x_axis({'name': 'Time [s]'})
-        graph_2.set_title({'name': '0 Watt acceleration ' + self.user_file_name})
-        graph_2.set_size({'width': 1080, 'height': 720})
         worksheet_data.set_column('A:Q', 14)
         worksheet_charts.set_column('X:X', 16)
 
@@ -595,34 +588,23 @@ class Main(wx.Frame):
         worksheet_data.write_column(2, 0, velocity_clean_high)
         worksheet_data.write_column(2, 1, power_clean_high)
         worksheet_data.write_column(2, 2, fitted_power_high)
-        worksheet_data.write_column(2, 25, velocity_time_clean_low)
 
-        worksheet_data.write('D1', 'Tested with lowest gradient (without slip)', underline)
-        worksheet_data.write('D2', 'Velocity [km/h]', bold)
-        worksheet_data.write('E2', 'Power [W]', bold)
-        worksheet_data.write('F2', 'Fitted Power [W]', bold)
-        worksheet_data.write_column(2, 3, velocity_clean_low)
-        worksheet_data.write_column(2, 4, power_clean_low)
-        worksheet_data.write_column(2, 5, fitted_power_low)
+        worksheet_data.write('E1', 'Tested with lowest gradient (without slip)', underline)
+        worksheet_data.write('E2', 'Velocity [km/h]', bold)
+        worksheet_data.write('F2', 'Power [W]', bold)
+        worksheet_data.write('G2', 'Fitted Power [W]', bold)
+        worksheet_data.write_column(2, 4, velocity_clean_low)
+        worksheet_data.write_column(2, 5, power_clean_low)
+        worksheet_data.write_column(2, 6, fitted_power_low)
 
-        worksheet_data.write('G1', 'Tested with 0 W program - constant velocities (without slip)', underline)
-        worksheet_data.write('G2', 'Time [s]', bold)
-        worksheet_data.write('H2', 'Power [W]', bold)
-        worksheet_data.write('I2', 'Fitted Power [W]', bold)
-        worksheet_data.write('J2', 'Velocity [km/h]', bold)
-        worksheet_data.write_column(2, 6, velocity_time_clean_const)
-        worksheet_data.write_column(2, 10, power_time_clean_const)
-        worksheet_data.write_column(2, 7, power_clean_const)
-        worksheet_data.write_column(2, 8, fitted_power_const)
-        worksheet_data.write_column(2, 9, velocity_clean_const)
+        worksheet_data.write('I1', 'Tested with 0W Power, combined with other files', underline)
+        worksheet_data.write('I2', 'Upper Limit [W]', bold)
+        worksheet_data.write('J2', 'Lower Limit [W]', bold)
+        worksheet_data.write_column(2, 8, power_clean_high_brake)
+        worksheet_data.write_column(2, 9, power_clean_low_brake)
 
-        worksheet_data.write('S2', 'Brake Power Trainer Upper Limit [W]', bold)
-        worksheet_data.write('T2', 'Brake Power Trainer Lower Limit [W]', bold)
-        worksheet_data.write_column(2, 18, power_clean_high_brake)
-        worksheet_data.write_column(2, 19, power_clean_low_brake)
-
-        worksheet_data.write('V2', 'Brake Power Trainer No Internal Friction Higher Limit [W]')
-        worksheet_data.write_column(2, 21, power_no_int_res_high)
+        worksheet_data.write('K2', 'Brake Limit [W]', bold)
+        worksheet_data.write_column(2, 10, power_no_int_res_high)
 
         # Writing to graph.
         graph.add_series({
@@ -641,42 +623,41 @@ class Main(wx.Frame):
 
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
-            'values': [worksheet_data.name] + [2, 18] + [len(power_clean_high) + 2, 18],
+            'values': [worksheet_data.name] + [2, 8] + [len(power_clean_high) + 2, 8],
             'line': {'color': 'black', 'width': 1.5},
             'name': 'Highest Gradient Power - Without Flywheel Effects',
         })
 
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
-            'values': [worksheet_data.name] + [2, 21] + [len(power_no_int_res_high) + 2, 21],
+            'values': [worksheet_data.name] + [2, 10] + [len(power_no_int_res_high) + 2, 10],
             'line': {'color': 'green', 'dash_type': 'dash', 'width': 2},
             'name': 'Highest Gradient Power - Without Internal Friction - Without Flywheel Effects',
         })
 
         graph.add_series({
-            'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
-            'values': [worksheet_data.name] + [2, 4] + [len(power_clean_low) + 2, 4],
+            'categories': [worksheet_data.name] + [2, 4] + [len(velocity_clean_low) + 2, 4],
+            'values': [worksheet_data.name] + [2, 5] + [len(power_clean_low) + 2, 5],
             'line': {'color': '#67bfe7', 'dash_type': 'dash', 'width': 1.5},
             'name': 'Lowest Gradient Power',
         })
 
         graph.add_series({
-            'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
-            'values': [worksheet_data.name] + [2, 5] + [len(power_clean_low) + 2, 5],
+            'categories': [worksheet_data.name] + [2, 4] + [len(velocity_clean_low) + 2, 4],
+            'values': [worksheet_data.name] + [2, 6] + [len(power_clean_low) + 2, 6],
             'line': {'color': '#67bfe7', 'width': 2},
             'name': 'Fitted Lowest Gradient Power',
         })
 
         graph.add_series({
-            'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
-            'values': [worksheet_data.name] + [2, 19] + [len(power_clean_low_brake) + 2, 19],
+            'categories': [worksheet_data.name] + [2, 4] + [len(velocity_clean_low) + 2, 4],
+            'values': [worksheet_data.name] + [2, 9] + [len(power_clean_low_brake) + 2, 9],
             'line': {'color': 'black', 'width': 1.5},
             'name': 'Lowest Gradient Power - Without Flywheel Effects',
         })
-#
+
         worksheet_charts.insert_chart('B2', graph)
         graph.set_legend({'position': 'bottom'})
-        # worksheet_charts.insert_chart('B40', graph_2)
         worksheet_charts.write('T2', 'Simulated Mass:', header)
         worksheet_charts.write('X2', str(round(float(self.simulated_mass_guess), 2)), header)
         worksheet_charts.write_rich_string('Y2', header, '[kgm', superscript, '2', header, ']')
