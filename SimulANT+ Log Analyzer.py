@@ -219,7 +219,7 @@ class Main(wx.Frame):
         self.xlsx_path_panel_header_display.SetFont(self.font_header)
         self.xlsx_path_panel_display = wx.StaticText(self.xlsx_path_panel, label=str(self.folder_pathname), pos=(4, 25))
 
-        self.sim_mass_panel_display = wx.StaticText(self.sim_mass_panel, label=str(round(float(self.simulated_mass), 2)) + " [kg m^2]", pos=(4, 25))
+        self.sim_mass_panel_display = wx.StaticText(self.sim_mass_panel, label=str(round(float(self.simulated_mass_guess), 2)) + " [kg m^2]", pos=(4, 25))
         self.sim_mass_panel_display.SetFont(self.font_normal)
 
     def on_open(self, e):
@@ -677,6 +677,7 @@ class Main(wx.Frame):
         #TODO Guessen enzo
 
         self.simulated_mass_guess = mean(self.simulated_mass_guess)
+        print(self.simulated_mass_guess)
         power_flywheel_high = []
         power_flywheel_high_imd = []
         power_flywheel_low = []
@@ -688,15 +689,15 @@ class Main(wx.Frame):
         popt6, pcov = curve_fit(self.func_lin, array(velocity_time_clean_low), array(velocity_clean_low) / 3.6)
 
         for i in range(len(velocity_clean_high)):
-            power_flywheel_high.append(float(self.simulated_mass) * velocity_clean_high[i] / 3.6 * popt5[0])
+            power_flywheel_high.append(float(self.simulated_mass_guess) * velocity_clean_high[i] / 3.6 * popt5[0])
             power_clean_high_brake.append(fitted_power_high[i] - power_flywheel_high[i])
 
         for i in range(len(velocity_clean_low)):
-            power_flywheel_low.append(float(self.simulated_mass) * velocity_clean_low[i] / 3.6 * popt6[0])
+            power_flywheel_low.append(float(self.simulated_mass_guess) * velocity_clean_low[i] / 3.6 * popt6[0])
             power_clean_low_brake.append(fitted_power_low[i] - power_flywheel_low[i])
 
         for i in range(len(power_no_int_res_high_imd)):
-            power_flywheel_high_imd.append(float(self.simulated_mass) * velocity_clean_high[i] / 3.6 * popt5[0])
+            power_flywheel_high_imd.append(float(self.simulated_mass_guess) * velocity_clean_high[i] / 3.6 * popt5[0])
             power_no_int_res_high.append(power_no_int_res_high_imd[i] - power_flywheel_high_imd[i])
 
         for i in range(len(power_no_int_res_high)):
@@ -872,19 +873,19 @@ class Main(wx.Frame):
         #     'line': {'color': 'red'},
         #     'name': 'Fitted Power Constant Velocities',
         # })
-
-        graph.add_series({
-            'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
-            'values': [worksheet_data.name] + [2, 8] + [len(fitted_power_const) + 2, 8],
-            'line': {'color': 'red'},
-            'name': 'Fitted Power Constant Velocities',
-        })
-        graph.add_series({
-            'categories': [worksheet_data.name] + [2, 9] + [len(velocity_clean_const) + 2, 9],
-            'values': [worksheet_data.name] + [2, 7] + [len(power_clean_const) + 2, 7],
-            'line': {'color': 'red'},
-            'name': 'Power Constant Velocities',
-        })
+        #
+        # graph.add_series({
+        #     'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
+        #     'values': [worksheet_data.name] + [2, 8] + [len(fitted_power_const) + 2, 8],
+        #     'line': {'color': 'red'},
+        #     'name': 'Fitted Power Constant Velocities',
+        # })
+        # graph.add_series({
+        #     'categories': [worksheet_data.name] + [2, 9] + [len(velocity_clean_const) + 2, 9],
+        #     'values': [worksheet_data.name] + [2, 7] + [len(power_clean_const) + 2, 7],
+        #     'line': {'color': 'red'},
+        #     'name': 'Power Constant Velocities',
+        # })
 
         graph_2.add_series({
             'categories': [worksheet_data.name] + [2, 10] + [len(power_time_clean_const) + 2, 10],
@@ -933,9 +934,9 @@ class Main(wx.Frame):
 
         worksheet_charts.insert_chart('B2', graph)
         graph.set_legend({'position': 'bottom'})
-        worksheet_charts.insert_chart('B40', graph_2)
+        # worksheet_charts.insert_chart('B40', graph_2)
         worksheet_charts.write('T2', 'Simulated Mass:', header)
-        worksheet_charts.write('X2', str(round(float(self.simulated_mass), 2)), header)
+        worksheet_charts.write('X2', str(round(float(self.simulated_mass_guess), 2)), header)
         worksheet_charts.write_rich_string('Y2', header, '[kgm', superscript, '2', header, ']')
 
         try:
@@ -1087,8 +1088,8 @@ class Main(wx.Frame):
                 self.checkbox.SetValue(False)
                 return
 
-            self.simulated_mass = self.sim_dialog.GetValue()
-            if self.simulated_mass == "":
+            self.simulated_mass_guess = self.sim_dialog.GetValue()
+            if self.simulated_mass_guess == "":
                 self.inertia_dialog = wx.TextEntryDialog(self,
                                                          "If the previous screen was left empty, what is the value for the moment of inertia [kg * m^2] (use '.' as decimal separator): ",
                                                          "Enter inertia value...")
@@ -1108,9 +1109,22 @@ class Main(wx.Frame):
                     return
 
                 self.inertia = float(self.inertia_dialog.GetValue())
-                self.conversion = float(self.conversion_dialog.GetValue())
+                if self.inertia == "":
+                    no_entry_dialog = wx.MessageDialog(self.top_panel, message="No text seems to have been entered. \nPlease retry or click \"Cancel\" to go back.", style=wx.ICON_WARNING)
+                    no_entry_dialog.CenterOnParent()
+                    if no_entry_dialog.ShowModal() == wx.OK:
+                        no_entry_dialog.Destroy()
+                        return
 
-                self.simulated_mass = (self.conversion ** 2) * self.inertia
+                self.conversion = float(self.conversion_dialog.GetValue())
+                if self.conversion == "":
+                    no_entry_dialog = wx.MessageDialog(self.top_panel, message="No text seems to have been entered. \nPlease retry or click \"Cancel\" to go back.", style=wx.ICON_WARNING)
+                    no_entry_dialog.CenterOnParent()
+                    if no_entry_dialog.ShowModal() == wx.OK:
+                        no_entry_dialog.Destroy()
+                        return
+
+                self.simulated_mass_guess = (self.conversion ** 2) * self.inertia
 
     def on_exit_widget_enter(self, event):
         self.statusbar.SetStatusText('Exit the program')
