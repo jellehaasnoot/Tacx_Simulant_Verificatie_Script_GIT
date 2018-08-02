@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6ee7abea-7152-40b0-9158-7e0d84e00cb4" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/Flow.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/Flow.xlsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flux.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/Flux.xlsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SimulANT+ Log Analyzer.py" beforeDir="false" afterPath="$PROJECT_DIR$/SimulANT+ Log Analyzer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KickR.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/KickR.xlsx" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,8 +18,8 @@
       <file leaf-file-name="SimulANT+ Log Analyzer.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SimulANT+ Log Analyzer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="293" column="22" lean-forward="true" selection-start-line="293" selection-start-column="22" selection-end-line="293" selection-end-column="22" />
+            <state relative-caret-position="-1099">
+              <caret line="89" column="57" lean-forward="true" selection-start-line="89" selection-start-column="57" selection-end-line="89" selection-end-column="57" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -27,27 +27,16 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Old Flux 0 W Acc Fitness Equipment Display ANT Messages.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Old Flux 0 W Acc Fitness Equipment Display ANT Messages.txt">
+      <file leaf-file-name="SimulANT+ Log Analyzer_Backup.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SimulANT+ Log Analyzer_Backup.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" column="48" lean-forward="true" selection-start-line="5" selection-start-column="48" selection-end-line="5" selection-end-column="48" />
+            <state relative-caret-position="629">
+              <caret line="983" column="64" lean-forward="true" selection-start-line="983" selection-start-column="64" selection-end-line="983" selection-end-column="64" />
+              <folding>
+                <element signature="e#0#15#0" expanded="true" />
+              </folding>
             </state>
           </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="KickR 0W Mod Fitness Equipment Display ANT Messages.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/KickR 0W Mod Fitness Equipment Display ANT Messages.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1224">
-              <caret line="72" column="47" lean-forward="true" selection-start-line="72" selection-start-column="47" selection-end-line="72" selection-end-column="47" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Old Flux 30 Fitness Equipment Display ANT Messages.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Old Flux 30 Fitness Equipment Display ANT Messages.txt">
-          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
     </leaf>
@@ -61,8 +50,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>pathname</find>
-      <find>lo</find>
       <find>index</find>
       <find>max_vel</find>
       <find>high</find>
@@ -91,6 +78,8 @@
       <find>2.5</find>
       <find>power_no_int_res_high</find>
       <find>sys</find>
+      <find>fitted_power_h</find>
+      <find>self.simulated_mass</find>
     </findStrings>
     <replaceStrings>
       <replace>path_panel_2</replace>
@@ -103,6 +92,7 @@
       <replace>fitted_compensated_power_moderate_acc</replace>
       <replace>range_half</replace>
       <replace>power_no_int_res_high_imd</replace>
+      <replace>self.simulated_mass_guess</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -120,6 +110,7 @@
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_1.py" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_2.py" />
         <option value="$PROJECT_DIR$/KickR 0W Mod Fitness Equipment Display ANT Messages.txt" />
+        <option value="$PROJECT_DIR$/SimulANT+ Log Analyzer_Backup.py" />
         <option value="$PROJECT_DIR$/SimulANT+ Log Analyzer.py" />
       </list>
     </option>
@@ -135,6 +126,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Course" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -146,7 +138,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Course" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -191,7 +182,7 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <configuration name="gistfile1" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="SimulANT+ Log Analyzer_Backup" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Tacx_Simulant_Verificatie_Script" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -199,11 +190,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$USER_HOME$/AppData/Local/Temp/Temp1_a42aecb379742d3cd150-e38aa37ebb60e01237b0d0325e768703bad2f5cb.zip/a42aecb379742d3cd150-e38aa37ebb60e01237b0d0325e768703bad2f5cb" />
-      <option name="IS_MODULE_SDK" value="false" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$USER_HOME$/AppData/Local/Temp/Temp1_a42aecb379742d3cd150-e38aa37ebb60e01237b0d0325e768703bad2f5cb.zip/a42aecb379742d3cd150-e38aa37ebb60e01237b0d0325e768703bad2f5cb/gistfile1.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/SimulANT+ Log Analyzer_Backup.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -265,18 +256,18 @@
     </configuration>
     <list>
       <item itemvalue="Python.SimulANT+ Log Analyzer" />
-      <item itemvalue="Python.gistfile1" />
       <item itemvalue="Python.scratch" />
       <item itemvalue="Python.scratch_1" />
       <item itemvalue="Python.scratch_2" />
+      <item itemvalue="Python.SimulANT+ Log Analyzer_Backup" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.SimulANT+ Log Analyzer" />
+        <item itemvalue="Python.SimulANT+ Log Analyzer_Backup" />
         <item itemvalue="Python.scratch_2" />
         <item itemvalue="Python.scratch_1" />
         <item itemvalue="Python.scratch" />
-        <item itemvalue="Python.gistfile1" />
       </list>
     </recent_temporary>
   </component>
@@ -284,10 +275,10 @@
     <configuration />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="2576" height="1456" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12371946" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.2994693" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12328767" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.22314912" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="8" weight="0.22668688" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39937434" />
@@ -463,13 +454,6 @@
     <entry file="file://C:/Program Files/Python36/Scripts/pyinstaller-script.py" />
     <entry file="file://F:/Ant/ANTlogfileconverter.py" />
     <entry file="file://$PROJECT_DIR$/log1.txt" />
-    <entry file="file://$PROJECT_DIR$/SimulANT+ Log Analyzer_Backup.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="142">
-          <caret line="150" selection-start-line="150" selection-end-line="159" selection-end-column="67" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/PyInstaller/loader/pyimod03_importers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="533">
@@ -525,27 +509,23 @@
     <entry file="file://$PROJECT_DIR$/ValueConverter.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/Old Flux 30 Fitness Equipment Display ANT Messages.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Old Flux 0 W Acc Fitness Equipment Display ANT Messages.txt">
+    <entry file="file://$PROJECT_DIR$/Old Flux 30 Fitness Equipment Display ANT Messages.txt" />
+    <entry file="file://$PROJECT_DIR$/Old Flux 0 W Acc Fitness Equipment Display ANT Messages.txt" />
+    <entry file="file://$PROJECT_DIR$/KickR 0W Mod Fitness Equipment Display ANT Messages.txt" />
+    <entry file="file://$PROJECT_DIR$/SimulANT+ Log Analyzer_Backup.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="48" lean-forward="true" selection-start-line="5" selection-start-column="48" selection-end-line="5" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/KickR 0W Mod Fitness Equipment Display ANT Messages.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1224">
-          <caret line="72" column="47" lean-forward="true" selection-start-line="72" selection-start-column="47" selection-end-line="72" selection-end-column="47" />
+        <state relative-caret-position="629">
+          <caret line="983" column="64" lean-forward="true" selection-start-line="983" selection-start-column="64" selection-end-line="983" selection-end-column="64" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SimulANT+ Log Analyzer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="293" column="22" lean-forward="true" selection-start-line="293" selection-start-column="22" selection-end-line="293" selection-end-column="22" />
+        <state relative-caret-position="-1099">
+          <caret line="89" column="57" lean-forward="true" selection-start-line="89" selection-start-column="57" selection-end-line="89" selection-end-column="57" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>

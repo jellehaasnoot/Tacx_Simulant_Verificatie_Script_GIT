@@ -178,7 +178,7 @@ class Main(wx.Frame):
         # meter, this way the accuracy can be calculated.
         # TODO: add "Choose the fourth logged SimulANT+ file with the 0 W Power program - Power meter ...." to dummy_strings
         self.pathname = []
-        dummy_strings = ["Choose the logged SimulANT+ file with the HIGHEST slope / power...",
+        dummy_strings = ["Choose the first logged SimulANT+ file with the HIGHEST slope / power...",
                          "Choose the second logged SimulANT+ file with the LOWEST (negative) slope...",
                          "Choose the third logged SimulANT+ file with the 0 W Power program - constant velocities..."]
         for i in range(len(dummy_strings)):
