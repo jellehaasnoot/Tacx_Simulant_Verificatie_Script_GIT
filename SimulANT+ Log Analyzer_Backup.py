@@ -68,8 +68,8 @@ class Main(wx.Frame):
         self.font_header = wx.Font(12, family=wx.DECORATIVE, style=wx.NORMAL, weight=wx.BOLD)
         self.font_normal = wx.Font(10, family=wx.DECORATIVE, style=wx.NORMAL, weight=wx.NORMAL)
 
-        self.panel_titles = ["Path to directory first selected LOG-file: ", "Path to directory second selected LOG-file: ", "Path to directory third selected LOG-file: "]
-        self.statistics_titles = ["Some statistics about the first file: ", "Some statistics about the second file: ", "Some statistics about the third file: "]
+        self.panel_titles = ["Path to directory first selected LOG-file: ", "Path to directory second selected LOG-file: ", "Path to directory third selected LOG-file: ", "Path to directory fourth selected LOG-file: "]
+        self.statistics_titles = ["Some statistics about the first file: ", "Some statistics about the second file: ", "Some statistics about the third file: ", "Some statistics about the fourth file: "]
         for i in range(len(self.panel_titles)):
             self.path_panel = wx.Panel(self.top_panel, -1, style=wx.TAB_TRAVERSAL | wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 10 + i * 55))
             self.path_panel_header = wx.StaticText(self.path_panel, label=self.panel_titles[i], pos=(4, 2))
@@ -182,7 +182,8 @@ class Main(wx.Frame):
         self.pathname = []
         dummy_strings = ["Choose the logged SimulANT+ file with the HIGHEST slope / power...",
                          "Choose the second logged SimulANT+ file with the LOWEST (negative) slope...",
-                         "Choose the third logged SimulANT+ file with the 0 W Power program - constant velocities..."]
+                         "Choose the third logged SimulANT+ file with the 0 W Power program - constant velocities...",
+                         "Choose the fourth logged SimulANT+ file with the 0 W Power program - read from the external power sensor..."]
         for i in range(len(dummy_strings)):
             with wx.FileDialog(self, dummy_strings[i],
                                wildcard="Text files (*.txt)|*.txt|" "Comma Separated Value-files (*.csv)|*.csv",
@@ -210,7 +211,7 @@ class Main(wx.Frame):
 
         for j in range(3):
             data_dummy = []
-            self.logfile_analyser(self.pathname[j])
+            self.logfile_analyser_trainer(self.pathname[j])
             if len(power_list) < len(velocity_list):
                 velocity_list.pop()
                 velocity_time_list.pop()
@@ -239,32 +240,29 @@ class Main(wx.Frame):
         self.power_list_const = self.power_list[2]
 
         # analysing log file 4:
-        # TODO: Change the logfile analyser to take the right values (which are different, because this is a power
-        # TODO: meter. Also uncomment the code below to use when the Logfile_analyser has been changed.
-        # TODO: KAN NIET IN DE LOOP IN VERBAND MET DE ANDERE PARAMETERS DIE HIER GEBRUIKT WORDEN!!!
-        # self.logfile_analyser(self.pathname[3])
-        # data_power = []
-        #
-        # if len(power_list) < len(cadence_list):
-        #     cadence_list.pop()
-        #     cadence_time_list.pop()
-        # elif len(cadence_list) < len(power_list):
-        #     power_list.pop()
-        #     power_time_list.pop()
-        # else:
-        #     pass
-        #
-        # for i in range(len(velocity_list)):
-        #     data_power.append([cadence_list[i], power_list[i], cadence_time_list[i], power_time_list[i]])
-        # TODO: bespreken hoe dit gedaan moet worden, nu gemaakt voor constante snelheid, dit betekent dat de 3e test op
-        # TODO: 12 m/s dubbel wordt opgenomen en wordt gekeken of de vermogens overeen komen, dit kan dan ook voor
-        # TODO: meerdere punten gedaan worden, nu is het slechts voor 1 punt gedaan!
-        # self.power_list_power = power_list
-        # self.time_list_power = time_list
+        self.logfile_analyser_sensor(self.pathname[3])
+        data_sensor = []
+
+        if len(power_list) < len(cadence_list):
+            cadence_list.pop()
+            sensor_time_list.pop()
+        elif len(cadence_list) < len(power_list):
+            power_list.pop()
+            power_time_list.pop()
+        else:
+            pass
+
+        for i in range(len(cadence_list)):
+            data_sensor.append([cadence_list[i], power_list[i], sensor_time_list[i]])
+
+        self.power_list_sensor = power_list
+        self.cadence_list_sensor = cadence_list
+        self.power_time_list_sensor = power_time_list
+        self.cadenc_time_list_sensor = sensor_time_list
 
         # Calculating the averages of every file, this is not necessary for the calculations below, but this will give
         # a quick overview of the used files to the user.
-        self.all_averages = [[], [], []]
+        self.all_averages = [[], [], [], []]
 
         self.power_high_avg = mean(self.power_list_high)
         self.all_averages[0].append(round(float(self.power_high_avg), 1))
@@ -285,9 +283,12 @@ class Main(wx.Frame):
         self.all_averages[2].append(len(self.velocity_list_const))
         self.all_averages = array(self.all_averages)
 
-        # TODO: turn on when fourth file is used
-        # self.power_avg = mean(self.power_list_power)
-        # self.all_averages.append(round(float(self.power_avg), 1))
+        self.power_sensor_avg = mean(self.power_list_sensor)
+        self.all_averages[3].append(round(float(self.power_sensor_avg), 1))
+        self.cadence_sensor_avg = mean(self.cadence_list_sensor)
+        self.all_averages[3].append(round(float(self.cadence_sensor_avg), 1))
+        self.all_averages[3].append(len(self.cadence_list_sensor))
+        self.all_averages = array(self.all_averages)
 
         # Some constants needed for the next part of code
         global index_low_below_zero_1, index_low_below_zero_2, index_low_below_zero, fitted_power_high, fitted_power_low, poplin
@@ -299,6 +300,10 @@ class Main(wx.Frame):
         power_raw_low = []
         velocity_time_raw_low = []
         power_time_raw_low =[]
+        power_raw_sensor = []
+        cadence_raw_sensor = []
+        power_time_raw_sensor = []
+        cadence_time_raw_sensor = []
         power_clean_high = []
         velocity_clean_high = []
         velocity_time_clean_high = []
@@ -311,6 +316,10 @@ class Main(wx.Frame):
         power_time_clean_const = []
         power_clean_const = []
         velocity_clean_const = []
+        power_clean_sensor = []
+        cadence_clean_sensor = []
+        power_time_clean_sensor = []
+        cadence_time_clean_sensor = []
         first_non_zero_power = []
         power_no_int_res_high_imd = []
         power_no_int_res_high = []
@@ -463,9 +472,6 @@ class Main(wx.Frame):
 
         # Convert the raw data from the file to named lists for the THIRD file. This file will be used to calculate the
         #  basic resistance and simulated mass if this is not given by the user.
-        # TODO: If more data points are required for the calculation of the precision of the trainer, this can be
-        # TODO: duplicated with another variable for the first limit. for example another 2 points at 6 m/s and 9 m/s.
-        # TODO: Uncomment the power_trainer variable if the fourth file is added.
         velocity_const = [velocity_clean_low[index_low_below_zero]]
         for j in range(len(data_const)):
             if first_limit - range_half < (data_const[j][0]) < first_limit + range_half:
@@ -473,28 +479,23 @@ class Main(wx.Frame):
                 velocity_const_1.append(data_const[j][0])
                 velocity_time_raw_const.append(data_const[j][2])
                 power_time_raw_const.append(data_const[j][3])
-        # power_trainer.append(mean(power_const1))
+        power_trainer.append(mean(power_const_1))
 
         velocity_const.append(mean(velocity_const_1))
         power_const.append(mean(power_const_1))
 
         # Convert the raw data from the file to named lists for the FOURTH file. This file will be used to calculate the
         # precision of the trainer.
-        # TODO: uncomment and if more data points are required, this can be duplicated with another variable for the
-        # TODO: first limit. for example another 2 points at 6m/s and 9m/s.
-        # for j in range(len(data_const)):
-        #     if first_limit - range_half < (data_const[j][0]) < first_limit + range_half:
-        #         power_const_1.append(data_const[j][1])
-        #         power_time_raw_const.append(data_const[j][3])
-        # power_meter.append(mean(power_const_1))
+        for j in range(len(data_sensor)):
+            if first_limit - range_half < (data_sensor[j][0]) < first_limit + range_half:
+                power_clean_sensor.append(data_sensor[j][1])
+                power_time_raw_sensor.append(data_sensor[j][3])
+        power_clean_sensor_mean = mean(power_clean_sensor)
 
         # The calculations below are used to calculate the precision of the trainer at the three data points, these will
         # be shown as variables in the excel file.
-        # TODO: uncomment
-        # for i in range(power_meter):
-        #     precision_trainer_power = (abs(power_meter[i] - power_trainer[i]))/power_meter[i] * 100
-        # precision_trainer_max = max(precision_trainer_power)
-        # precision_trainer_mean = mean(precision_trainer_power)
+        precision_trainer_power = (abs(power_clean_sensor_mean - power_trainer))/power_trainer * 100
+        print(precision_trainer_power)
 
         # Start calculations on the THIRD file to calculate the SIMULATED MASS. This includes fitting the
         # data.
@@ -617,6 +618,7 @@ class Main(wx.Frame):
         worksheet_data.write_column(2, 8, fitted_power_const)
         worksheet_data.write_column(2, 9, velocity_clean_const)
 
+
         worksheet_data.write('S2', 'Brake Power Trainer Upper Limit [W]', bold)
         worksheet_data.write('T2', 'Brake Power Trainer Lower Limit [W]', bold)
         worksheet_data.write_column(2, 18, power_clean_high_brake)
@@ -699,26 +701,26 @@ class Main(wx.Frame):
         #     'line': {'color': 'purple'},
         #     'name': 'Fitted Compensated Power Moderate Acceleration',
         # })
-        #
-        # graph.add_series({
-        #     'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
-        #     'values': [worksheet_data.name] + [2, 8] + [len(fitted_power_const) + 2, 8],
-        #     'line': {'color': 'red'},
-        #     'name': 'Fitted Power Constant Velocities',
-        # })
-        #
-        # graph.add_series({
-        #     'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
-        #     'values': [worksheet_data.name] + [2, 8] + [len(fitted_power_const) + 2, 8],
-        #     'line': {'color': 'red'},
-        #     'name': 'Fitted Power Constant Velocities',
-        # })
-        # graph.add_series({
-        #     'categories': [worksheet_data.name] + [2, 9] + [len(velocity_clean_const) + 2, 9],
-        #     'values': [worksheet_data.name] + [2, 7] + [len(power_clean_const) + 2, 7],
-        #     'line': {'color': 'red'},
-        #     'name': 'Power Constant Velocities',
-        # })
+
+        graph.add_series({
+            'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
+            'values': [worksheet_data.name] + [2, 8] + [len(fitted_power_const) + 2, 8],
+            'line': {'color': 'red'},
+            'name': 'Fitted Power Constant Velocities',
+        })
+
+        graph.add_series({
+            'categories': [worksheet_data.name] + [2, 3] + [len(velocity_clean_low) + 2, 3],
+            'values': [worksheet_data.name] + [2, 8] + [len(fitted_power_const) + 2, 8],
+            'line': {'color': 'red'},
+            'name': 'Fitted Power Constant Velocities',
+        })
+        graph.add_series({
+            'categories': [worksheet_data.name] + [2, 9] + [len(velocity_clean_const) + 2, 9],
+            'values': [worksheet_data.name] + [2, 7] + [len(power_clean_const) + 2, 7],
+            'line': {'color': 'red'},
+            'name': 'Power Constant Velocities',
+        })
 
         graph_2.add_series({
             'categories': [worksheet_data.name] + [2, 10] + [len(power_time_clean_const) + 2, 10],
@@ -767,7 +769,7 @@ class Main(wx.Frame):
 
         worksheet_charts.insert_chart('B2', graph)
         graph.set_legend({'position': 'bottom'})
-        # worksheet_charts.insert_chart('B40', graph_2)
+        worksheet_charts.insert_chart('B40', graph_2)
         worksheet_charts.write('T2', 'Simulated Mass:', header)
         worksheet_charts.write('X2', str(round(float(self.simulated_mass_guess), 2)), header)
         worksheet_charts.write_rich_string('Y2', header, '[kgm', superscript, '2', header, ']')
@@ -807,7 +809,7 @@ class Main(wx.Frame):
     def on_exit(self, e):
         self.Close(True)
 
-    def logfile_analyser(self, logfile):
+    def logfile_analyser_trainer(self, logfile):
         global velocity_list, power_list, time_list, velocity_time_list, power_time_list
         sentences = []
         value_list = []
@@ -874,6 +876,60 @@ class Main(wx.Frame):
             else:
                 pass
 
+    def logfile_analyser_sensor(self, logfile):
+        global cadence_list, power_list, time_list, sensor_time_list
+        sentences = []
+        value_list = []
+        time_list = []
+        time_values_raw = []
+        cadence_list = []
+        sensor_time_list = []
+        power_list = []
+
+        # The log-file is opened here.
+        log = open(logfile)
+        with open(logfile) as f:
+            for lines, l in enumerate(f):
+                pass
+
+        # The important lines will be retrieved from the log-file here, by looking at the lines which start with 'Rx'. These are received messages.
+        for n in range(lines):
+            sentence = log.readline()
+            if "Rx:" in sentence:
+                sentences.append(sentence)
+
+        # This part splits the retrieved lines in subparts, after which the hexadecimals will be read.
+        for i in range(len(sentences)):
+            sentence = sentences[i].split()
+            index = sentence.index("Rx:")
+            value_raw = sentence[index + 1]
+            time_raw = sentence[index - 2]
+            value = value_raw.replace("[", "").replace("]", "")  # This will removes the useless characters
+            value_list.append(value)
+            time_values_raw.append(time_raw)
+
+        # These subparts will be categorized according to their first character: When this is '10', this means the cadence is recorded in that line. When the first character is '19', this means power is recorded in that line. The other characters are not important for the functionality of this file, which means they will be left out.
+        for i in range(len(value_list)):
+            value_list_characters = list(value_list[i])
+
+            if value_list_characters[0] == '1' and value_list_characters[1] == '0':
+                cadence_values_raw = [value_list_characters[6], value_list_characters[7]]
+                power_values_raw = [value_list_characters[15], value_list_characters[12], value_list_characters[13]]
+                cadence_values_raw_string = "".join(cadence_values_raw)
+                power_values_raw_string = "".join(power_values_raw)
+                value_converter = ValueConverter()
+                cadence_bin = value_converter.hex_to_bin(cadence_values_raw_string)
+                power_bin = value_converter.hex_to_bin(power_values_raw_string)
+                cadence_list.append(value_converter.bin_to_dec(cadence_bin))
+                power_list.append(value_converter.bin_to_dec(power_bin))
+                sensor_time_list.append((float(time_values_raw[i]) - float(time_values_raw[0])) / 1000)
+
+            else:
+                pass
+
+        print(power_list)
+        print(cadence_list)
+        
     def on_exit_button(self, event):
         self.Close()
 

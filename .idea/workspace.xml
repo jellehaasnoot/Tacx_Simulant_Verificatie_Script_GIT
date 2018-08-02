@@ -4,7 +4,8 @@
     <list default="true" id="6ee7abea-7152-40b0-9158-7e0d84e00cb4" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/KickR.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/KickR.xlsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SimulANT+ Log Analyzer.py" beforeDir="false" afterPath="$PROJECT_DIR$/SimulANT+ Log Analyzer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SimulANT+ Log Analyzer_Backup.py" beforeDir="false" afterPath="$PROJECT_DIR$/SimulANT+ Log Analyzer_Backup.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,8 +19,8 @@
       <file leaf-file-name="SimulANT+ Log Analyzer.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SimulANT+ Log Analyzer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1099">
-              <caret line="89" column="57" lean-forward="true" selection-start-line="89" selection-start-column="57" selection-end-line="89" selection-end-column="57" />
+            <state relative-caret-position="709">
+              <caret line="949" column="46" lean-forward="true" selection-start-line="949" selection-start-column="46" selection-end-line="949" selection-end-column="46" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -27,11 +28,29 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="scratch_4.py" pinned="false" current-in-tab="false">
+        <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_4.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="629">
+              <caret line="37" selection-start-line="37" selection-end-line="37" selection-end-column="54" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ValueConverter.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ValueConverter.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="379">
+              <caret line="36" column="30" lean-forward="true" selection-start-line="36" selection-start-column="30" selection-end-line="36" selection-end-column="30" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="SimulANT+ Log Analyzer_Backup.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SimulANT+ Log Analyzer_Backup.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="629">
-              <caret line="983" column="64" lean-forward="true" selection-start-line="983" selection-start-column="64" selection-end-line="983" selection-end-column="64" />
+            <state relative-caret-position="710">
+              <caret line="285" selection-start-line="285" selection-end-line="290" selection-end-column="52" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -50,10 +69,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>index</find>
-      <find>max_vel</find>
-      <find>high</find>
-      <find>data_zero</find>
       <find>data_low</find>
       <find>filtered</find>
       <find>power</find>
@@ -80,6 +95,10 @@
       <find>sys</find>
       <find>fitted_power_h</find>
       <find>self.simulated_mass</find>
+      <find>velocity</find>
+      <find>speed</find>
+      <find>cadence_time_list</find>
+      <find>logfile_analyser</find>
     </findStrings>
     <replaceStrings>
       <replace>path_panel_2</replace>
@@ -93,6 +112,9 @@
       <replace>range_half</replace>
       <replace>power_no_int_res_high_imd</replace>
       <replace>self.simulated_mass_guess</replace>
+      <replace>cadence</replace>
+      <replace>sensor_time_list</replace>
+      <replace>logfile_analyser_trainer</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -111,6 +133,8 @@
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_2.py" />
         <option value="$PROJECT_DIR$/KickR 0W Mod Fitness Equipment Display ANT Messages.txt" />
         <option value="$PROJECT_DIR$/SimulANT+ Log Analyzer_Backup.py" />
+        <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_3.py" />
+        <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_4.py" />
         <option value="$PROJECT_DIR$/SimulANT+ Log Analyzer.py" />
       </list>
     </option>
@@ -133,6 +157,15 @@
             <path>
               <item name="Tacx_Simulant_Verificatie_Script" type="b2602c69:ProjectViewProjectNode" />
               <item name="Tacx_Simulant_Verificatie_Script" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Tacx_Simulant_Verificatie_Script" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Scratches and Consoles" type="1a2a3e82:ScratchProjectViewPane$MyProjectNode" />
+            </path>
+            <path>
+              <item name="Tacx_Simulant_Verificatie_Script" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Scratches and Consoles" type="1a2a3e82:ScratchProjectViewPane$MyProjectNode" />
+              <item name="Scratches" type="d62648e6:ScratchProjectViewPane$MyRootNode" />
             </path>
           </expand>
           <select />
@@ -200,42 +233,6 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <configuration name="scratch" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Tacx_Simulant_Verificatie_Script" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$APPLICATION_CONFIG_DIR$/scratches" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$APPLICATION_CONFIG_DIR$/scratches/scratch.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
-    <configuration name="scratch_1" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Tacx_Simulant_Verificatie_Script" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$APPLICATION_CONFIG_DIR$/scratches" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$APPLICATION_CONFIG_DIR$/scratches/scratch_1.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
     <configuration name="scratch_2" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Tacx_Simulant_Verificatie_Script" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -254,20 +251,56 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
+    <configuration name="scratch_3" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Tacx_Simulant_Verificatie_Script" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$APPLICATION_CONFIG_DIR$/scratches" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$APPLICATION_CONFIG_DIR$/scratches/scratch_3.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
+    <configuration name="scratch_4" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Tacx_Simulant_Verificatie_Script" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$APPLICATION_CONFIG_DIR$/scratches" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$APPLICATION_CONFIG_DIR$/scratches/scratch_4.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
     <list>
       <item itemvalue="Python.SimulANT+ Log Analyzer" />
-      <item itemvalue="Python.scratch" />
-      <item itemvalue="Python.scratch_1" />
       <item itemvalue="Python.scratch_2" />
       <item itemvalue="Python.SimulANT+ Log Analyzer_Backup" />
+      <item itemvalue="Python.scratch_3" />
+      <item itemvalue="Python.scratch_4" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.SimulANT+ Log Analyzer" />
+        <item itemvalue="Python.scratch_4" />
+        <item itemvalue="Python.scratch_3" />
         <item itemvalue="Python.SimulANT+ Log Analyzer_Backup" />
         <item itemvalue="Python.scratch_2" />
-        <item itemvalue="Python.scratch_1" />
-        <item itemvalue="Python.scratch" />
       </list>
     </recent_temporary>
   </component>
@@ -275,12 +308,13 @@
     <configuration />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
+    <frame x="-8" y="-8" width="2576" height="1456" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12328767" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.22314912" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12293144" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="8" weight="0.22668688" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.12282032" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39937434" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info id="Structure" order="1" weight="0.25" />
@@ -318,26 +352,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/SimulANT+ Log Analyzer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="10727">
-          <caret line="631" column="35" selection-start-line="631" selection-start-column="35" selection-end-line="631" selection-end-column="35" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SimulANT+ Log Analyzer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="11254">
-          <caret line="662" column="10" lean-forward="true" selection-start-line="662" selection-start-column="10" selection-end-line="662" selection-end-column="10" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/log1.txt" />
     <entry file="file://$PROJECT_DIR$/ANTlogfileconverter.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -468,13 +482,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Temp/Temp1_a42aecb379742d3cd150-e38aa37ebb60e01237b0d0325e768703bad2f5cb.zip/a42aecb379742d3cd150-e38aa37ebb60e01237b0d0325e768703bad2f5cb/gistfile1.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="25" lean-forward="true" selection-start-line="19" selection-start-column="25" selection-end-line="19" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/Temp1_a42aecb379742d3cd150-e38aa37ebb60e01237b0d0325e768703bad2f5cb.zip/a42aecb379742d3cd150-e38aa37ebb60e01237b0d0325e768703bad2f5cb/gistfile1.py" />
     <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="806">
@@ -506,26 +514,47 @@
     <entry file="file://$PROJECT_DIR$/tacx-logo.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/ValueConverter.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/Old Flux 30 Fitness Equipment Display ANT Messages.txt" />
     <entry file="file://$PROJECT_DIR$/Old Flux 0 W Acc Fitness Equipment Display ANT Messages.txt" />
     <entry file="file://$PROJECT_DIR$/KickR 0W Mod Fitness Equipment Display ANT Messages.txt" />
+    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_3.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="24" column="45" lean-forward="true" selection-start-line="24" selection-start-column="45" selection-end-line="24" selection-end-column="45" />
+          <folding>
+            <element signature="e#1#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/SimulANT+ Log Analyzer_Backup.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="629">
-          <caret line="983" column="64" lean-forward="true" selection-start-line="983" selection-start-column="64" selection-end-line="983" selection-end-column="64" />
+        <state relative-caret-position="710">
+          <caret line="285" selection-start-line="285" selection-end-line="290" selection-end-column="52" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/ValueConverter.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="379">
+          <caret line="36" column="30" lean-forward="true" selection-start-line="36" selection-start-column="30" selection-end-line="36" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_4.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="629">
+          <caret line="37" selection-start-line="37" selection-end-line="37" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/SimulANT+ Log Analyzer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1099">
-          <caret line="89" column="57" lean-forward="true" selection-start-line="89" selection-start-column="57" selection-end-line="89" selection-end-column="57" />
+        <state relative-caret-position="709">
+          <caret line="949" column="46" lean-forward="true" selection-start-line="949" selection-start-column="46" selection-end-line="949" selection-end-column="46" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
