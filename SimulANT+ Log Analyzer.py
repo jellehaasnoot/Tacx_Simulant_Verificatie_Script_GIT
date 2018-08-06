@@ -804,6 +804,15 @@ class Main(wx.Frame):
         worksheet_data.write_column(2, 25, speed_trainer_check_lower_bound)
         worksheet_data.write_column(2, 26, speed_trainer_check_upper_bound)
 
+        for i in range(int(trainer_deviation_perc * 2)):
+            for j in range(len(power_const_check)):
+                worksheet_data.write(2 + j, 50 + i, power_const_check[j] * (1 + i / 200))
+                worksheet_data.write(2 + j, 50 + int(trainer_deviation_perc) * 2 + i, power_const_check[j] * (1 - i / 200))
+
+        for i in range(int(sensor_deviation_perc * 2)):
+            for j in range(len(power_sensor_check)):
+                worksheet_data.write(2 + j, 150 + i, power_sensor_check[j] * (1 + i / 200))
+                worksheet_data.write(2 + j, 150 + int(sensor_deviation_perc) * 2 + i, power_sensor_check[j] * (1 - i / 200))
 
         # Percentage Lines
         for i in range(len(velocities_for_percentages)):
@@ -867,27 +876,39 @@ class Main(wx.Frame):
         graph_2.add_series({
             'values': [worksheet_data.name] + [2, 14] + [len(power_const_check) + 2, 14],
             'categories': [worksheet_data.name] + [2, 12] + [len(power_time_const_check) + 2, 12],
-            'line': {'color': 'blue', 'width': 1},
+            'line': {'color': 'blue', 'width': 1.5},
             'name': 'Trainer power lower bound (-' + str(trainer_deviation_perc) + '%)',
         })
         graph_2.add_series({
             'values': [worksheet_data.name] + [2, 15] + [len(power_const_check) + 2, 15],
             'categories': [worksheet_data.name] + [2, 12] + [len(power_time_const_check) + 2, 12],
-            'line': {'color': 'blue', 'width': 1},
+            'line': {'color': 'blue', 'width': 1.5},
             'name': 'Trainer power upper bound (' + str(trainer_deviation_perc) + '%)',
         })
         graph_2.add_series({
             'values': [worksheet_data.name] + [2, 18] + [len(power_sensor_check) + 2, 18],
             'categories': [worksheet_data.name] + [2, 16] + [len(power_time_sensor_check) + 2, 16],
-            'line': {'color': 'red', 'width': 1},
+            'line': {'color': 'red', 'width': 1.5},
             'name': 'Sensor power lower bound (-' + str(sensor_deviation_perc) + '%)',
         })
         graph_2.add_series({
             'values': [worksheet_data.name] + [2, 19] + [len(power_sensor_check) + 2, 19],
             'categories': [worksheet_data.name] + [2, 16] + [len(power_time_sensor_check) + 2, 16],
-            'line': {'color': 'red', 'width': 1},
+            'line': {'color': 'red', 'width': 1.5},
             'name': 'Sensor power upper bound (' + str(sensor_deviation_perc) + '%)',
         })
+        for i in range(int(4 * sensor_deviation_perc)):
+            graph_2.add_series({
+                'values': [worksheet_data.name] + [2, 150 + i] + [len(power_const_check) + 2, 150 + i],
+                'categories': [worksheet_data.name] + [2, 16] + [len(power_const_check) + 2, 16],
+                'line': {'color': 'red', 'width': 3, 'transparency': 98},
+            })
+        for i in range(int(4 * trainer_deviation_perc)):
+            graph_2.add_series({
+                'values': [worksheet_data.name] + [2, 50 + i] + [len(power_const_check) + 2, 50 + i],
+                'categories': [worksheet_data.name] + [2, 12] + [len(power_const_check) + 2, 12],
+                'line': {'color': 'blue', 'width': 3, 'transparency': 98},
+            })
 
 
 
@@ -931,15 +952,16 @@ class Main(wx.Frame):
         # worksheet_charts.write('X4', str(round(float(precision_trainer_max), 2)), header)
         # worksheet_charts.write_rich_string('Y4', header, '[%]')
 
-        try:
-            excel.close()
-        except Exception:
-            excel_open_dialog = wx.MessageDialog(self.top_panel, style=wx.ICON_ERROR,
-                                                 message="Excel seems to be still running. It needs to be closed for this application to be able to save a new file.\n\nNo new file will be saved. Please restart the program.",
-                                                 caption="Error!")
-            excel_open_dialog.CenterOnParent()
-            if excel_open_dialog.ShowModal() == wx.OK:
-                excel_open_dialog.Destroy()
+        # try:
+        #     excel.close()
+        # except Exception:
+        #     excel_open_dialog = wx.MessageDialog(self.top_panel, style=wx.ICON_ERROR,
+        #                                          message="Excel seems to be still running. It needs to be closed for this application to be able to save a new file.\n\nNo new file will be saved. Please restart the program.",
+        #                                          caption="Error!")
+        #     excel_open_dialog.CenterOnParent()
+        #     if excel_open_dialog.ShowModal() == wx.OK:
+        #         excel_open_dialog.Destroy()
+        excel.close()
         self.panel_layout()
 
     def on_about(self, e):
