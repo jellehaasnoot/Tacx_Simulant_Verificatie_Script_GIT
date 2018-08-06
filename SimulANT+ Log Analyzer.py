@@ -376,6 +376,10 @@ class Main(wx.Frame):
             for i in range(len(self.power_time_list_sensor)):
                 self.power_time_list_sensor[i] = float(self.power_time_list_sensor[i]) + correcting_time/1000
 
+        power_time_const_check = self.power_time_list_const
+        power_sensor_check = self.power_list_sensor
+        power_time_sensor_check = self.power_time_list_sensor
+        power_const_check = self.power_list_const
 
         # Calculating the averages of every file, this is not necessary for the calculations below, but this will give
         # a quick overview of the used files to the user.
@@ -599,15 +603,11 @@ class Main(wx.Frame):
 
         # Convert the raw data from the file to named lists for the FOURTH file. This file will be used to calculate the
         # precision of the trainer.
-        for j in range(len(data_sensor)):
-            if first_limit - range_half < (data_sensor[j][0] * self.sprocket_ratio * self.wheel_radius) < first_limit + range_half:
-                power_clean_sensor.append(data_sensor[j][1])
-                sensor_time_raw.append(data_sensor[j][2])
-        power_clean_sensor_mean = mean(power_clean_sensor)
-
-        # The calculations below are used to calculate the precision of the trainer at the three data points, these will
-        # be shown as variables in the excel file.
-        precision_trainer_power = (abs(power_clean_sensor_mean - power_trainer))/power_trainer * 100
+        # for j in range(len(data_sensor)):
+        #     if first_limit - range_half < (data_sensor[j][0] * self.sprocket_ratio * self.wheel_radius) < first_limit + range_half:
+        #         power_clean_sensor.append(data_sensor[j][1])
+        #         sensor_time_raw.append(data_sensor[j][2])
+        # power_clean_sensor_mean = mean(power_clean_sensor)
 
         # Start calculations on the THIRD file to calculate the SIMULATED MASS. This includes fitting the
         # data.
@@ -683,6 +683,7 @@ class Main(wx.Frame):
             graph = excel.add_chart({'type': 'scatter', 'subtype': 'straight'})
         except Exception:
             print('NO')
+        graph_2 = excel.add_chart({'type': 'scatter', 'subtype': 'straight'})
         worksheet_charts = excel.add_worksheet('Charts')
         worksheet_data = excel.add_worksheet('Data')
 
@@ -728,6 +729,11 @@ class Main(wx.Frame):
 
         worksheet_data.write('K2', 'Brake Limit [W]', bold)
         worksheet_data.write_column(2, 10, power_no_int_res_high)
+
+        worksheet_data.write_column(2, 12, power_time_const_check)
+        worksheet_data.write_column(2, 13, power_const_check)
+        worksheet_data.write_column(2, 14, power_time_sensor_check)
+        worksheet_data.write_column(2, 15, power_sensor_check)
 
         # Writing to graph.
         graph.add_series({
@@ -779,7 +785,22 @@ class Main(wx.Frame):
             'name': 'Lowest Gradient Power - Without Flywheel Effects',
         })
 
+        graph_2.add_series({
+            'values': [worksheet_data.name] + [2, 13] + [len(power_const_check) + 2, 13],
+            'categories': [worksheet_data.name] + [2, 12] + [len(power_time_const_check) + 2, 12],
+            'line': {'color': 'blue'},
+            'name': 'Trainer power',
+        })
+
+        graph_2.add_series({
+            'values': [worksheet_data.name] + [2, 15] + [len(power_sensor_check) + 2, 15],
+            'categories': [worksheet_data.name] + [2, 14] + [len(power_time_sensor_check) + 2, 14],
+            'line': {'color': 'red'},
+            'name': 'Sensor power',
+        })
+
         worksheet_charts.insert_chart('B2', graph)
+        worksheet_charts.insert_chart('B40', graph_2)
         graph.set_legend({'position': 'bottom'})
         worksheet_charts.write('T2', 'Simulated Mass:', header)
         worksheet_charts.write('X2', str(round(float(self.simulated_mass_guess), 2)), header)
@@ -967,9 +988,6 @@ class Main(wx.Frame):
 
             else:
                 pass
-
-        print(power_list)
-        print(cadence_list)
 
     def on_exit_button(self, event):
         self.Close()
