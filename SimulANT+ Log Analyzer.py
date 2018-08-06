@@ -650,6 +650,11 @@ class Main(wx.Frame):
         graph.set_x_axis({'name': 'Velocity [km/h]'})
         graph.set_title({'name': 'Operating range ' + self.user_file_name})
         graph.set_size({'width': 1080, 'height': 720})
+        graph_2.set_y_axis({'name': 'Power [W]'})
+        graph_2.set_y2_axis({'name': 'Velocity [km/h]'})
+        graph_2.set_x_axis({'name': 'Time [s]'})
+        graph_2.set_title({'name': '0 Watt acceleration ' + self.user_file_name})
+        graph_2.set_size({'width': 1080, 'height': 720})
         worksheet_data.set_column('A:Q', 14)
         worksheet_charts.set_column('X:X', 16)
 
