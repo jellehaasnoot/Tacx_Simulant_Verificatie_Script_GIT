@@ -392,6 +392,25 @@ class Main(wx.Frame):
             power_const_check_upper_bound.append(power_const_check[i] * (1 + trainer_deviation_perc/100))
             power_const_check_lower_bound.append(power_const_check[i] * (1 - trainer_deviation_perc/100))
 
+        speed_sensor_check = []
+        speed_sensor_check_upper_bound = []
+        speed_sensor_check_lower_bound = []
+        for i in range(len(self.cadence_list_sensor)):
+            speed_sensor_check.append(self.cadence_list_sensor[i] * self.sprocket_ratio * self.wheel_radius)
+            speed_sensor_check_upper_bound.append(speed_sensor_check[i] * (1 + sensor_deviation_perc/100))
+            speed_sensor_check_lower_bound.append(speed_sensor_check[i] * (1 - sensor_deviation_perc/100))
+
+        speed_trainer_check = []
+        speed_trainer_check_time = []
+        speed_trainer_check_upper_bound = []
+        speed_trainer_check_lower_bound = []
+        for i in range(len(self.velocity_time_list_const)):
+            speed_trainer_check.append(self.velocity_list_const[i])
+            speed_trainer_check_time.append(self.velocity_time_list_const[i])
+            speed_trainer_check_upper_bound.append(speed_trainer_check[i] * (1 + trainer_deviation_perc/100))
+            speed_trainer_check_lower_bound.append(speed_trainer_check[i] * (1 - trainer_deviation_perc/100))
+
+
         # Calculating the averages of every file, this is not necessary for the calculations below, but this will give
         # a quick overview of the used files to the user.
         self.all_averages = [[], [], [], []]
@@ -695,6 +714,7 @@ class Main(wx.Frame):
         except Exception:
             print('NO')
         graph_2 = excel.add_chart({'type': 'scatter', 'subtype': 'straight'})
+        graph_3 = excel.add_chart({'type': 'scatter', 'subtype': 'straight'})
         worksheet_charts = excel.add_worksheet('Charts')
         worksheet_data = excel.add_worksheet('Data')
 
@@ -710,8 +730,12 @@ class Main(wx.Frame):
         graph_2.set_y_axis({'name': 'Power [W]'})
         graph_2.set_y2_axis({'name': 'Velocity [km/h]'})
         graph_2.set_x_axis({'name': 'Time [s]'})
-        graph_2.set_title({'name': '0 Watt acceleration ' + self.user_file_name})
+        graph_2.set_title({'name': 'Power ' + self.user_file_name + ' vs. external powermeter'})
         graph_2.set_size({'width': 1080, 'height': 720})
+        graph_3.set_y_axis({'name': 'Velocity [m/s]'})
+        graph_3.set_x_axis({'name': 'Time [s]'})
+        graph_3.set_title({'name': 'Velocity ' + self.user_file_name + ' vs. external powermeter'})
+        graph_3.set_size({'width': 1080, 'height': 720})
         worksheet_data.set_column('A:Q', 14)
         worksheet_charts.set_column('X:X', 16)
 
@@ -750,6 +774,15 @@ class Main(wx.Frame):
         worksheet_data.write_column(2, 17, power_sensor_check)
         worksheet_data.write_column(2, 18, power_sensor_check_lower_bound)
         worksheet_data.write_column(2, 19, power_sensor_check_upper_bound)
+        worksheet_data.write_column(2, 20, speed_sensor_check)
+        worksheet_data.write_column(2, 21, speed_sensor_check_lower_bound)
+        worksheet_data.write_column(2, 22, speed_sensor_check_upper_bound)
+
+        worksheet_data.write_column(2, 23, speed_trainer_check_time)
+        worksheet_data.write_column(2, 24, speed_trainer_check)
+        worksheet_data.write_column(2, 25, speed_trainer_check_lower_bound)
+        worksheet_data.write_column(2, 26, speed_trainer_check_upper_bound)
+
 
         # Writing to graph.
         graph.add_series({
@@ -805,19 +838,14 @@ class Main(wx.Frame):
             'values': [worksheet_data.name] + [2, 14] + [len(power_const_check) + 2, 14],
             'categories': [worksheet_data.name] + [2, 12] + [len(power_time_const_check) + 2, 12],
             'line': {'color': 'blue', 'width': 1},
-            'name': 'Trainer power lower bound',
+            'name': 'Trainer power lower bound (-' + str(trainer_deviation_perc) + '%)',
         })
-        # graph_2.add_series({
-        #     'values': [worksheet_data.name] + [2, 13] + [len(power_const_check) + 2, 13],
-        #     'categories': [worksheet_data.name] + [2, 12] + [len(power_time_const_check) + 2, 12],
-        #     'line': {'color': 'blue'},
-        #     'name': 'Trainer power',
-        # })
+
         graph_2.add_series({
             'values': [worksheet_data.name] + [2, 15] + [len(power_const_check) + 2, 15],
             'categories': [worksheet_data.name] + [2, 12] + [len(power_time_const_check) + 2, 12],
             'line': {'color': 'blue', 'width': 1},
-            'name': 'Trainer power upper bound',
+            'name': 'Trainer power upper bound (' + str(trainer_deviation_perc) + '%)',
         })
 
 
@@ -825,7 +853,7 @@ class Main(wx.Frame):
             'values': [worksheet_data.name] + [2, 18] + [len(power_sensor_check) + 2, 18],
             'categories': [worksheet_data.name] + [2, 16] + [len(power_time_sensor_check) + 2, 16],
             'line': {'color': 'red', 'width': 1},
-            'name': 'Sensor power lower bound',
+            'name': 'Sensor power lower bound (-' + str(sensor_deviation_perc) + '%)',
         })
         # graph_2.add_series({
         #     'values': [worksheet_data.name] + [2, 17] + [len(power_sensor_check) + 2, 17],
@@ -837,11 +865,37 @@ class Main(wx.Frame):
             'values': [worksheet_data.name] + [2, 19] + [len(power_sensor_check) + 2, 19],
             'categories': [worksheet_data.name] + [2, 16] + [len(power_time_sensor_check) + 2, 16],
             'line': {'color': 'red', 'width': 1},
-            'name': 'Sensor power upper bound',
+            'name': 'Sensor power upper bound (' + str(sensor_deviation_perc) + '%)',
+        })
+
+        graph_3.add_series({
+            'categories': [worksheet_data.name] + [2, 16] + [len(speed_sensor_check_lower_bound) + 2, 16],
+            'values': [worksheet_data.name] + [2, 21] + [len(speed_sensor_check_lower_bound) + 2, 21],
+            'line': {'color': 'red', 'width': 1},
+            'name': 'Sensor power lower bound (-' + str(sensor_deviation_perc) + '%)',
+        })
+        graph_3.add_series({
+            'categories': [worksheet_data.name] + [2, 16] + [len(speed_sensor_check_upper_bound) + 2, 16],
+            'values': [worksheet_data.name] + [2, 22] + [len(speed_sensor_check_upper_bound) + 2, 22],
+            'line': {'color': 'red', 'width': 1},
+            'name': 'Sensor power upper bound (' + str(sensor_deviation_perc) + '%)',
+        })
+        graph_3.add_series({
+            'categories': [worksheet_data.name] + [2, 23] + [len(speed_trainer_check_lower_bound) + 2, 23],
+            'values': [worksheet_data.name] + [2, 25] + [len(speed_trainer_check_lower_bound) + 2, 25],
+            'line': {'color': 'blue', 'width': 1},
+            'name': 'Trainer power lower bound (-' + str(trainer_deviation_perc) + '%)',
+        })
+        graph_3.add_series({
+            'categories': [worksheet_data.name] + [2, 23] + [len(speed_trainer_check_lower_bound) + 2, 23],
+            'values': [worksheet_data.name] + [2, 26] + [len(speed_trainer_check_lower_bound) + 2, 26],
+            'line': {'color': 'blue', 'width': 1},
+            'name': 'Trainer power upper bound (' + str(trainer_deviation_perc) + '%)',
         })
 
         worksheet_charts.insert_chart('B2', graph)
         worksheet_charts.insert_chart('B40', graph_2)
+        worksheet_charts.insert_chart('B78', graph_3)
         graph.set_legend({'position': 'bottom'})
         worksheet_charts.write('T2', 'Simulated Mass:', header)
         worksheet_charts.write('X2', str(round(float(self.simulated_mass_guess), 2)), header)
