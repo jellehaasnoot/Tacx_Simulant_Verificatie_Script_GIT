@@ -67,8 +67,9 @@ class Main(wx.Frame):
                                      size=(image_file_png.GetWidth(), image_file_png.GetHeight()))
 
         # 5: Creating panels
-        self.font_header = wx.Font(12, family=wx.DECORATIVE, style=wx.NORMAL, weight=wx.BOLD)
-        self.font_normal = wx.Font(10, family=wx.DECORATIVE, style=wx.NORMAL, weight=wx.NORMAL)
+        self.font_header = wx.Font(12, family=wx.FONTFAMILY_DECORATIVE, style=wx.FONTSTYLE_NORMAL, weight=wx.FONTWEIGHT_BOLD)
+        self.font_normal = wx.Font(10, family=wx.FONTFAMILY_DECORATIVE, style=wx.FONTSTYLE_NORMAL, weight=wx.FONTWEIGHT_NORMAL)
+        self.font_green = wx.Font(12, family=wx.FONTFAMILY_DEFAULT, style=wx.FONTSTYLE_NORMAL, weight=wx.FONTWEIGHT_BOLD)
 
         self.panel_titles = ["Path to directory first selected LOG-file: ", "Path to directory second selected LOG-file: ", "Path to directory third selected LOG-file: ", "Path to directory fourth selected LOG-file: "]
         self.statistics_titles = ["Some statistics about the first file: ", "Some statistics about the second file: ", "Some statistics about the third file: ", "Some statistics about the fourth file: "]
@@ -80,6 +81,7 @@ class Main(wx.Frame):
             self.data_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 80), pos=(10, 10 + i * 90))
             self.data_panel_header = wx.StaticText(self.data_panel, label=self.statistics_titles[i], pos=(4, 2))
             self.data_panel_header.SetFont(self.font_header)
+
 
         self.xlsx_path_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 537))
         self.user_input_panel = wx.Panel(self.top_panel, -1, style=wx.BORDER_RAISED, size=(685, 156), pos=(10, 370))
@@ -187,6 +189,10 @@ class Main(wx.Frame):
 
 
         self.save_inputs_button = wx.Button(self.user_input_panel, -1, label="Save Input", pos=(499, 110), size=(100, 30))
+        self.saved_text = wx.StaticText(self.user_input_panel, -1, label="", pos=(320, 115), style=wx.ALIGN_CENTER_HORIZONTAL)
+        self.saved_text.SetFont(self.font_green)
+        self.saved_text.SetLabel("VALUES NOT SAVED")
+        self.saved_text.SetForegroundColour((255, 10, 10))
 
         # 9: Create empty parameters
         self.data_1 = []
@@ -711,9 +717,9 @@ class Main(wx.Frame):
 
         # Calculate the resistance which should be present when cycling a conventional road.
         velocity_x = []
-        percentage_lines = [5, 10, 20, 30]
-        theoretical_power_values = [[], [], [], []]
-        velocities_for_percentages = [[], [], [], []]
+        percentage_lines = [1, 2, 5, 10, 20, 30]
+        theoretical_power_values = [[], [], [], [], [], []]
+        velocities_for_percentages = [[], [], [], [], [], []]
         for i in range(10 * round(max(velocity_clean_low))):
             velocity_x.append(i / 10)
         for j in range(len(percentage_lines)):
@@ -723,9 +729,6 @@ class Main(wx.Frame):
                     velocities_for_percentages[j].append(velocity_x[i])
                 else:
                     pass
-
-        print((theoretical_power_values))
-        print((velocities_for_percentages))
 
         # Initialize writing an excel file. This file will be used to store all the necessary information which is
         # analysed in the code.
@@ -816,15 +819,15 @@ class Main(wx.Frame):
 
         # Percentage Lines
         for i in range(len(velocities_for_percentages)):
-            worksheet_data.write_column(2, i + 20, velocities_for_percentages[i])
-            worksheet_data.write_column(2, i + 24, theoretical_power_values[i])
+            worksheet_data.write_column(2, i + 27, velocities_for_percentages[i])
+            worksheet_data.write_column(2, i + 33, theoretical_power_values[i])
 
         # Writing to graph.
         for i in range(len(velocities_for_percentages)):
             graph.add_series({
-                'categories': [worksheet_data.name] + [2, i + 20] + [len(velocities_for_percentages[i]) + 2, i + 20],
-                'values': [worksheet_data.name] + [2, i + 24] + [len(theoretical_power_values[i]) + 2, i + 24],
-                'line': {'color': '#67bfe7', 'width': 1, 'transparency': 50},
+                'categories': [worksheet_data.name] + [2, i + 27] + [len(velocities_for_percentages[i]) + 2, i + 27],
+                'values': [worksheet_data.name] + [2, i + 33] + [len(theoretical_power_values[i]) + 2, i + 33],
+                'line': {'color': '#67bfe7', 'width': 2.5, 'transparency': 70},
                 'name': str(percentage_lines[i]) + "%"
             })
 
@@ -870,7 +873,6 @@ class Main(wx.Frame):
             'line': {'color': 'black', 'width': 1.5},
             'name': 'Lowest Gradient Power - Without Flywheel Effects',
         })
-
 
 
         graph_2.add_series({
@@ -940,7 +942,7 @@ class Main(wx.Frame):
         worksheet_charts.insert_chart('B2', graph)
         worksheet_charts.insert_chart('B40', graph_2)
         worksheet_charts.insert_chart('B78', graph_3)
-        graph.set_legend({'position': 'bottom'})
+        graph.set_legend({'position': 'bottom', 'delete_series': [0, 1, 2, 3, 4, 5]})
         worksheet_charts.write('T2', 'Simulated Mass:', header)
         worksheet_charts.write('X2', str(round(float(self.simulated_mass_guess), 2)), header)
         worksheet_charts.write_rich_string('Y2', header, '[kgm', superscript, '2', header, ']')
@@ -1230,6 +1232,9 @@ class Main(wx.Frame):
                 self.simulated_mass_guess = 0
             else:
                 self.simulated_mass_guess = float(self.edit_simulated_mass_text.GetValue())
+            self.saved_text.SetFont(self.font_green)
+            self.saved_text.SetLabel("VALUES SAVED")
+            self.saved_text.SetForegroundColour((10, 255, 10))
 
         except ValueError:
             no_number_dialog = wx.MessageDialog(self.top_panel, style=wx.ICON_ERROR, message="This doesn't appear to be a number. \nPlease try again.")
