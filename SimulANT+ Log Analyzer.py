@@ -43,12 +43,11 @@ class Main(wx.Frame):
         menu_bar.Append(file_menu, "&File")
         self.SetMenuBar(menu_bar)
 
-        # 3: Creating buttons and checkboxes
+        # 3: Creating buttons
         self.exit_button = wx.Button(self.top_panel, -1, label='Exit', pos=(590, 875), size=(100, 30))
         self.reset_button = wx.Button(self.top_panel, -1, label='Reset Program', pos=(480, 875), size=(100, 30))
         self.open_xlsx_button = wx.Button(self.top_panel, -1, label='Open Excel File', pos=(370, 875), size=(100, 30))
         self.open_files_butten = wx.Button(self.top_panel, -1, label='Open LOG\'s', pos=(260, 875), size=(100, 30))
-        self.save_inputs_button = wx.Button(self.top_panel, -1, label="Save Input", pos=(150, 875), size=(100, 30))
 
 
         # 4: Loading images
@@ -59,9 +58,9 @@ class Main(wx.Frame):
         image_path = path.join(base_path, 'tacx-logo.png')
 
         image_file_png = wx.Image(image_path, wx.BITMAP_TYPE_PNG)
-        image_file_png.Rescale(image_file_png.GetWidth() * 0.2, image_file_png.GetHeight() * 0.2)
+        image_file_png.Rescale(image_file_png.GetWidth() * 0.28, image_file_png.GetHeight() * 0.28)
         image_file_png = wx.Bitmap(image_file_png)
-        self.image = wx.StaticBitmap(self.top_panel, -1, image_file_png, pos=(18, 780),
+        self.image = wx.StaticBitmap(self.top_panel, -1, image_file_png, pos=(9, 815),
                                      size=(image_file_png.GetWidth(), image_file_png.GetHeight()))
 
         # 5: Creating panels
@@ -79,10 +78,10 @@ class Main(wx.Frame):
             self.data_panel_header = wx.StaticText(self.data_panel, label=self.statistics_titles[i], pos=(4, 2))
             self.data_panel_header.SetFont(self.font_header)
 
-        self.xlsx_path_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 710))
-        self.user_input_panel = wx.Panel(self.top_panel, -1, style=wx.BORDER_RAISED, size=(685, 80), pos=(10, 620))
+        self.xlsx_path_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 748))
+        self.user_input_panel = wx.Panel(self.top_panel, -1, style=wx.BORDER_RAISED, size=(685, 117), pos=(10, 620))
 
-        self.sim_mass_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(428, 50), pos=(262, 810))
+        self.sim_mass_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(433, 50), pos=(262, 812))
         self.sim_mass_panel_header_display = wx.StaticText(self.sim_mass_panel, label="Simulated Mass (calculated / user-given): ", pos=(4, 2))
         self.sim_mass_panel_header_display.SetFont(self.font_header)
 
@@ -97,6 +96,7 @@ class Main(wx.Frame):
             welcome_dialog.Destroy()
             return
 
+
         # 8: Create status bar
         self.statusbar = self.CreateStatusBar()
 
@@ -104,7 +104,7 @@ class Main(wx.Frame):
         # 9: Create TextCtrl boxes
         self.gear_front_ask = wx.StaticText(self.user_input_panel, label="No. of teeth front sprocket: ", pos=(20, 10))
         self.gear_front_ask.SetFont(self.font_normal)
-        self.edit_gear_front_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=(180, 7))
+        self.edit_gear_front_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=(180, 8))
         self.gear_front_sizer = wx.BoxSizer()
         self.gear_front_sizer.Add(self.user_input_panel, 1, wx.ALL | wx.EXPAND)
         self.sizer = wx.GridBagSizer(5, 5)
@@ -114,7 +114,7 @@ class Main(wx.Frame):
 
         self.gear_rear_ask = wx.StaticText(self.user_input_panel, label="No. of teeth rear sprocket: ", pos=(20, 45))
         self.gear_rear_ask.SetFont(self.font_normal)
-        self.edit_gear_rear_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=(180, 42))
+        self.edit_gear_rear_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=(180, 43))
         self.gear_rear_sizer = wx.BoxSizer()
         self.gear_rear_sizer.Add(self.user_input_panel, 1, wx.ALL | wx.EXPAND)
         self.sizer = wx.GridBagSizer(5, 5)
@@ -122,7 +122,43 @@ class Main(wx.Frame):
         self.border = wx.BoxSizer()
         self.border.Add(self.sizer, 1, wx.ALL | wx.EXPAND, 5)
 
-        self.edit_simulated_mass_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=())
+        self.simulated_mass_ask = wx.StaticText(self.user_input_panel, label="User input simulated mass: ", pos=(322, 10))
+        self.simulated_mass_units = wx.StaticText(self.user_input_panel, label="kg", pos=(605, 10))
+        self.simulated_mass_units.SetFont(self.font_normal)
+        self.simulated_mass_ask.SetFont(self.font_normal)
+        self.edit_simulated_mass_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=(510, 8))
+        self.simulated_mass_sizer = wx.BoxSizer()
+        self.simulated_mass_sizer.Add(self.user_input_panel, 1, wx.ALL | wx.EXPAND)
+        self.sizer = wx.GridBagSizer(5, 5)
+        self.sizer.Add(self.simulated_mass_ask, (0, 0))
+        self.border = wx.BoxSizer()
+        self.border.Add(self.sizer, 1, wx.ALL | wx.EXPAND, 5)
+
+        self.simulated_mass_ask_alt_1 = wx.StaticText(self.user_input_panel, label="User input moment of inertia: ", pos=(322, 45))
+        self.sim_mass_units_alt_1 = wx.StaticText(self.user_input_panel, label="kg m²",pos=(605, 45))
+        self.sim_mass_units_alt_1.SetFont(self.font_normal)
+        self.simulated_mass_ask_alt_1.SetFont(self.font_normal)
+        self.simulated_mass_alt_1_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=(510, 43))
+        self.simulated_mass_alt_1_sizer = wx.BoxSizer()
+        self.simulated_mass_alt_1_sizer.Add(self.user_input_panel, 1, wx.ALL | wx.EXPAND)
+        self.sizer = wx.GridBagSizer(5, 5)
+        self.sizer.Add(self.simulated_mass_ask_alt_1, (0, 0))
+        self.border = wx.BoxSizer()
+        self.border.Add(self.sizer, 1, wx.ALL | wx.EXPAND, 5)
+
+        self.simulated_mass_ask_alt_2 = wx.StaticText(self.user_input_panel, label="User input lin. / rot. ratio: ", pos=(322, 80))
+        self.sim_mass_units_alt_2 = wx.StaticText(self.user_input_panel, label="rad / m", pos=(605, 80))
+        self.sim_mass_units_alt_2.SetFont(self.font_normal)
+        self.simulated_mass_ask_alt_2.SetFont(self.font_normal)
+        self.simulated_mass_alt_2_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=(510, 78))
+        self.simulated_mass_alt_2_sizer = wx.BoxSizer()
+        self.simulated_mass_alt_2_sizer.Add(self.user_input_panel, 1, wx.ALL | wx.EXPAND)
+        self.sizer = wx.GridBagSizer(5, 5)
+        self.sizer.Add(self.simulated_mass_ask_alt_1, (0, 0))
+        self.border = wx.BoxSizer()
+        self.border.Add(self.sizer, 1, wx.ALL | wx.EXPAND, 5)
+
+        self.save_inputs_button = wx.Button(self.user_input_panel, -1, label="Save Input", pos=(19, 71), size=(100, 30))
 
 
         # 9: Create empty parameters
@@ -142,6 +178,18 @@ class Main(wx.Frame):
         self.power_list_low = []
         self.power_list_high = []
         self.power_list_const = []
+        self.check_counter = 0
+        self.wheel_radius = 0.35
+
+        self.checkbox = wx.CheckBox(self.user_input_panel, -1, '', pos=(300, 10.7))
+        self.checkbox.SetValue(False)
+        self.edit_simulated_mass_text.SetEditable(False)
+        self.simulated_mass_alt_1_text.SetEditable(False)
+        self.simulated_mass_alt_2_text.SetEditable(False)
+
+        self.edit_simulated_mass_text.SetBackgroundColour((220, 220, 220))
+        self.simulated_mass_alt_1_text.SetBackgroundColour((220, 220, 220))
+        self.simulated_mass_alt_2_text.SetBackgroundColour((220, 220, 220))
 
         # 6: Set events
         self.Bind(wx.EVT_MENU, self.on_open, menu_file_open)
@@ -158,8 +206,7 @@ class Main(wx.Frame):
         self.checkbox.Bind(wx.EVT_ENTER_WINDOW, self.on_check_hover)
         self.Bind(wx.EVT_CHECKBOX, self.on_check)
         self.save_inputs_button.Bind(wx.EVT_BUTTON, self.on_save_inputs)
-        self.checkbox = wx.CheckBox(self.user_input_panel, -1, 'User Input Simulated Mass', pos=(342.5, 10))
-        self.checkbox.SetValue(False)
+        self.save_inputs_button.Bind(wx.EVT_ENTER_WINDOW, self.on_save_hover)
 
 
     def panel_layout(self):
@@ -184,7 +231,7 @@ class Main(wx.Frame):
         self.xlsx_path_panel_header_display.SetFont(self.font_header)
         self.xlsx_path_panel_display = wx.StaticText(self.xlsx_path_panel, label=str(self.folder_pathname), pos=(4, 25))
 
-        self.sim_mass_panel_display = wx.StaticText(self.sim_mass_panel, label=str(round(float(self.simulated_mass_guess), 2)) + " [kg m^2]", pos=(4, 25))
+        self.sim_mass_panel_display = wx.StaticText(self.sim_mass_panel, label=str(round(float(self.simulated_mass_guess), 2)) + " [kg m²]", pos=(4, 25))
         self.sim_mass_panel_display.SetFont(self.font_normal)
 
     def on_open(self, e):
@@ -286,8 +333,7 @@ class Main(wx.Frame):
 
         self.power_list_sensor = power_list
         self.cadence_list_sensor = cadence_list
-        self.power_time_list_sensor = power_time_list
-        self.cadenc_time_list_sensor = sensor_time_list
+        self.power_time_list_sensor = sensor_time_list
 
         # Calculating the averages of every file, this is not necessary for the calculations below, but this will give
         # a quick overview of the used files to the user.
@@ -318,6 +364,8 @@ class Main(wx.Frame):
         self.all_averages[3].append(round(float(self.cadence_sensor_avg), 1))
         self.all_averages[3].append(len(self.cadence_list_sensor))
         self.all_averages = array(self.all_averages)
+
+        # TODO No mean error up to this point
 
         # Some constants needed for the next part of code
         global index_low_below_zero_1, index_low_below_zero_2, index_low_below_zero, fitted_power_high, fitted_power_low, poplin, graph
@@ -510,15 +558,14 @@ class Main(wx.Frame):
         # Convert the raw data from the file to named lists for the FOURTH file. This file will be used to calculate the
         # precision of the trainer.
         for j in range(len(data_sensor)):
-            if first_limit - range_half < (data_sensor[j][0]) < first_limit + range_half:
+            if first_limit - range_half < (data_sensor[j][0] * self.sprocket_ratio * self.wheel_radius) < first_limit + range_half:
                 power_clean_sensor.append(data_sensor[j][1])
-                sensor_time_raw.append(data_sensor[j][3])
+                sensor_time_raw.append(data_sensor[j][2])
         power_clean_sensor_mean = mean(power_clean_sensor)
 
         # The calculations below are used to calculate the precision of the trainer at the three data points, these will
         # be shown as variables in the excel file.
         precision_trainer_power = (abs(power_clean_sensor_mean - power_trainer))/power_trainer * 100
-        print(precision_trainer_power)
 
         # Start calculations on the THIRD file to calculate the SIMULATED MASS. This includes fitting the
         # data.
@@ -879,53 +926,28 @@ class Main(wx.Frame):
         return a * x
 
     def on_check(self, event):
-        if self.checkbox.GetValue():
-            self.sim_dialog = wx.TextEntryDialog(self,
-                                                 "What is the value for simulated mass [kg]. Leave empty to be prompted for inertia (use '.' as decimal separator): ",
-                                                 "Enter simulated mass value...")
-            self.sim_dialog.CenterOnParent()
+        self.check_counter += 1
+        if self.check_counter % 2 != 0:
+            self.edit_simulated_mass_text.SetEditable(True)
+            self.simulated_mass_alt_1_text.SetEditable(True)
+            self.simulated_mass_alt_2_text.SetEditable(True)
 
-            if self.sim_dialog.ShowModal() == wx.ID_CANCEL:
-                self.checkbox.SetValue(False)
-                return
+            self.edit_simulated_mass_text.SetBackgroundColour((255, 255, 255))
+            self.simulated_mass_alt_1_text.SetBackgroundColour((255, 255, 255))
+            self.simulated_mass_alt_2_text.SetBackgroundColour((255, 255, 255))
 
-            self.simulated_mass_guess = self.sim_dialog.GetValue()
-            if self.simulated_mass_guess == "":
-                self.inertia_dialog = wx.TextEntryDialog(self,
-                                                         "If the previous screen was left empty, what is the value for the moment of inertia [kg * m^2] (use '.' as decimal separator): ",
-                                                         "Enter inertia value...")
-                self.inertia_dialog.CenterOnParent()
+        elif self.check_counter % 2 == 0:
+            self.edit_simulated_mass_text.SetEditable(False)
+            self.simulated_mass_alt_1_text.SetEditable(False)
+            self.simulated_mass_alt_2_text.SetEditable(False)
 
-                if self.inertia_dialog.ShowModal() == wx.ID_CANCEL:
-                    self.checkbox.SetValue(False)
-                    return
+            self.edit_simulated_mass_text.SetBackgroundColour((220, 220, 220))
+            self.simulated_mass_alt_1_text.SetBackgroundColour((220, 220, 220))
+            self.simulated_mass_alt_2_text.SetBackgroundColour((220, 220, 220))
 
-                self.conversion_dialog = wx.TextEntryDialog(self,
-                                                            "What is the value for the conversion factor (use '.' as decimal separator, see README.txt for explanation): ",
-                                                            "Enter conversion value...")
-                self.conversion_dialog.CenterOnParent()
-
-                if self.conversion_dialog.ShowModal() == wx.ID_CANCEL:
-                    self.checkbox.SetValue(False)
-                    return
-
-                self.inertia = float(self.inertia_dialog.GetValue())
-                if self.inertia == "":
-                    no_entry_dialog = wx.MessageDialog(self.top_panel, message="No text seems to have been entered. \nPlease retry or click \"Cancel\" to go back.", style=wx.ICON_WARNING)
-                    no_entry_dialog.CenterOnParent()
-                    if no_entry_dialog.ShowModal() == wx.OK:
-                        no_entry_dialog.Destroy()
-                        return
-
-                self.conversion = float(self.conversion_dialog.GetValue())
-                if self.conversion == "":
-                    no_entry_dialog = wx.MessageDialog(self.top_panel, message="No text seems to have been entered. \nPlease retry or click \"Cancel\" to go back.", style=wx.ICON_WARNING)
-                    no_entry_dialog.CenterOnParent()
-                    if no_entry_dialog.ShowModal() == wx.OK:
-                        no_entry_dialog.Destroy()
-                        return
-
-                self.simulated_mass_guess = (self.conversion ** 2) * self.inertia
+            self.edit_simulated_mass_text.SetValue("")
+            self.simulated_mass_alt_1_text.SetValue("")
+            self.simulated_mass_alt_2_text.SetValue("")
 
     def on_exit_widget_enter(self, event):
         self.statusbar.SetStatusText('Exit the program')
@@ -947,10 +969,26 @@ class Main(wx.Frame):
         self.statusbar.SetStatusText('Enable the option to use user-input simulated mass')
         event.Skip()
 
+    def on_save_hover(self, event):
+        self.statusbar.SetStatusText('Save the entered inputs to use them in calculations')
+        event.Skip()
+
     def on_save_inputs(self, event):
         try:
             self.front_gear_value = float(self.edit_gear_front_text.GetValue())
             self.rear_gear_value = float(self.edit_gear_rear_text.GetValue())
+
+            self.sprocket_ratio = self.front_gear_value / self.rear_gear_value
+
+            if self.edit_simulated_mass_text.GetValue() == "" and self.checkbox.GetValue() == True:
+                self.inertia_value = float(self.simulated_mass_alt_1_text.GetValue())
+                self.ratio_value = float(self.simulated_mass_alt_2_text.GetValue())
+                self.simulated_mass_guess = self.inertia_value * self.ratio_value ** 2
+            elif self.edit_simulated_mass_text.GetValue() == "" and self.checkbox.GetValue() == False:
+                self.simulated_mass_guess = 0
+            else:
+                self.simulated_mass_guess = float(self.edit_simulated_mass_text.GetValue())
+
         except ValueError:
             no_number_dialog = wx.MessageDialog(self.top_panel, style=wx.ICON_ERROR, message="This doesn't appear to be a number. \nPlease try again.")
             no_number_dialog.CenterOnParent()
@@ -960,6 +998,7 @@ class Main(wx.Frame):
 
         print(str(self.front_gear_value))
         print(str(self.rear_gear_value))
+        print(str(self.simulated_mass_guess))
 
 if __name__ == '__main__':
     Application = wx.App(False)
