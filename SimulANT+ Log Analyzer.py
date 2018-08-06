@@ -205,7 +205,6 @@ class Main(wx.Frame):
         # Opening File 4 with the use of a dialog. File 4 will contain the ANT+ data of the measurements with a power
         # goal of 0W while cycling at some multiple constant velocities. This will be measured with an external power
         # meter, this way the accuracy can be calculated.
-        # TODO: add "Choose the fourth logged SimulANT+ file with the 0 W Power program - Power meter ...." to dummy_strings
         self.pathname = []
         dummy_strings = ["Choose the logged SimulANT+ file with the HIGHEST slope / power...",
                          "Choose the second logged SimulANT+ file with the LOWEST (negative) slope...",
