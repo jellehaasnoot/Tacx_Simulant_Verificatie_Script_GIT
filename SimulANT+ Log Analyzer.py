@@ -1076,6 +1076,8 @@ class Main(wx.Frame):
         try:
             self.front_gear_value = float(self.edit_gear_front_text.GetValue())
             self.rear_gear_value = float(self.edit_gear_rear_text.GetValue())
+            self.trainer_deviation_perc = float(self.trainer_deviation_text.GetValue())
+            self.sensor_deviation_perc = float(self.sensor_deviation_text.GetValue())
 
             self.sprocket_ratio = self.front_gear_value / self.rear_gear_value
 
@@ -1094,6 +1096,8 @@ class Main(wx.Frame):
             if no_number_dialog.ShowModal() == wx.OK:
                 no_number_dialog.Destroy()
                 return
+
+    def theoretical_power_at_velocity(self, velocity):
 
 if __name__ == '__main__':
     Application = wx.App(False)
