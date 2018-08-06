@@ -381,8 +381,19 @@ class Main(wx.Frame):
 
         power_time_const_check = self.power_time_list_const
         power_sensor_check = self.power_list_sensor
+        power_sensor_check_upper_bound = []
+        power_sensor_check_lower_bound = []
+        for i in range(len(power_sensor_check)):
+            power_sensor_check_upper_bound.append(power_sensor_check[i] * (1 + sensor_deviation_perc/100))
+            power_sensor_check_lower_bound.append(power_sensor_check[i] * (1 - sensor_deviation_perc/100))
+
         power_time_sensor_check = self.power_time_list_sensor
         power_const_check = self.power_list_const
+        power_const_check_upper_bound = []
+        power_const_check_lower_bound = []
+        for i in range(len(power_const_check)):
+            power_const_check_upper_bound.append(power_const_check[i] * (1 + trainer_deviation_perc/100))
+            power_const_check_lower_bound.append(power_const_check[i] * (1 - trainer_deviation_perc/100))
 
         # Calculating the averages of every file, this is not necessary for the calculations below, but this will give
         # a quick overview of the used files to the user.
@@ -748,8 +759,13 @@ class Main(wx.Frame):
 
         worksheet_data.write_column(2, 12, power_time_const_check)
         worksheet_data.write_column(2, 13, power_const_check)
-        worksheet_data.write_column(2, 14, power_time_sensor_check)
-        worksheet_data.write_column(2, 15, power_sensor_check)
+        worksheet_data.write_column(2, 14, power_const_check_lower_bound)
+        worksheet_data.write_column(2, 15, power_const_check_upper_bound)
+
+        worksheet_data.write_column(2, 16, power_time_sensor_check)
+        worksheet_data.write_column(2, 17, power_sensor_check)
+        worksheet_data.write_column(2, 18, power_sensor_check_lower_bound)
+        worksheet_data.write_column(2, 19, power_sensor_check_upper_bound)
 
         # Writing to graph.
         graph.add_series({
@@ -802,17 +818,42 @@ class Main(wx.Frame):
         })
 
         graph_2.add_series({
-            'values': [worksheet_data.name] + [2, 13] + [len(power_const_check) + 2, 13],
+            'values': [worksheet_data.name] + [2, 14] + [len(power_const_check) + 2, 14],
             'categories': [worksheet_data.name] + [2, 12] + [len(power_time_const_check) + 2, 12],
-            'line': {'color': 'blue'},
-            'name': 'Trainer power',
+            'line': {'color': 'blue', 'width': 1},
+            'name': 'Trainer power lower bound',
+        })
+        # graph_2.add_series({
+        #     'values': [worksheet_data.name] + [2, 13] + [len(power_const_check) + 2, 13],
+        #     'categories': [worksheet_data.name] + [2, 12] + [len(power_time_const_check) + 2, 12],
+        #     'line': {'color': 'blue'},
+        #     'name': 'Trainer power',
+        # })
+        graph_2.add_series({
+            'values': [worksheet_data.name] + [2, 15] + [len(power_const_check) + 2, 15],
+            'categories': [worksheet_data.name] + [2, 12] + [len(power_time_const_check) + 2, 12],
+            'line': {'color': 'blue', 'width': 1},
+            'name': 'Trainer power upper bound',
         })
 
+
         graph_2.add_series({
-            'values': [worksheet_data.name] + [2, 15] + [len(power_sensor_check) + 2, 15],
-            'categories': [worksheet_data.name] + [2, 14] + [len(power_time_sensor_check) + 2, 14],
-            'line': {'color': 'red'},
-            'name': 'Sensor power',
+            'values': [worksheet_data.name] + [2, 18] + [len(power_sensor_check) + 2, 18],
+            'categories': [worksheet_data.name] + [2, 16] + [len(power_time_sensor_check) + 2, 16],
+            'line': {'color': 'red', 'width': 1},
+            'name': 'Sensor power lower bound',
+        })
+        # graph_2.add_series({
+        #     'values': [worksheet_data.name] + [2, 17] + [len(power_sensor_check) + 2, 17],
+        #     'categories': [worksheet_data.name] + [2, 16] + [len(power_time_sensor_check) + 2, 16],
+        #     'line': {'color': 'red'},
+        #     'name': 'Sensor power',
+        # })
+        graph_2.add_series({
+            'values': [worksheet_data.name] + [2, 19] + [len(power_sensor_check) + 2, 19],
+            'categories': [worksheet_data.name] + [2, 16] + [len(power_time_sensor_check) + 2, 16],
+            'line': {'color': 'red', 'width': 1},
+            'name': 'Sensor power upper bound',
         })
 
         worksheet_charts.insert_chart('B2', graph)
@@ -1092,8 +1133,9 @@ class Main(wx.Frame):
         try:
             self.front_gear_value = float(self.edit_gear_front_text.GetValue())
             self.rear_gear_value = float(self.edit_gear_rear_text.GetValue())
-            self.trainer_deviation_perc = float(self.trainer_deviation_text.GetValue())
-            self.sensor_deviation_perc = float(self.sensor_deviation_text.GetValue())
+            global trainer_deviation_perc, sensor_deviation_perc
+            trainer_deviation_perc = float(self.trainer_deviation_text.GetValue())
+            sensor_deviation_perc = float(self.sensor_deviation_text.GetValue())
 
             self.sprocket_ratio = self.front_gear_value / self.rear_gear_value
 
@@ -1113,6 +1155,7 @@ class Main(wx.Frame):
                 no_number_dialog.Destroy()
                 return
 
+
     def theoretical_power_at_velocity(self, velocity, theta):
         # Variables
         frontal_area = 0.4 # m^2
@@ -1124,6 +1167,7 @@ class Main(wx.Frame):
         roll_coefficient = 0.004
 
         return 0.5 * frontal_area * air_density * drag_coefficient * velocity ** 2 + sin(angle) * mass * grav + cos(angle) * mass * grav * roll_coefficient
+
 
 if __name__ == '__main__':
     Application = wx.App(False)
