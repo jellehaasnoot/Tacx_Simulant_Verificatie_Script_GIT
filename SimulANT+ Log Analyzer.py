@@ -25,7 +25,7 @@ class Main(wx.Frame):
         """
 
         wx.Frame.__init__(self, parent, title=title,
-                          style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX), size=(720, 1000))
+                          style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX), size=(720, 788))
 
         self.top_panel = wx.Panel(self)
         self.SetBackgroundColour("white")
@@ -44,10 +44,10 @@ class Main(wx.Frame):
         self.SetMenuBar(menu_bar)
 
         # 3: Creating buttons
-        self.exit_button = wx.Button(self.top_panel, -1, label='Exit', pos=(590, 875), size=(100, 30))
-        self.reset_button = wx.Button(self.top_panel, -1, label='Reset Program', pos=(480, 875), size=(100, 30))
-        self.open_xlsx_button = wx.Button(self.top_panel, -1, label='Open Excel File', pos=(370, 875), size=(100, 30))
-        self.open_files_butten = wx.Button(self.top_panel, -1, label='Open LOG\'s', pos=(260, 875), size=(100, 30))
+        self.exit_button = wx.Button(self.top_panel, -1, label='Exit', pos=(590, 664), size=(100, 30))
+        self.reset_button = wx.Button(self.top_panel, -1, label='Reset Program', pos=(480, 664), size=(100, 30))
+        self.open_xlsx_button = wx.Button(self.top_panel, -1, label='Open Excel File', pos=(370, 664), size=(100, 30))
+        self.open_files_butten = wx.Button(self.top_panel, -1, label='Open LOG\'s', pos=(260, 664), size=(100, 30))
 
 
         # 4: Loading images
@@ -60,7 +60,7 @@ class Main(wx.Frame):
         image_file_png = wx.Image(image_path, wx.BITMAP_TYPE_PNG)
         image_file_png.Rescale(image_file_png.GetWidth() * 0.28, image_file_png.GetHeight() * 0.28)
         image_file_png = wx.Bitmap(image_file_png)
-        self.image = wx.StaticBitmap(self.top_panel, -1, image_file_png, pos=(9, 815),
+        self.image = wx.StaticBitmap(self.top_panel, -1, image_file_png, pos=(9, 604),
                                      size=(image_file_png.GetWidth(), image_file_png.GetHeight()))
 
         # 5: Creating panels
@@ -69,19 +69,19 @@ class Main(wx.Frame):
 
         self.panel_titles = ["Path to directory first selected LOG-file: ", "Path to directory second selected LOG-file: ", "Path to directory third selected LOG-file: ", "Path to directory fourth selected LOG-file: "]
         self.statistics_titles = ["Some statistics about the first file: ", "Some statistics about the second file: ", "Some statistics about the third file: ", "Some statistics about the fourth file: "]
-        for i in range(len(self.panel_titles)):
-            self.path_panel = wx.Panel(self.top_panel, -1, style=wx.TAB_TRAVERSAL | wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 10 + i * 55))
-            self.path_panel_header = wx.StaticText(self.path_panel, label=self.panel_titles[i], pos=(4, 2))
-            self.path_panel_header.SetFont(self.font_header)
+        for i in range(len(self.statistics_titles)):
+            # self.path_panel = wx.Panel(self.top_panel, -1, style=wx.TAB_TRAVERSAL | wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 10 + i * 55))
+            # self.path_panel_header = wx.StaticText(self.path_panel, label=self.panel_titles[i], pos=(4, 2))
+            # self.path_panel_header.SetFont(self.font_header)
 
-            self.data_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 80), pos=(10, 260 + i * 90))
+            self.data_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 80), pos=(10, 10 + i * 90))
             self.data_panel_header = wx.StaticText(self.data_panel, label=self.statistics_titles[i], pos=(4, 2))
             self.data_panel_header.SetFont(self.font_header)
 
-        self.xlsx_path_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 748))
-        self.user_input_panel = wx.Panel(self.top_panel, -1, style=wx.BORDER_RAISED, size=(685, 117), pos=(10, 620))
+        self.xlsx_path_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(685, 50), pos=(10, 537))
+        self.user_input_panel = wx.Panel(self.top_panel, -1, style=wx.BORDER_RAISED, size=(685, 156), pos=(10, 370))
 
-        self.sim_mass_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(433, 50), pos=(262, 812))
+        self.sim_mass_panel = wx.Panel(self.top_panel, -1, style=wx.SUNKEN_BORDER, size=(433, 50), pos=(262, 601))
         self.sim_mass_panel_header_display = wx.StaticText(self.sim_mass_panel, label="Simulated Mass (calculated / user-given): ", pos=(4, 2))
         self.sim_mass_panel_header_display.SetFont(self.font_header)
 
@@ -104,7 +104,7 @@ class Main(wx.Frame):
         # 9: Create TextCtrl boxes
         self.gear_front_ask = wx.StaticText(self.user_input_panel, label="No. of teeth front sprocket: ", pos=(20, 10))
         self.gear_front_ask.SetFont(self.font_normal)
-        self.edit_gear_front_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=(180, 8))
+        self.edit_gear_front_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=(180, 8.5))
         self.gear_front_sizer = wx.BoxSizer()
         self.gear_front_sizer.Add(self.user_input_panel, 1, wx.ALL | wx.EXPAND)
         self.sizer = wx.GridBagSizer(5, 5)
@@ -114,7 +114,7 @@ class Main(wx.Frame):
 
         self.gear_rear_ask = wx.StaticText(self.user_input_panel, label="No. of teeth rear sprocket: ", pos=(20, 45))
         self.gear_rear_ask.SetFont(self.font_normal)
-        self.edit_gear_rear_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=(180, 43))
+        self.edit_gear_rear_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=(180, 43.5))
         self.gear_rear_sizer = wx.BoxSizer()
         self.gear_rear_sizer.Add(self.user_input_panel, 1, wx.ALL | wx.EXPAND)
         self.sizer = wx.GridBagSizer(5, 5)
@@ -122,11 +122,35 @@ class Main(wx.Frame):
         self.border = wx.BoxSizer()
         self.border.Add(self.sizer, 1, wx.ALL | wx.EXPAND, 5)
 
+        self.trainer_deviation_ask = wx.StaticText(self.user_input_panel, label="Trainer accuracy [%]: ", pos=(20, 80))
+        self.trainer_deviation_units = wx.StaticText(self.user_input_panel, label="%", pos=(270, 80))
+        self.trainer_deviation_ask.SetFont(self.font_normal)
+        self.trainer_deviation_units.SetFont(self.font_normal)
+        self.trainer_deviation_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=(180, 78.5))
+        self.trainer_deviation_sizer = wx.BoxSizer()
+        self.trainer_deviation_sizer.Add(self.user_input_panel, 1, wx.ALL | wx.EXPAND)
+        self.sizer = wx.GridBagSizer(5, 5)
+        self.sizer.Add(self.trainer_deviation_ask, (0, 0))
+        self.border = wx.BoxSizer()
+        self.border.Add(self.sizer, 1, wx.ALL | wx.EXPAND, 5)
+
+        self.sensor_deviation_ask = wx.StaticText(self.user_input_panel, label="Sensor accuracy [%]: ", pos=(20, 115))
+        self.sensor_deviation_units = wx.StaticText(self.user_input_panel, label="%", pos=(270, 115))
+        self.sensor_deviation_ask.SetFont(self.font_normal)
+        self.sensor_deviation_units.SetFont(self.font_normal)
+        self.sensor_deviation_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=(180, 113.5))
+        self.sensor_deviation_sizer = wx.BoxSizer()
+        self.sensor_deviation_sizer.Add(self.user_input_panel, 1, wx.ALL | wx.EXPAND)
+        self.sizer = wx.GridBagSizer(5, 5)
+        self.sizer.Add(self.sensor_deviation_ask, (0, 0))
+        self.border = wx.BoxSizer()
+        self.border.Add(self.sizer, 1, wx.ALL | wx.EXPAND, 5)
+
         self.simulated_mass_ask = wx.StaticText(self.user_input_panel, label="User input simulated mass: ", pos=(322, 10))
         self.simulated_mass_units = wx.StaticText(self.user_input_panel, label="kg", pos=(605, 10))
         self.simulated_mass_units.SetFont(self.font_normal)
         self.simulated_mass_ask.SetFont(self.font_normal)
-        self.edit_simulated_mass_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=(510, 8))
+        self.edit_simulated_mass_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=(510, 8.5))
         self.simulated_mass_sizer = wx.BoxSizer()
         self.simulated_mass_sizer.Add(self.user_input_panel, 1, wx.ALL | wx.EXPAND)
         self.sizer = wx.GridBagSizer(5, 5)
@@ -138,7 +162,7 @@ class Main(wx.Frame):
         self.sim_mass_units_alt_1 = wx.StaticText(self.user_input_panel, label="kg m²",pos=(605, 45))
         self.sim_mass_units_alt_1.SetFont(self.font_normal)
         self.simulated_mass_ask_alt_1.SetFont(self.font_normal)
-        self.simulated_mass_alt_1_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=(510, 43))
+        self.simulated_mass_alt_1_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=(510, 43.5))
         self.simulated_mass_alt_1_sizer = wx.BoxSizer()
         self.simulated_mass_alt_1_sizer.Add(self.user_input_panel, 1, wx.ALL | wx.EXPAND)
         self.sizer = wx.GridBagSizer(5, 5)
@@ -150,7 +174,7 @@ class Main(wx.Frame):
         self.sim_mass_units_alt_2 = wx.StaticText(self.user_input_panel, label="rad / m", pos=(605, 80))
         self.sim_mass_units_alt_2.SetFont(self.font_normal)
         self.simulated_mass_ask_alt_2.SetFont(self.font_normal)
-        self.simulated_mass_alt_2_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=(510, 78))
+        self.simulated_mass_alt_2_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=(510, 78.5))
         self.simulated_mass_alt_2_sizer = wx.BoxSizer()
         self.simulated_mass_alt_2_sizer.Add(self.user_input_panel, 1, wx.ALL | wx.EXPAND)
         self.sizer = wx.GridBagSizer(5, 5)
@@ -158,7 +182,8 @@ class Main(wx.Frame):
         self.border = wx.BoxSizer()
         self.border.Add(self.sizer, 1, wx.ALL | wx.EXPAND, 5)
 
-        self.save_inputs_button = wx.Button(self.user_input_panel, -1, label="Save Input", pos=(19, 71), size=(100, 30))
+
+        self.save_inputs_button = wx.Button(self.user_input_panel, -1, label="Save Input", pos=(499, 110), size=(100, 30))
 
         # 9: Create empty parameters
         self.data_1 = []
@@ -190,9 +215,6 @@ class Main(wx.Frame):
         self.simulated_mass_alt_1_text.SetBackgroundColour((220, 220, 220))
         self.simulated_mass_alt_2_text.SetBackgroundColour((220, 220, 220))
 
-        self.checkbox = wx.CheckBox(self.user_input_panel, -1, 'User Input Simulated Mass', pos=(342.5, 10))
-        self.checkbox.SetValue(False)
-
         # 6: Set events
         self.Bind(wx.EVT_MENU, self.on_open, menu_file_open)
         self.Bind(wx.EVT_MENU, self.on_about, menu_about)
@@ -215,12 +237,12 @@ class Main(wx.Frame):
         Assign panels to the main panel. This includes the path to both files and some basic data about the files.
         New fonts are created to create some diversity on the screen, making the application more appealing to look at.
         """
-        for i in range(len(self.panel_titles)):
-            self.path_display_panel = wx.Panel(self.top_panel, -1, style=wx.NO_BORDER, size=(660, 22), pos=(14, 35 + i * 55))
-            self.path_display = wx.StaticText(self.path_display_panel, label=str(path.dirname(self.pathname[i])), pos=(4, 2))
+        # for i in range(len(self.statistics_titles)):
+        #     self.path_display_panel = wx.Panel(self.top_panel, -1, style=wx.NO_BORDER, size=(660, 22), pos=(14, 35 + i * 55))
+        #     self.path_display = wx.StaticText(self.path_display_panel, label=str(path.dirname(self.pathname[i])), pos=(4, 2))
 
         data_display_strings = ["Average power at high slope / power:     ", "Average velocity at high slope / power:   ", "Amount of received ANT+ messages:   "]
-        for i in range(len(self.panel_titles)):
+        for i in range(len(self.statistics_titles)):
             self.data_display_panel = wx.Panel(self.top_panel, -1, style=wx.NO_BORDER, size=(660, 50), pos=(18, 285 + i * 90))
             self.data_display = wx.StaticText(self.data_display_panel, label=data_display_strings[0] + str(self.all_averages[i][0]) + "W\n" + data_display_strings[1] + str(self.all_averages[i][1]) + "km/h\n" + data_display_strings[2] + str(self.all_averages[i][2]))
             self.data_display.SetFont(self.font_normal)
@@ -671,6 +693,11 @@ class Main(wx.Frame):
         graph.set_x_axis({'name': 'Velocity [km/h]'})
         graph.set_title({'name': 'Operating range ' + self.user_file_name})
         graph.set_size({'width': 1080, 'height': 720})
+        graph_2.set_y_axis({'name': 'Power [W]'})
+        graph_2.set_y2_axis({'name': 'Velocity [km/h]'})
+        graph_2.set_x_axis({'name': 'Time [s]'})
+        graph_2.set_title({'name': '0 Watt acceleration ' + self.user_file_name})
+        graph_2.set_size({'width': 1080, 'height': 720})
         worksheet_data.set_column('A:Q', 14)
         worksheet_charts.set_column('X:X', 16)
 
