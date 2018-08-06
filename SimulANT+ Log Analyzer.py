@@ -440,7 +440,7 @@ class Main(wx.Frame):
         power_clean_high = []
         velocity_clean_high = []
         velocity_time_clean_high = []
-        power_time_clean_high = [] 
+        power_time_clean_high = []
         power_clean_low = []
         velocity_clean_low = []
         velocity_time_clean_low = []
@@ -694,14 +694,19 @@ class Main(wx.Frame):
         velocity_x = []
         percentage_lines = [5, 10, 20, 30]
         theoretical_power_values = [[], [], [], []]
+        velocities_for_percentages = [[], [], [], []]
         for i in range(10 * round(max(velocity_clean_low))):
             velocity_x.append(i / 10)
         for j in range(len(percentage_lines)):
             for i in range(len(velocity_x)):
-                theoretical_power_values[j].append(self.theoretical_power_at_velocity(velocity_x[i], percentage_lines[j]))
-                if theoretical_power_values[j][i] > max(power_clean_high):
-                    del theoretical_power_values[j][-1]
-        print(theoretical_power_values[3])
+                if self.theoretical_power_at_velocity(velocity_x[i], percentage_lines[j]) <= max(power_clean_high):
+                    theoretical_power_values[j].append(self.theoretical_power_at_velocity(velocity_x[i], percentage_lines[j]))
+                    velocities_for_percentages[j].append(velocity_x[i])
+                else:
+                    pass
+
+        print((theoretical_power_values))
+        print((velocities_for_percentages))
 
         # Initialize writing an excel file. This file will be used to store all the necessary information which is
         # analysed in the code.
@@ -767,7 +772,20 @@ class Main(wx.Frame):
         worksheet_data.write_column(2, 18, power_sensor_check_lower_bound)
         worksheet_data.write_column(2, 19, power_sensor_check_upper_bound)
 
+        # Percentage Lines
+        for i in range(len(velocities_for_percentages)):
+            worksheet_data.write_column(2, i + 20, velocities_for_percentages[i])
+            worksheet_data.write_column(2, i + 24, theoretical_power_values[i])
+
         # Writing to graph.
+        for i in range(len(velocities_for_percentages)):
+            graph.add_series({
+                'categories': [worksheet_data.name] + [2, i + 20] + [len(velocities_for_percentages[i]) + 2, i + 20],
+                'values': [worksheet_data.name] + [2, i + 24] + [len(theoretical_power_values[i]) + 2, i + 24],
+                'line': {'color': '#67bfe7', 'width': 1, 'transparency': 50},
+                'name': str(percentage_lines[i]) + "%"
+            })
+
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
             'values': [worksheet_data.name] + [2, 1] + [len(power_clean_high) + 2, 1],
@@ -1166,7 +1184,7 @@ class Main(wx.Frame):
         angle = arctan(float(theta) / 100)
         roll_coefficient = 0.004
 
-        return 0.5 * frontal_area * air_density * drag_coefficient * velocity ** 2 + sin(angle) * mass * grav + cos(angle) * mass * grav * roll_coefficient
+        return (0.5 * frontal_area * air_density * drag_coefficient * (velocity / 3.6) ** 2 + sin(angle) * mass * grav + cos(angle) * mass * grav * roll_coefficient) * (velocity / 3.6)
 
 
 if __name__ == '__main__':
