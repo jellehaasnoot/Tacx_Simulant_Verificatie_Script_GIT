@@ -122,7 +122,7 @@ class Main(wx.Frame):
         self.border = wx.BoxSizer()
         self.border.Add(self.sizer, 1, wx.ALL | wx.EXPAND, 5)
 
-        self.edit_simulated_mass_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=())
+        # self.edit_simulated_mass_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=())
 
 
         # 9: Create empty parameters
@@ -143,6 +143,9 @@ class Main(wx.Frame):
         self.power_list_high = []
         self.power_list_const = []
 
+        self.checkbox = wx.CheckBox(self.user_input_panel, -1, 'User Input Simulated Mass', pos=(342.5, 10))
+        self.checkbox.SetValue(False)
+
         # 6: Set events
         self.Bind(wx.EVT_MENU, self.on_open, menu_file_open)
         self.Bind(wx.EVT_MENU, self.on_about, menu_about)
@@ -158,8 +161,7 @@ class Main(wx.Frame):
         self.checkbox.Bind(wx.EVT_ENTER_WINDOW, self.on_check_hover)
         self.Bind(wx.EVT_CHECKBOX, self.on_check)
         self.save_inputs_button.Bind(wx.EVT_BUTTON, self.on_save_inputs)
-        self.checkbox = wx.CheckBox(self.user_input_panel, -1, 'User Input Simulated Mass', pos=(342.5, 10))
-        self.checkbox.SetValue(False)
+
 
 
     def panel_layout(self):
@@ -236,6 +238,8 @@ class Main(wx.Frame):
         # Analysing log file 1:
         self.velocity_list = []
         self.power_list = []
+        self.velocity_time_list = []
+        self.power_time_list = []
         data = []
 
         for j in range(3):
@@ -256,6 +260,8 @@ class Main(wx.Frame):
             data.append(data_dummy)
             self.velocity_list.append(velocity_list)
             self.power_list.append(power_list)
+            self.velocity_time_list.append(velocity_time_list)
+            self.power_time_list.append(power_time_list)
 
         data_high = data[0]
         data_low = data[1]
@@ -267,6 +273,8 @@ class Main(wx.Frame):
         self.power_list_low = self.power_list[1]
         self.velocity_list_const = self.velocity_list[2]
         self.power_list_const = self.power_list[2]
+        self.power_time_list_const = self.power_time_list[2]
+        self.velocity_time_list_const = self.velocity_time_list[2]
 
         # analysing log file 4:
         self.logfile_analyser_sensor(self.pathname[3])
@@ -286,8 +294,21 @@ class Main(wx.Frame):
 
         self.power_list_sensor = power_list
         self.cadence_list_sensor = cadence_list
-        self.power_time_list_sensor = power_time_list
+        self.power_time_list_sensor = sensor_time_list
         self.cadenc_time_list_sensor = sensor_time_list
+
+        # Correcting time-stamps between log file 3 and log file 4
+        if int(self.time_stamp_trainer[0]) > int(self.time_stamp_sensor[0]):
+            correcting_time = abs(int(self.time_stamp_sensor[0]) - int(self.time_stamp_trainer[0]))
+            for i in range(len(self.power_time_list_const)):
+                self.power_time_list_const[i] = float(self.power_time_list_const[i]) + correcting_time/1000
+            for i in range(len(self.velocity_time_list_const)):
+                self.velocity_time_list_const[i] = float(self.velocity_time_list_const[i]) + correcting_time/1000
+        elif int(self.time_stamp_trainer[0]) < int(self.time_stamp_sensor[0]):
+            correcting_time = abs(int(self.time_stamp_sensor[0]) - int(self.time_stamp_trainer[0]))
+            for i in range(len(self.power_time_list_sensor)):
+                self.power_time_list_sensor[i] = float(self.power_time_list_sensor[i]) + correcting_time/1000
+
 
         # Calculating the averages of every file, this is not necessary for the calculations below, but this will give
         # a quick overview of the used files to the user.
@@ -728,6 +749,8 @@ class Main(wx.Frame):
         value_list = []
         time_list = []
         time_values_raw = []
+        self.time_stamp_trainer = []
+        sentences_1 = []
         velocity_list = []
         velocity_time_list = []
         power_time_list = []
@@ -746,6 +769,17 @@ class Main(wx.Frame):
             sentence = log.readline()
             if "Rx:" in sentence:
                 sentences.append(sentence)
+                sentences_1.append(sentence)
+            elif "Rx" in sentence:
+                sentences_1.append(sentence)
+
+        # for i in range(len(sentences_1)):
+        #     sentence_1 = sentences_1[i].split()
+        #     try:
+        #         index_1 = sentence_1.index("Rx")
+        #     except:
+        #         index_1 = sentence_1.index("Rx:")
+        #     self.time_stamp_trainer.append(sentence_1[index_1 - 2])
 
         # This part splits the retrieved lines in subparts, after which the hexadecimals will be read.
         for i in range(len(sentences)):
@@ -756,6 +790,10 @@ class Main(wx.Frame):
             value = value_raw.replace("[", "").replace("]", "")  # This will removes the useless characters
             value_list.append(value)
             time_values_raw.append(time_raw)
+        self.time_stamp_trainer = time_values_raw
+
+        for i in range(len(value_list)):
+            value_list_characters = list(value_list[i])
 
         # These subparts will be categorized according to their first character: When this is '10', this means the velocity is recorded in that line. When the first character is '19', this means power is recorded in that line. The other characters are not important for the functionality of this file, which means they will be left out.
         for i in range(len(value_list)):
@@ -785,13 +823,14 @@ class Main(wx.Frame):
                 wattage = value_converter.bin_to_dec(power_bin)
                 power_list.append(wattage)
                 power_time_list.append((float(time_values_raw[i]) - float(time_values_raw[0])) / 1000)
-
             else:
                 pass
 
     def logfile_analyser_sensor(self, logfile):
         global cadence_list, power_list, time_list, sensor_time_list
+        self.time_stamp_sensor = []
         sentences = []
+        sentences_1 = []
         value_list = []
         time_list = []
         time_values_raw = []
@@ -810,6 +849,17 @@ class Main(wx.Frame):
             sentence = log.readline()
             if "Rx:" in sentence:
                 sentences.append(sentence)
+                sentences_1.append(sentence)
+            elif "Rx" in sentence:
+                sentences_1.append(sentence)
+
+        # for i in range(len(sentences_1)):
+        #     sentence_1 = sentences_1[i].split()
+        #     try:
+        #         index_1 = sentence_1.index("Rx")
+        #     except:
+        #         index_1 = sentence_1.index("Rx:")
+        #     self.time_stamp_sensor.append(sentence_1[index_1 - 2])
 
         # This part splits the retrieved lines in subparts, after which the hexadecimals will be read.
         for i in range(len(sentences)):
@@ -820,6 +870,8 @@ class Main(wx.Frame):
             value = value_raw.replace("[", "").replace("]", "")  # This will removes the useless characters
             value_list.append(value)
             time_values_raw.append(time_raw)
+
+        self.time_stamp_sensor = time_values_raw
 
         # These subparts will be categorized according to their first character: When this is '10', this means the cadence is recorded in that line. When the first character is '19', this means power is recorded in that line. The other characters are not important for the functionality of this file, which means they will be left out.
         for i in range(len(value_list)):
@@ -957,9 +1009,6 @@ class Main(wx.Frame):
             if no_number_dialog.ShowModal() == wx.OK:
                 no_number_dialog.Destroy()
                 return
-
-        print(str(self.front_gear_value))
-        print(str(self.rear_gear_value))
 
 if __name__ == '__main__':
     Application = wx.App(False)
