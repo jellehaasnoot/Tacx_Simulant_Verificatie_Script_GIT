@@ -729,6 +729,7 @@ class Main(wx.Frame):
 
         worksheet_data.write_column(2, 12, power_time_const_check)
         worksheet_data.write_column(2, 13, power_const_check)
+        worksheet_data.write_column(2, 14, )
         worksheet_data.write_column(2, 14, power_time_sensor_check)
         worksheet_data.write_column(2, 15, power_sensor_check)
 
@@ -788,8 +789,33 @@ class Main(wx.Frame):
             'line': {'color': 'blue'},
             'name': 'Trainer power',
         })
+        graph_2.add_series({
+            'values': [worksheet_data.name] + [2, 13] + [len(power_const_check) + 2, 13],
+            'categories': [worksheet_data.name] + [2, 12] + [len(power_time_const_check) + 2, 12],
+            'line': {'color': 'blue'},
+            'name': 'Trainer power',
+        })
+        graph_2.add_series({
+            'values': [worksheet_data.name] + [2, 13] + [len(power_const_check) + 2, 13],
+            'categories': [worksheet_data.name] + [2, 12] + [len(power_time_const_check) + 2, 12],
+            'line': {'color': 'blue'},
+            'name': 'Trainer power',
+        })
+
 
         graph_2.add_series({
+            'values': [worksheet_data.name] + [2, 15] + [len(power_sensor_check) + 2, 15],
+            'categories': [worksheet_data.name] + [2, 14] + [len(power_time_sensor_check) + 2, 14],
+            'line': {'color': 'red'},
+            'name': 'Sensor power',
+        })
+         graph_2.add_series({
+            'values': [worksheet_data.name] + [2, 15] + [len(power_sensor_check) + 2, 15],
+            'categories': [worksheet_data.name] + [2, 14] + [len(power_time_sensor_check) + 2, 14],
+            'line': {'color': 'red'},
+            'name': 'Sensor power',
+        })
+         graph_2.add_series({
             'values': [worksheet_data.name] + [2, 15] + [len(power_sensor_check) + 2, 15],
             'categories': [worksheet_data.name] + [2, 14] + [len(power_time_sensor_check) + 2, 14],
             'line': {'color': 'red'},
