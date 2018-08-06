@@ -617,6 +617,9 @@ class Main(wx.Frame):
             velocity_time_clean_const.append(velocity_time_raw_const[i])
             power_time_clean_const.append(power_time_raw_const[i])
 
+        # Start calculations on the THIRD file to calculate the deviation limits.
+
+
         # Calculating the best possible fit, we only consider quadratic and linear fits at this moment. The error with
         # the original data is calculated and the best fit will be drawn. A dictionary is used to track the variable
         # with the highest value without a big if statement structure.
