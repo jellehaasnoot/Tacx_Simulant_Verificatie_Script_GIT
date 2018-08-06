@@ -100,6 +100,8 @@ class Main(wx.Frame):
         # 8: Create status bar
         self.statusbar = self.CreateStatusBar()
 
+
+        # 9: Create TextCtrl boxes
         self.gear_front_ask = wx.StaticText(self.user_input_panel, label="No. of teeth front sprocket: ", pos=(20, 10))
         self.gear_front_ask.SetFont(self.font_normal)
         self.edit_gear_front_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=(180, 7))
@@ -120,8 +122,7 @@ class Main(wx.Frame):
         self.border = wx.BoxSizer()
         self.border.Add(self.sizer, 1, wx.ALL | wx.EXPAND, 5)
 
-        self.checkbox = wx.CheckBox(self.user_input_panel, -1, 'User Input Simulated Mass', pos=(342.5, 10))
-        self.checkbox.SetValue(False)
+        self.edit_simulated_mass_text = wx.TextCtrl(self.user_input_panel, size=(80, -1), pos=())
 
 
         # 9: Create empty parameters
@@ -142,7 +143,6 @@ class Main(wx.Frame):
         self.power_list_high = []
         self.power_list_const = []
 
-
         # 6: Set events
         self.Bind(wx.EVT_MENU, self.on_open, menu_file_open)
         self.Bind(wx.EVT_MENU, self.on_about, menu_about)
@@ -158,6 +158,9 @@ class Main(wx.Frame):
         self.checkbox.Bind(wx.EVT_ENTER_WINDOW, self.on_check_hover)
         self.Bind(wx.EVT_CHECKBOX, self.on_check)
         self.save_inputs_button.Bind(wx.EVT_BUTTON, self.on_save_inputs)
+        self.checkbox = wx.CheckBox(self.user_input_panel, -1, 'User Input Simulated Mass', pos=(342.5, 10))
+        self.checkbox.SetValue(False)
+
 
     def panel_layout(self):
         """
