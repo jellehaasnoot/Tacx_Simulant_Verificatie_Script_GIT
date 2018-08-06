@@ -6,6 +6,9 @@ from os import path
 from os import startfile
 from numpy import mean
 from numpy import array
+from numpy import arctan
+from numpy import sin
+from numpy import cos
 from scipy.optimize import curve_fit
 
 class Main(wx.Frame):
@@ -243,7 +246,7 @@ class Main(wx.Frame):
 
         data_display_strings = ["Average power at high slope / power:     ", "Average velocity at high slope / power:   ", "Amount of received ANT+ messages:   "]
         for i in range(len(self.statistics_titles)):
-            self.data_display_panel = wx.Panel(self.top_panel, -1, style=wx.NO_BORDER, size=(660, 50), pos=(18, 285 + i * 90))
+            self.data_display_panel = wx.Panel(self.top_panel, -1, style=wx.NO_BORDER, size=(660, 50), pos=(18, 35 + i * 90))
             self.data_display = wx.StaticText(self.data_display_panel, label=data_display_strings[0] + str(self.all_averages[i][0]) + "W\n" + data_display_strings[1] + str(self.all_averages[i][1]) + "km/h\n" + data_display_strings[2] + str(self.all_averages[i][2]))
             self.data_display.SetFont(self.font_normal)
 
@@ -456,7 +459,7 @@ class Main(wx.Frame):
         power_clean_high = []
         velocity_clean_high = []
         velocity_time_clean_high = []
-        power_time_clean_high = [] 
+        power_time_clean_high = []
         power_clean_low = []
         velocity_clean_low = []
         velocity_time_clean_low = []
@@ -706,6 +709,24 @@ class Main(wx.Frame):
             if power_no_int_res_high[i] < 0:
                 power_no_int_res_high[i] = 0
 
+        # Calculate the resistance which should be present when cycling a conventional road.
+        velocity_x = []
+        percentage_lines = [5, 10, 20, 30]
+        theoretical_power_values = [[], [], [], []]
+        velocities_for_percentages = [[], [], [], []]
+        for i in range(10 * round(max(velocity_clean_low))):
+            velocity_x.append(i / 10)
+        for j in range(len(percentage_lines)):
+            for i in range(len(velocity_x)):
+                if self.theoretical_power_at_velocity(velocity_x[i], percentage_lines[j]) <= max(power_clean_high):
+                    theoretical_power_values[j].append(self.theoretical_power_at_velocity(velocity_x[i], percentage_lines[j]))
+                    velocities_for_percentages[j].append(velocity_x[i])
+                else:
+                    pass
+
+        print((theoretical_power_values))
+        print((velocities_for_percentages))
+
         # Initialize writing an excel file. This file will be used to store all the necessary information which is
         # analysed in the code.
         excel = xlsxwriter.Workbook(self.folder_pathname + "\\" + self.user_file_name + ".xlsx")
@@ -784,7 +805,20 @@ class Main(wx.Frame):
         worksheet_data.write_column(2, 26, speed_trainer_check_upper_bound)
 
 
+        # Percentage Lines
+        for i in range(len(velocities_for_percentages)):
+            worksheet_data.write_column(2, i + 20, velocities_for_percentages[i])
+            worksheet_data.write_column(2, i + 24, theoretical_power_values[i])
+
         # Writing to graph.
+        for i in range(len(velocities_for_percentages)):
+            graph.add_series({
+                'categories': [worksheet_data.name] + [2, i + 20] + [len(velocities_for_percentages[i]) + 2, i + 20],
+                'values': [worksheet_data.name] + [2, i + 24] + [len(theoretical_power_values[i]) + 2, i + 24],
+                'line': {'color': '#67bfe7', 'width': 1, 'transparency': 50},
+                'name': str(percentage_lines[i]) + "%"
+            })
+
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
             'values': [worksheet_data.name] + [2, 1] + [len(power_clean_high) + 2, 1],
@@ -1192,6 +1226,19 @@ class Main(wx.Frame):
             if no_number_dialog.ShowModal() == wx.OK:
                 no_number_dialog.Destroy()
                 return
+
+
+    def theoretical_power_at_velocity(self, velocity, theta):
+        # Variables
+        frontal_area = 0.4 # m^2
+        air_density = 1.226 # kg / m^3
+        drag_coefficient = 0.85
+        mass = 82.5 # kg
+        grav = 9.81 # m / s^2
+        angle = arctan(float(theta) / 100)
+        roll_coefficient = 0.004
+
+        return (0.5 * frontal_area * air_density * drag_coefficient * (velocity / 3.6) ** 2 + sin(angle) * mass * grav + cos(angle) * mass * grav * roll_coefficient) * (velocity / 3.6)
 
 
 if __name__ == '__main__':
