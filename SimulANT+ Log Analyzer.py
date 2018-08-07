@@ -10,7 +10,7 @@ from numpy import arctan
 from numpy import sin
 from numpy import cos
 from scipy.optimize import curve_fit
-#TODO Commit
+
 class Main(wx.Frame):
     def __init__(self, parent, title):
         """
@@ -188,8 +188,8 @@ class Main(wx.Frame):
         self.border.Add(self.sizer, 1, wx.ALL | wx.EXPAND, 5)
 
 
-        self.save_inputs_button = wx.Button(self.user_input_panel, -1, label="Save Input", pos=(499, 110), size=(100, 30))
-        self.saved_text = wx.StaticText(self.user_input_panel, -1, label="", pos=(320, 115), style=wx.ALIGN_CENTER_HORIZONTAL)
+        self.save_inputs_button = wx.Button(self.user_input_panel, -1, label="Save Inputs", pos=(500, 112), size=(100, 30))
+        self.saved_text = wx.StaticText(self.user_input_panel, -1, label="", pos=(320, 119), style=wx.ALIGN_CENTER_HORIZONTAL)
         self.saved_text.SetFont(self.font_green)
         self.saved_text.SetLabel("VALUES NOT SAVED")
         self.saved_text.SetForegroundColour((255, 10, 10))
@@ -250,10 +250,13 @@ class Main(wx.Frame):
         #     self.path_display_panel = wx.Panel(self.top_panel, -1, style=wx.NO_BORDER, size=(660, 22), pos=(14, 35 + i * 55))
         #     self.path_display = wx.StaticText(self.path_display_panel, label=str(path.dirname(self.pathname[i])), pos=(4, 2))
 
-        data_display_strings = ["Average power at high slope / power:     ", "Average velocity at high slope / power:   ", "Amount of received ANT+ messages:   "]
+        data_display_strings = [["Average power at high slope / power:     ", "Average velocity at high slope / power:   ", "Amount of received ANT+ messages:     "],
+                                ["Average power at low slope / power:     ", "Average velocity at low slope / power:   ", "Amount of received ANT+ messages:   "],
+                                ["Average power at constant velocity:     ", "Average velocity at constant velocity:   ", "Amount of received ANT+ messages:   "],
+                                ["Average power from power / cadence sensor:     ", "Average velocity from power / cadence sensor:   ", "Amount of received ANT+ messages:                "]]
         for i in range(len(self.statistics_titles)):
             self.data_display_panel = wx.Panel(self.top_panel, -1, style=wx.NO_BORDER, size=(660, 50), pos=(18, 35 + i * 90))
-            self.data_display = wx.StaticText(self.data_display_panel, label=data_display_strings[0] + str(self.all_averages[i][0]) + "W\n" + data_display_strings[1] + str(self.all_averages[i][1]) + "km/h\n" + data_display_strings[2] + str(self.all_averages[i][2]))
+            self.data_display = wx.StaticText(self.data_display_panel, label=data_display_strings[i][0] + str(self.all_averages[i][0]) + "W\n" + data_display_strings[i][1] + str(self.all_averages[i][1]) + "km/h\n" + data_display_strings[i][2] + str(self.all_averages[i][2]))
             self.data_display.SetFont(self.font_normal)
 
         # Create panels
@@ -287,6 +290,14 @@ class Main(wx.Frame):
         # Opening File 4 with the use of a dialog. File 4 will contain the ANT+ data of the measurements with a power
         # goal of 0W while cycling at some multiple constant velocities. This will be measured with an external power
         # meter, this way the accuracy can be calculated.
+
+        if self.sensor_deviation_text.GetValue() == "" or self.trainer_deviation_text.GetValue() == "" or self.edit_gear_front_text.GetValue() == "" or self.edit_gear_rear_text.GetValue() == "":
+            no_entry_dialog = wx.MessageDialog(self.top_panel, style=wx.ICON_ERROR, message="(some of) The fields are still left empty. \nPlease fill out the gear ratio, deviations and optionally inertia data.")
+            no_entry_dialog.CenterOnParent()
+            if no_entry_dialog.ShowModal() == wx.OK:
+                no_entry_dialog.Destroy()
+                return
+
         self.pathname = []
         dummy_strings = ["Choose the logged SimulANT+ file with the HIGHEST slope / power...",
                          "Choose the second logged SimulANT+ file with the LOWEST (negative) slope...",
@@ -299,6 +310,7 @@ class Main(wx.Frame):
                 if prompted_dialog.ShowModal() == wx.ID_CANCEL:
                     return
                 self.pathname.append(prompted_dialog.GetPath())
+
 
         # Naming the excel file which will be made by the program.
         self.user_file_name_dialog = wx.TextEntryDialog(self,
@@ -754,11 +766,11 @@ class Main(wx.Frame):
         graph_2.set_y_axis({'name': 'Power [W]'})
         graph_2.set_y2_axis({'name': 'Velocity [km/h]'})
         graph_2.set_x_axis({'name': 'Time [s]'})
-        graph_2.set_title({'name': 'Power ' + self.user_file_name + ' vs. external powermeter'})
+        graph_2.set_title({'name': 'Power ' + self.user_file_name + ' vs. Power external sensor'})
         graph_2.set_size({'width': 1080, 'height': 720})
         graph_3.set_y_axis({'name': 'Velocity [m/s]'})
         graph_3.set_x_axis({'name': 'Time [s]'})
-        graph_3.set_title({'name': 'Velocity ' + self.user_file_name + ' vs. external powermeter'})
+        graph_3.set_title({'name': 'Velocity ' + self.user_file_name + ' vs. Velocity external sensor'})
         graph_3.set_size({'width': 1080, 'height': 720})
         worksheet_data.set_column('A:Q', 14)
         worksheet_charts.set_column('X:X', 16)
@@ -843,7 +855,7 @@ class Main(wx.Frame):
                 'categories': [worksheet_data.name] + [2, i + 27] + [len(velocities_for_percentages[i]) + 2, i + 27],
                 'values': [worksheet_data.name] + [2, i + 33] + [len(theoretical_power_values[i]) + 2, i + 33],
                 'line': {'color': '#67bfe7', 'width': 2.5, 'transparency': 70},
-                'name': str(percentage_lines[i]) + "%"
+                'name': "Reference lines: 1, 2, 5, 10, 20, 30%"
             })
 
         graph.add_series({
@@ -972,9 +984,9 @@ class Main(wx.Frame):
         worksheet_charts.insert_chart('B2', graph)
         worksheet_charts.insert_chart('B40', graph_2)
         worksheet_charts.insert_chart('B78', graph_3)
-        graph.set_legend({'position': 'bottom', 'delete_series': [0, 1, 2, 3, 4, 5]})
         graph_2.set_legend({'position': 'bottom', 'delete_series': count_1})
         graph_3.set_legend({'position': 'bottom', 'delete_series': count_2})
+        graph.set_legend({'position': 'bottom', 'delete_series': [0, 1, 2, 3, 4]})
         worksheet_charts.write('T2', 'Simulated Mass:', header)
         worksheet_charts.write('X2', str(round(float(self.simulated_mass_guess), 2)), header)
         worksheet_charts.write_rich_string('Y2', header, '[kgm', superscript, '2', header, ']')
@@ -986,15 +998,26 @@ class Main(wx.Frame):
         # worksheet_charts.write('X4', str(round(float(precision_trainer_max), 2)), header)
         # worksheet_charts.write_rich_string('Y4', header, '[%]')
 
-        # try:
-        #     excel.close()
-        # except Exception:
-        #     excel_open_dialog = wx.MessageDialog(self.top_panel, style=wx.ICON_ERROR,
-        #                                          message="Excel seems to be still running. It needs to be closed for this application to be able to save a new file.\n\nNo new file will be saved. Please restart the program.",
-        #                                          caption="Error!")
-        #     excel_open_dialog.CenterOnParent()
-        #     if excel_open_dialog.ShowModal() == wx.OK:
-        #         excel_open_dialog.Destroy()
+
+        try:
+            excel.close()
+        except Exception:
+            excel_open_dialog = wx.MessageDialog(self.top_panel, style= wx.OK | wx.CANCEL | wx.ICON_ERROR,
+                                                 message="Excel seems to be still running. It needs to be closed for this application to be able to save a new file.\n\nClick ""Ok"" to try again, after having closed Excel.",
+                                                 caption="Error!")
+            excel_open_dialog.CenterOnParent()
+            if excel_open_dialog.ShowModal() == wx.OK:
+                excel_open_dialog.Destroy()
+                try:
+                    excel.close()
+                except:
+                    excel_open_dialog = wx.MessageDialog(self.top_panel, style= wx.OK | wx.ICON_ERROR,
+                                     message="Something still went wrong. \n\n Please restart, and make sure no other instances of this application are running.",
+                                     caption="Error!")
+                    excel_open_dialog.CenterOnParent()
+                    if excel_open_dialog.ShowModal() == wx.OK:
+                        excel_open_dialog.Destroy()
+
         excel.close()
         self.panel_layout()
 
@@ -1269,7 +1292,7 @@ class Main(wx.Frame):
             self.saved_text.SetForegroundColour((10, 255, 10))
 
         except ValueError:
-            no_number_dialog = wx.MessageDialog(self.top_panel, style=wx.ICON_ERROR, message="This doesn't appear to be a number. \nPlease try again.")
+            no_number_dialog = wx.MessageDialog(self.top_panel, style=wx.ICON_ERROR, message="This doesn't appear to be a number. \n\nPlease try again.")
             no_number_dialog.CenterOnParent()
             if no_number_dialog.ShowModal() == wx.OK:
                 no_number_dialog.Destroy()

@@ -56,10 +56,10 @@ missing module named 'pkg_resources.extern.six.moves' - imported by pkg_resource
 missing module named pkg_resources.extern.appdirs - imported by pkg_resources.extern, pkg_resources, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
 missing module named pkg_resources.extern.packaging - imported by pkg_resources.extern, pkg_resources, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
 missing module named __main__ - imported by pkg_resources, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
-missing module named 'pkg_resources.extern.pyparsing' - imported by pkg_resources._vendor.packaging.requirements, pkg_resources._vendor.packaging.markers
+missing module named ordereddict - imported by pkg_resources._vendor.pyparsing, pyparsing
 missing module named 'com.sun' - imported by pkg_resources._vendor.appdirs
 missing module named com - imported by pkg_resources._vendor.appdirs
-missing module named ordereddict - imported by pkg_resources._vendor.pyparsing, pyparsing
+missing module named 'pkg_resources.extern.pyparsing' - imported by pkg_resources._vendor.packaging.markers, pkg_resources._vendor.packaging.requirements
 missing module named setuptools.extern.packaging - imported by setuptools.extern, setuptools.dist, setuptools.command.egg_info, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
 missing module named commands - imported by numpy.distutils.cpuinfo, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
 missing module named nose - imported by numpy.testing._private.utils, numpy.testing._private.decorators, numpy.testing._private.noseclasses, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
@@ -156,5 +156,6 @@ missing module named scikits - imported by scipy.sparse.linalg.dsolve.linsolve
 missing module named numpy.double - imported by numpy, scipy.optimize.nnls
 missing module named numpy.float64 - imported by numpy, scipy.optimize.lbfgsb
 missing module named numpy.greater - imported by numpy, scipy.optimize.minpack
+missing module named numpy.arctan - imported by numpy, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py
 missing module named numpy.array - imported by numpy, numpy.ma.core, numpy.ma.extras, numpy.ma.mrecords, numpy.ctypeslib, C:\Users\Jelle\PycharmProjects\Tacx_Simulant_Verificatie_Script_GIT\Tacx_Simulant_Verificatie_Script\SimulANT+ Log Analyzer.py, scipy.linalg.decomp, scipy.sparse.linalg.isolve.utils, scipy.optimize.lbfgsb, scipy.optimize.tnc, scipy.optimize.slsqp, scipy.optimize.minpack, scipy.integrate._ode, scipy.interpolate.interpolate, scipy.interpolate._fitpack_impl, scipy.interpolate.fitpack2
 missing module named Carbon - imported by wx.lib.colourutils
