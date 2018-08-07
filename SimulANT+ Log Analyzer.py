@@ -431,7 +431,7 @@ class Main(wx.Frame):
                 if power_sensor_check[i] == 0 or power_const_check[i] == 0:
                     pass
                 elif power_time_const_check[index_closest_value] > power_time_sensor_check[i]:
-                    dummy = (power_const_check[index_closest_value] - power_const_check[index_closest_value - 1])/ \
+                    dummy = (power_const_check[index_closest_value] - power_const_check[index_closest_value - 1]) / \
                             (power_time_const_check[index_closest_value]- power_time_const_check[index_closest_value
                                                                                                     - 1])
                     dummy2 = power_time_const_check[index_closest_value] - power_time_sensor_check[i]
@@ -1119,6 +1119,7 @@ class Main(wx.Frame):
         worksheet_charts.write('T2', 'Simulated Mass:', header)
         worksheet_charts.write('X2', str(round(float(self.simulated_mass_guess), 2)), header)
         worksheet_charts.write_rich_string('Y2', header, '[kg]')
+        
         # TODO: uncomment (only uncomment mean if there are more measurements.
         # worksheet_charts.write('T3', 'Minimal precision:', header)
         # worksheet_charts.write('X3', str(round(float(precision_trainer_mean), 2)), header)
