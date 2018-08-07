@@ -819,6 +819,37 @@ class Main(wx.Frame):
         worksheet_data.write_column(2, 25, speed_trainer_check_lower_bound)
         worksheet_data.write_column(2, 26, speed_trainer_check_upper_bound)
 
+        # Fill graph 1
+        count = [0]
+        i = 0
+        velocity_check = []
+        pop = []
+
+        for i in range(1000):
+            velocity_check.append(i * 0.2)
+            if velocity_check[i] > max(velocity_clean_low):
+                break
+        worksheet_data.write_column(2, 449, velocity_check)
+        fill_power_low = self.func_lin(array(velocity_check), *popt1_low)
+        for j in range(240):
+                fill_power = self.func_lin(array(velocity_check), *popt1_high)
+                count.append(count[j] + 1)
+                pops = 0
+                fill_power_list = []
+                for i in range(len(fill_power)):
+                    fill_power_list.append(fill_power[i] - j * 3)
+                    if fill_power_list[i - pops] < fill_power_low[i]:
+                        fill_power_list.pop()
+                        pops += 1
+                    elif fill_power_list[i - pops] > max(fitted_power_high):
+                        fill_power_list.pop()
+                        break
+                worksheet_data.write_column(2 + pops, 450 + j, fill_power_list)
+                pop.append(pops)
+                if len(fill_power_list) > 0:
+                    if max(fill_power_list) <= max(fill_power_low):
+                        break
+
         # Fill graph 2
         count_1 = [4]
         for i in range(int(trainer_deviation_perc * 2)):
@@ -857,23 +888,24 @@ class Main(wx.Frame):
                 'line': {'color': '#67bfe7', 'width': 2.5, 'transparency': 70},
                 'name': "Reference lines: 1, 2, 5, 10, 20, 30%"
             })
-
+        for i in range(len(count)):
+            graph.add_series({
+            'categories': [worksheet_data.name] + [2, 449] + [len(velocity_check) + 2, 449],
+            'values': [worksheet_data.name] + [2, 450 + i] + [len(velocity_check) + 2, 450 + i],
+            'line': {'color': '#67bfe7', 'width': 10, 'transparency': 99},
+        })
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
             'values': [worksheet_data.name] + [2, 1] + [len(power_clean_high) + 2, 1],
             'line': {'color': '#67bfe7', 'dash_type': 'dash', 'width': 1.5},
             'name': 'Highest Gradient Power',
         })
-        graph.add_series({
-            'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
-            'values': [worksheet_data.name] + [2, 2] + [len(power_clean_high) + 2, 2],
-            'line': {'color': '#67bfe7', 'width': 2},
-            'name': 'Fitted Highest Gradient Power',
-        })
+
+
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
             'values': [worksheet_data.name] + [2, 8] + [len(power_clean_high) + 2, 8],
-            'line': {'color': 'black', 'width': 1.5},
+            'line': {'color': '#67bfe7', 'width': 1.5},
             'name': 'Highest Gradient Power - Without Flywheel Effects',
         })
         graph.add_series({
@@ -890,17 +922,22 @@ class Main(wx.Frame):
         })
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 4] + [len(velocity_clean_low) + 2, 4],
-            'values': [worksheet_data.name] + [2, 6] + [len(power_clean_low) + 2, 6],
-            'line': {'color': '#67bfe7', 'width': 2},
-            'name': 'Fitted Lowest Gradient Power',
+            'values': [worksheet_data.name] + [2, 9] + [len(power_clean_low_brake) + 2, 9],
+            'line': {'color': '#67bfe7', 'width': 1.5},
+            'name': 'Lowest Gradient Power - Without Flywheel Effects',
         })
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 4] + [len(velocity_clean_low) + 2, 4],
-            'values': [worksheet_data.name] + [2, 9] + [len(power_clean_low_brake) + 2, 9],
-            'line': {'color': 'black', 'width': 1.5},
-            'name': 'Lowest Gradient Power - Without Flywheel Effects',
+            'values': [worksheet_data.name] + [2, 6] + [len(power_clean_low) + 2, 6],
+            'line': {'color': 'black', 'width': 3},
+            'name': 'Fitted Lowest Gradient Power',
         })
-
+        graph.add_series({
+            'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
+            'values': [worksheet_data.name] + [2, 2] + [len(power_clean_high) + 2, 2],
+            'line': {'color': 'black', 'width': 3},
+            'name': 'Fitted Highest Gradient Power',
+        })
 
         graph_2.add_series({
             'values': [worksheet_data.name] + [2, 14] + [len(power_const_check) + 2, 14],
@@ -981,12 +1018,15 @@ class Main(wx.Frame):
             })
             count_2.append(count_2[4* int(sensor_deviation_perc) + i] + 1)
 
+
+        list =[*range(1, 7 + max(count))]
+
         worksheet_charts.insert_chart('B2', graph)
         worksheet_charts.insert_chart('B40', graph_2)
-        worksheet_charts.insert_chart('B78', graph_3)
+        worksheet_charts.insert_chart('S40', graph_3)
         graph_2.set_legend({'position': 'bottom', 'delete_series': count_1})
         graph_3.set_legend({'position': 'bottom', 'delete_series': count_2})
-        graph.set_legend({'position': 'bottom', 'delete_series': [0, 1, 2, 3, 4]})
+        graph.set_legend({'position': 'bottom', 'delete_series': list})
         worksheet_charts.write('T2', 'Simulated Mass:', header)
         worksheet_charts.write('X2', str(round(float(self.simulated_mass_guess), 2)), header)
         worksheet_charts.write_rich_string('Y2', header, '[kgm', superscript, '2', header, ']')
