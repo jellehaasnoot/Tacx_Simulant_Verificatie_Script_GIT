@@ -250,10 +250,13 @@ class Main(wx.Frame):
         #     self.path_display_panel = wx.Panel(self.top_panel, -1, style=wx.NO_BORDER, size=(660, 22), pos=(14, 35 + i * 55))
         #     self.path_display = wx.StaticText(self.path_display_panel, label=str(path.dirname(self.pathname[i])), pos=(4, 2))
 
-        data_display_strings = ["Average power at high slope / power:     ", "Average velocity at high slope / power:   ", "Amount of received ANT+ messages:   "]
+        data_display_strings = [["Average power at high slope / power:     ", "Average velocity at high slope / power:   ", "Amount of received ANT+ messages:     "],
+                                ["Average power at low slope / power:     ", "Average velocity at low slope / power:   ", "Amount of received ANT+ messages:   "],
+                                ["Average power at constant velocity:     ", "Average velocity at constant velocity:   ", "Amount of received ANT+ messages:   "],
+                                ["Average power from power / cadence sensor:     ", "Average velocity from power / cadence sensor:   ", "Amount of received ANT+ messages:                "]]
         for i in range(len(self.statistics_titles)):
             self.data_display_panel = wx.Panel(self.top_panel, -1, style=wx.NO_BORDER, size=(660, 50), pos=(18, 35 + i * 90))
-            self.data_display = wx.StaticText(self.data_display_panel, label=data_display_strings[0] + str(self.all_averages[i][0]) + "W\n" + data_display_strings[1] + str(self.all_averages[i][1]) + "km/h\n" + data_display_strings[2] + str(self.all_averages[i][2]))
+            self.data_display = wx.StaticText(self.data_display_panel, label=data_display_strings[i][0] + str(self.all_averages[i][0]) + "W\n" + data_display_strings[i][1] + str(self.all_averages[i][1]) + "km/h\n" + data_display_strings[i][2] + str(self.all_averages[i][2]))
             self.data_display.SetFont(self.font_normal)
 
         # Create panels
