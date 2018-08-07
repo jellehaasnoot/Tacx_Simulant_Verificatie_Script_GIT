@@ -776,11 +776,11 @@ class Main(wx.Frame):
         graph_2.set_y_axis({'name': 'Power [W]'})
         graph_2.set_y2_axis({'name': 'Velocity [km/h]'})
         graph_2.set_x_axis({'name': 'Time [s]'})
-        graph_2.set_title({'name': 'Power ' + self.user_file_name + ' vs. Power external sensor'})
+        graph_2.set_title({'name': 'Power ' + self.user_file_name + ' vs. Power External Sensor'})
         graph_2.set_size({'width': 1080, 'height': 720})
         graph_3.set_y_axis({'name': 'Velocity [km/h]'})
         graph_3.set_x_axis({'name': 'Time [s]'})
-        graph_3.set_title({'name': 'Velocity ' + self.user_file_name + ' vs. Velocity external sensor'})
+        graph_3.set_title({'name': 'Velocity ' + self.user_file_name + ' vs. Velocity External Sensor'})
         graph_3.set_size({'width': 1080, 'height': 720})
         worksheet_data.set_column('A:Q', 14)
         worksheet_charts.set_column('X:X', 16)
@@ -907,7 +907,7 @@ class Main(wx.Frame):
                 'categories': [worksheet_data.name] + [2, i + 27] + [len(velocities_for_percentages[i]) + 2, i + 27],
                 'values': [worksheet_data.name] + [2, i + 33] + [len(theoretical_power_values[i]) + 2, i + 33],
                 'line': {'color': '#67bfe7', 'width': 2.5, 'transparency': 70},
-                'name': "Reference lines: 1, 2, 5, 10, 20, 30%"
+                'name': "Reference Lines: 1, 2, 5, 10, 20, 30%"
             })
         for i in range(len(count)):
             graph.add_series({
@@ -919,7 +919,7 @@ class Main(wx.Frame):
             'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
             'values': [worksheet_data.name] + [2, 1] + [len(power_clean_high) + 2, 1],
             'line': {'color': 'blue', 'dash_type': 'dash', 'width': 1.5},
-            'name': 'Highest Gradient Power',
+            'name': 'Highest Power',
         })
 
 
@@ -927,62 +927,62 @@ class Main(wx.Frame):
             'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
             'values': [worksheet_data.name] + [2, 8] + [len(power_clean_high) + 2, 8],
             'line': {'color': 'red', 'width': 3},
-            'name': 'Highest Gradient Power - Without Flywheel Effects',
+            'name': 'Highest Power - Without Flywheel Effects',
         })
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
             'values': [worksheet_data.name] + [2, 10] + [len(power_no_int_res_high) + 2, 10],
             'line': {'color': 'green', 'dash_type': 'dash', 'width': 2},
-            'name': 'Highest Gradient Power - Without Internal Friction - Without Flywheel Effects',
+            'name': 'Highest Power - Without Internal Friction - Without Flywheel Effects',
         })
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 4] + [len(velocity_clean_low) + 2, 4],
             'values': [worksheet_data.name] + [2, 5] + [len(power_clean_low) + 2, 5],
             'line': {'color': 'blue', 'dash_type': 'dash', 'width': 1.5},
-            'name': 'Lowest Gradient Power',
+            'name': 'Lowest Power',
         })
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 4] + [len(velocity_clean_low) + 2, 4],
             'values': [worksheet_data.name] + [2, 9] + [len(power_clean_low_brake) + 2, 9],
             'line': {'color': 'red', 'width': 3},
-            'name': 'Lowest Gradient Power - Without Flywheel Effects',
+            'name': 'Lowest Power - Without Flywheel Effects',
         })
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 4] + [len(velocity_clean_low) + 2, 4],
             'values': [worksheet_data.name] + [2, 6] + [len(power_clean_low) + 2, 6],
             'line': {'color': 'blue', 'width': 2},
-            'name': 'Fitted Lowest Gradient Power',
+            'name': 'Fitted Lowest Power',
         })
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
             'values': [worksheet_data.name] + [2, 2] + [len(power_clean_high) + 2, 2],
             'line': {'color': 'blue', 'width': 2},
-            'name': 'Fitted Highest Gradient Power',
+            'name': 'Fitted Highest Power',
         })
 
         graph_2.add_series({
             'values': [worksheet_data.name] + [2, 14] + [len(power_const_check) + 2, 14],
             'categories': [worksheet_data.name] + [2, 12] + [len(power_time_const_check) + 2, 12],
             'line': {'color': 'blue', 'width': 1.5},
-            'name': 'Trainer power lower bound (-' + str(trainer_deviation_perc) + '%)',
+            'name': 'Trainer Power Lower Bound (-' + str(trainer_deviation_perc) + '%)',
         })
         graph_2.add_series({
             'values': [worksheet_data.name] + [2, 15] + [len(power_const_check) + 2, 15],
             'categories': [worksheet_data.name] + [2, 12] + [len(power_time_const_check) + 2, 12],
             'line': {'color': 'blue', 'width': 1.5},
-            'name': 'Trainer power upper bound (' + str(trainer_deviation_perc) + '%)',
+            'name': 'Trainer Power Upper Bound (' + str(trainer_deviation_perc) + '%)',
         })
         graph_2.add_series({
             'values': [worksheet_data.name] + [2, 18] + [len(power_sensor_check) + 2, 18],
             'categories': [worksheet_data.name] + [2, 16] + [len(power_time_sensor_check) + 2, 16],
             'line': {'color': 'red', 'width': 1.5},
-            'name': 'Sensor power lower bound (-' + str(sensor_deviation_perc) + '%)',
+            'name': 'Sensor Power Lower Bound (-' + str(sensor_deviation_perc) + '%)',
         })
         graph_2.add_series({
             'values': [worksheet_data.name] + [2, 19] + [len(power_sensor_check) + 2, 19],
             'categories': [worksheet_data.name] + [2, 16] + [len(power_time_sensor_check) + 2, 16],
             'line': {'color': 'red', 'width': 1.5},
-            'name': 'Sensor power upper bound (' + str(sensor_deviation_perc) + '%)',
+            'name': 'Sensor Power Upper Bound (' + str(sensor_deviation_perc) + '%)',
         })
         for i in range(int(4 * sensor_deviation_perc)):
             graph_2.add_series({
@@ -1004,25 +1004,25 @@ class Main(wx.Frame):
             'categories': [worksheet_data.name] + [2, 16] + [len(speed_sensor_check_lower_bound) + 2, 16],
             'values': [worksheet_data.name] + [2, 21] + [len(speed_sensor_check_lower_bound) + 2, 21],
             'line': {'color': 'red', 'width': 1.5},
-            'name': 'Sensor power lower bound (-' + str(sensor_deviation_perc) + '%)',
+            'name': 'Sensor Velocity Lower Bound (-' + str(sensor_deviation_perc) + '%)',
         })
         graph_3.add_series({
             'categories': [worksheet_data.name] + [2, 16] + [len(speed_sensor_check_upper_bound) + 2, 16],
             'values': [worksheet_data.name] + [2, 22] + [len(speed_sensor_check_upper_bound) + 2, 22],
             'line': {'color': 'red', 'width': 1.5},
-            'name': 'Sensor power upper bound (' + str(sensor_deviation_perc) + '%)',
+            'name': 'Sensor Velocity Upper Bound (' + str(sensor_deviation_perc) + '%)',
         })
         graph_3.add_series({
             'categories': [worksheet_data.name] + [2, 23] + [len(speed_trainer_check_lower_bound) + 2, 23],
             'values': [worksheet_data.name] + [2, 25] + [len(speed_trainer_check_lower_bound) + 2, 25],
             'line': {'color': 'blue', 'width': 1.5},
-            'name': 'Trainer power lower bound (-' + str(trainer_deviation_perc) + '%)',
+            'name': 'Trainer Velocity Lower Bound (-' + str(trainer_deviation_perc) + '%)',
         })
         graph_3.add_series({
             'categories': [worksheet_data.name] + [2, 23] + [len(speed_trainer_check_lower_bound) + 2, 23],
             'values': [worksheet_data.name] + [2, 26] + [len(speed_trainer_check_lower_bound) + 2, 26],
             'line': {'color': 'blue', 'width': 1.5},
-            'name': 'Trainer power upper bound (' + str(trainer_deviation_perc) + '%)',
+            'name': 'Trainer Velocity Upper Bound (' + str(trainer_deviation_perc) + '%)',
         })
         for i in range(int(4 * sensor_deviation_perc)):
             graph_3.add_series({
