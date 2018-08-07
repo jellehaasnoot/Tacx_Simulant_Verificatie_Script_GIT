@@ -819,6 +819,8 @@ class Main(wx.Frame):
         worksheet_data.write_column(2, 25, speed_trainer_check_lower_bound)
         worksheet_data.write_column(2, 26, speed_trainer_check_upper_bound)
 
+        # Fill graph 2
+        count_1 = [4]
         for i in range(int(trainer_deviation_perc * 2)):
             for j in range(len(power_const_check)):
                 worksheet_data.write(2 + j, 50 + i, power_const_check[j] * (1 + i / 200))
@@ -828,6 +830,19 @@ class Main(wx.Frame):
             for j in range(len(power_sensor_check)):
                 worksheet_data.write(2 + j, 150 + i, power_sensor_check[j] * (1 + i / 200))
                 worksheet_data.write(2 + j, 150 + int(sensor_deviation_perc) * 2 + i, power_sensor_check[j] * (1 - i / 200))
+
+        # Fill graph 3
+        count_2 = [4]
+        for i in range(int(trainer_deviation_perc * 2)):
+            for j in range(len(power_const_check)):
+                worksheet_data.write(2 + j, 250 + i, speed_trainer_check[j] * (1 + i / 200))
+                worksheet_data.write(2 + j, 250 + int(trainer_deviation_perc) * 2 + i, speed_trainer_check[j] * (1 - i / 200))
+
+        for i in range(int(sensor_deviation_perc * 2)):
+            for j in range(len(power_sensor_check)):
+                worksheet_data.write(2 + j, 350 + i, speed_sensor_check[j] * (1 + i / 200))
+                worksheet_data.write(2 + j, 350 + int(sensor_deviation_perc) * 2 + i, speed_sensor_check[j] * (1 - i / 200))
+
 
         # Percentage Lines
         for i in range(len(velocities_for_percentages)):
@@ -917,43 +932,60 @@ class Main(wx.Frame):
                 'categories': [worksheet_data.name] + [2, 16] + [len(power_const_check) + 2, 16],
                 'line': {'color': 'red', 'width': 3, 'transparency': 98},
             })
+            count_1.append(count_1[i] + 1)
         for i in range(int(4 * trainer_deviation_perc)):
             graph_2.add_series({
                 'values': [worksheet_data.name] + [2, 50 + i] + [len(power_const_check) + 2, 50 + i],
                 'categories': [worksheet_data.name] + [2, 12] + [len(power_const_check) + 2, 12],
                 'line': {'color': 'blue', 'width': 3, 'transparency': 98},
             })
-
+            count_1.append(count_1[4*int(sensor_deviation_perc) + i] + 1)
 
 
         graph_3.add_series({
             'categories': [worksheet_data.name] + [2, 16] + [len(speed_sensor_check_lower_bound) + 2, 16],
             'values': [worksheet_data.name] + [2, 21] + [len(speed_sensor_check_lower_bound) + 2, 21],
-            'line': {'color': 'red', 'width': 1},
+            'line': {'color': 'red', 'width': 1.5},
             'name': 'Sensor power lower bound (-' + str(sensor_deviation_perc) + '%)',
         })
         graph_3.add_series({
             'categories': [worksheet_data.name] + [2, 16] + [len(speed_sensor_check_upper_bound) + 2, 16],
             'values': [worksheet_data.name] + [2, 22] + [len(speed_sensor_check_upper_bound) + 2, 22],
-            'line': {'color': 'red', 'width': 1},
+            'line': {'color': 'red', 'width': 1.5},
             'name': 'Sensor power upper bound (' + str(sensor_deviation_perc) + '%)',
         })
         graph_3.add_series({
             'categories': [worksheet_data.name] + [2, 23] + [len(speed_trainer_check_lower_bound) + 2, 23],
             'values': [worksheet_data.name] + [2, 25] + [len(speed_trainer_check_lower_bound) + 2, 25],
-            'line': {'color': 'blue', 'width': 1},
+            'line': {'color': 'blue', 'width': 1.5},
             'name': 'Trainer power lower bound (-' + str(trainer_deviation_perc) + '%)',
         })
         graph_3.add_series({
             'categories': [worksheet_data.name] + [2, 23] + [len(speed_trainer_check_lower_bound) + 2, 23],
             'values': [worksheet_data.name] + [2, 26] + [len(speed_trainer_check_lower_bound) + 2, 26],
-            'line': {'color': 'blue', 'width': 1},
+            'line': {'color': 'blue', 'width': 1.5},
             'name': 'Trainer power upper bound (' + str(trainer_deviation_perc) + '%)',
         })
+        for i in range(int(4 * sensor_deviation_perc)):
+            graph_3.add_series({
+                'values': [worksheet_data.name] + [2, 350 + i] + [len(power_const_check) + 2, 350 + i],
+                'categories': [worksheet_data.name] + [2, 16] + [len(power_const_check) + 2, 16],
+                'line': {'color': 'red', 'width': 3, 'transparency': 97},
+            })
+            count_2.append(count_2[i] + 1)
+        for i in range(int(4 * trainer_deviation_perc)):
+            graph_3.add_series({
+                'values': [worksheet_data.name] + [2, 250 + i] + [len(power_const_check) + 2, 250 + i],
+                'categories': [worksheet_data.name] + [2, 23] + [len(power_const_check) + 2, 23],
+                'line': {'color': 'blue', 'width': 3, 'transparency': 97},
+            })
+            count_2.append(count_2[4* int(sensor_deviation_perc) + i] + 1)
 
         worksheet_charts.insert_chart('B2', graph)
         worksheet_charts.insert_chart('B40', graph_2)
         worksheet_charts.insert_chart('B78', graph_3)
+        graph_2.set_legend({'position': 'bottom', 'delete_series': count_1})
+        graph_3.set_legend({'position': 'bottom', 'delete_series': count_2})
         graph.set_legend({'position': 'bottom', 'delete_series': [0, 1, 2, 3, 4]})
         worksheet_charts.write('T2', 'Simulated Mass:', header)
         worksheet_charts.write('X2', str(round(float(self.simulated_mass_guess), 2)), header)
