@@ -267,7 +267,7 @@ class Main(wx.Frame):
         self.xlsx_path_panel_header_display.SetFont(self.font_header)
         self.xlsx_path_panel_display = wx.StaticText(self.xlsx_path_panel, label=str(self.folder_pathname), pos=(4, 25))
 
-        self.sim_mass_panel_display = wx.StaticText(self.sim_mass_panel, label=str(round(float(self.simulated_mass_guess), 2)) + " [kg m²]", pos=(4, 25))
+        self.sim_mass_panel_display = wx.StaticText(self.sim_mass_panel, label=str(round(float(self.simulated_mass_guess), 2)) + " [kg]", pos=(4, 25))
         self.sim_mass_panel_display.SetFont(self.font_normal)
 
     def on_open(self, e):
@@ -443,7 +443,7 @@ class Main(wx.Frame):
                     # print('--------')
                     error.append(abs(power_sensor_check[i] - power_const_at_index) / power_sensor_check[i] * 100)
                 elif power_time_const_check[index_closest_value] < power_time_sensor_check[i] and index_closest_value < len(power_const_check)-1:
-                    print(index_closest_value, len(power_const_check))
+                    # print(index_closest_value, len(power_const_check))
                     dummy = (power_const_check[index_closest_value] - power_const_check[index_closest_value + 1])/ \
                             (power_time_const_check[index_closest_value] - power_time_const_check[index_closest_value
                                                                                                     + 1])
@@ -489,7 +489,7 @@ class Main(wx.Frame):
                     # print('--------')
                     error.append(abs(power_const_check[i] - power_sensor_at_index) / power_sensor_at_index * 100)
 
-        mean_error_power = mean(error)
+        mean_error_power = float(mean(error))
         # print(mean_error_power)
 
         speed_sensor_check = []
@@ -1120,8 +1120,9 @@ class Main(wx.Frame):
         worksheet_charts.write('T2', 'Simulated Mass:', header)
         worksheet_charts.write('X2', str(round(float(self.simulated_mass_guess), 2)), header)
         worksheet_charts.write_rich_string('Y2', header, '[kg]')
-        worksheet_charts.write('T3', 'Mean deviation power:', header)
-        worksheet_charts.write('X3', str(round(mean_error_power, 2)), header)
+        worksheet_charts.write('T3', 'Trainer deviation:', header)
+        worksheet_charts.write('X3', str(round(mean_error_power, 1)), header)
+        worksheet_charts.write('Y3', '[%]', header)
         # TODO: uncomment (only uncomment mean if there are more measurements.
         # worksheet_charts.write('T3', 'Minimal precision:', header)
         # worksheet_charts.write('X3', str(round(float(precision_trainer_mean), 2)), header)
