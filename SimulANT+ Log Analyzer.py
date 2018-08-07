@@ -450,12 +450,12 @@ class Main(wx.Frame):
                     power_const_at_index = power_const_check[index_closest_value] - dummy * dummy2
 
                     error.append(abs(power_sensor_check[i] - power_const_at_index) / power_sensor_check[i] * 100)
-                    print(abs(power_sensor_check[i] - power_const_at_index) / power_sensor_check[i] * 100)
-                    print(power_time_const_check[index_closest_value], power_const_check[index_closest_value])
-                    print(power_time_sensor_check[i], power_sensor_check[i])
-                    print(power_time_const_check[index_closest_value+1], power_const_check[index_closest_value+1])
-                    print(power_const_at_index)
-                    print('--------')
+                    # print(abs(power_sensor_check[i] - power_const_at_index) / power_sensor_check[i] * 100)
+                    # print(power_time_const_check[index_closest_value], power_const_check[index_closest_value])
+                    # print(power_time_sensor_check[i], power_sensor_check[i])
+                    # print(power_time_const_check[index_closest_value+1], power_const_check[index_closest_value+1])
+                    # print(power_const_at_index)
+                    # print('--------')
 
         elif len(power_time_const_check) < len(power_time_sensor_check):
              for i in range(len(power_time_const_check)-1):
@@ -489,7 +489,7 @@ class Main(wx.Frame):
                     error.append(abs(power_const_check[i] - power_sensor_at_index) / power_sensor_at_index * 100)
 
         mean_error_power = mean(error)
-        print(mean_error_power)
+        # print(mean_error_power)
 
         speed_sensor_check = []
         speed_sensor_check_upper_bound = []
@@ -1119,7 +1119,8 @@ class Main(wx.Frame):
         worksheet_charts.write('T2', 'Simulated Mass:', header)
         worksheet_charts.write('X2', str(round(float(self.simulated_mass_guess), 2)), header)
         worksheet_charts.write_rich_string('Y2', header, '[kg]')
-        
+        worksheet_charts.write('T3', 'Mean deviation power:', header)
+        worksheet_charts.write('X3', str(round(mean_error_power, 2)), header)
         # TODO: uncomment (only uncomment mean if there are more measurements.
         # worksheet_charts.write('T3', 'Minimal precision:', header)
         # worksheet_charts.write('X3', str(round(float(precision_trainer_mean), 2)), header)
