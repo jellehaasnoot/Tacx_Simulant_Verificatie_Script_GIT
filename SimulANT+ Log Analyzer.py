@@ -193,6 +193,7 @@ class Main(wx.Frame):
         self.saved_text.SetFont(self.font_green)
         self.saved_text.SetLabel("VALUES NOT SAVED")
         self.saved_text.SetForegroundColour((255, 10, 10))
+        self.saved = False
 
         # 9: Create empty parameters
         self.data_1 = []
@@ -250,8 +251,8 @@ class Main(wx.Frame):
         #     self.path_display_panel = wx.Panel(self.top_panel, -1, style=wx.NO_BORDER, size=(660, 22), pos=(14, 35 + i * 55))
         #     self.path_display = wx.StaticText(self.path_display_panel, label=str(path.dirname(self.pathname[i])), pos=(4, 2))
 
-        data_display_strings = [["Average power at high slope / power:     ", "Average velocity at high slope / power:   ", "Amount of received ANT+ messages:     "],
-                                ["Average power at low slope / power:     ", "Average velocity at low slope / power:   ", "Amount of received ANT+ messages:   "],
+        data_display_strings = [["Average power at high power:                ", "Average velocity at high power:              ", "Amount of received ANT+ messages:     "],
+                                ["Average power at low power:                ", "Average velocity at low power:              ", "Amount of received ANT+ messages:   "],
                                 ["Average power at constant velocity:     ", "Average velocity at constant velocity:   ", "Amount of received ANT+ messages:   "],
                                 ["Average power from power / cadence sensor:     ", "Average velocity from power / cadence sensor:   ", "Amount of received ANT+ messages:                "]]
         for i in range(len(self.statistics_titles)):
@@ -291,18 +292,19 @@ class Main(wx.Frame):
         # goal of 0W while cycling at some multiple constant velocities. This will be measured with an external power
         # meter, this way the accuracy can be calculated.
 
-        if self.sensor_deviation_text.GetValue() == "" or self.trainer_deviation_text.GetValue() == "" or self.edit_gear_front_text.GetValue() == "" or self.edit_gear_rear_text.GetValue() == "":
-            no_entry_dialog = wx.MessageDialog(self.top_panel, style=wx.ICON_ERROR, message="(some of) The fields are still left empty. \nPlease fill out the gear ratio, deviations and optionally inertia data.")
+        if self.sensor_deviation_text.GetValue() == "" or self.trainer_deviation_text.GetValue() == "" or self.edit_gear_front_text.GetValue() == "" or self.edit_gear_rear_text.GetValue() == "" or self.saved == False:
+            no_entry_dialog = wx.MessageDialog(self.top_panel, style=wx.ICON_ERROR, message="(some of) The fields are still left empty, or haven't been saved. \n\nPlease fill out the gear ratio, deviations and optionally inertia data.")
             no_entry_dialog.CenterOnParent()
             if no_entry_dialog.ShowModal() == wx.OK:
                 no_entry_dialog.Destroy()
                 return
+            return
 
         self.pathname = []
-        dummy_strings = ["Choose the logged SimulANT+ file with the HIGHEST slope / power...",
-                         "Choose the second logged SimulANT+ file with the LOWEST (negative) slope/ 0W...",
-                         "Choose the third logged SimulANT+ file with the 0 W Power program - constant velocities...",
-                         "Choose the fourth logged SimulANT+ file with the 0 W Power program - read from the external power sensor..."]
+        dummy_strings = ["Choose the logged SimulANT+ file with high power...",
+                         "Choose the second logged SimulANT+ file with low power...",
+                         "Choose the third logged SimulANT+ file with the constant velocity...",
+                         "Choose the fourth logged SimulANT+ file with the constant velocity - read from the external power sensor..."]
         for i in range(len(dummy_strings)):
             with wx.FileDialog(self, dummy_strings[i],
                                wildcard="Text files (*.txt)|*.txt|" "Comma Separated Value-files (*.csv)|*.csv",
@@ -1341,13 +1343,14 @@ class Main(wx.Frame):
             self.saved_text.SetFont(self.font_green)
             self.saved_text.SetLabel("VALUES SAVED")
             self.saved_text.SetForegroundColour((10, 255, 10))
+            self.saved = True
 
         except ValueError:
             no_number_dialog = wx.MessageDialog(self.top_panel, style=wx.ICON_ERROR, message="This doesn't appear to be a number. \n\nPlease try again.")
             no_number_dialog.CenterOnParent()
             if no_number_dialog.ShowModal() == wx.OK:
                 no_number_dialog.Destroy()
-                return
+                pass
 
 
     def theoretical_power_at_velocity(self, velocity, theta):
@@ -1366,5 +1369,5 @@ class Main(wx.Frame):
 if __name__ == '__main__':
     Application = wx.App(False)
     frame = Main(None, 'SimulANT+ Log Analyzer                                                                       '
-                       '                                                    [v1.0]').Show()
+                       '                                                    [v1.1]').Show()
     Application.MainLoop()
