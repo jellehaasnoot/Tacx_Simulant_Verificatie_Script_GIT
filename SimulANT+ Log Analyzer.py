@@ -425,7 +425,7 @@ class Main(wx.Frame):
 
         error = []
         if len(power_time_const_check) > len(power_time_sensor_check):
-            for i in range(len(power_sensor_check)-1):
+            for i in range(len(power_sensor_check)):
                 closest_value = min(enumerate(power_time_const_check), key=lambda x: abs(x[1] - power_time_sensor_check[i]))
                 index_closest_value = closest_value[0]
                 if power_sensor_check[i] == 0 or power_const_check[i] == 0:
@@ -442,9 +442,10 @@ class Main(wx.Frame):
                     # print(power_const_at_index)
                     # print('--------')
                     error.append(abs(power_sensor_check[i] - power_const_at_index) / power_sensor_check[i] * 100)
-                elif power_time_const_check[index_closest_value] < power_time_sensor_check[i]:
+                elif power_time_const_check[index_closest_value] < power_time_sensor_check[i] and index_closest_value < len(power_const_check)-1:
+                    print(index_closest_value, len(power_const_check))
                     dummy = (power_const_check[index_closest_value] - power_const_check[index_closest_value + 1])/ \
-                            (power_time_const_check[index_closest_value]- power_time_const_check[index_closest_value
+                            (power_time_const_check[index_closest_value] - power_time_const_check[index_closest_value
                                                                                                     + 1])
                     dummy2 = power_time_const_check[index_closest_value] - power_time_sensor_check[i]
                     power_const_at_index = power_const_check[index_closest_value] - dummy * dummy2
@@ -475,7 +476,7 @@ class Main(wx.Frame):
                     # print(power_const_at_index)
                     # print('--------')
                     error.append(abs(power_const_check[i] - power_sensor_at_index) / power_sensor_at_index * 100)
-                elif power_time_const_check[i] > power_time_sensor_check[index_closest_value]:
+                elif power_time_const_check[i] > power_time_sensor_check[index_closest_value] and index_closest_value < len(power_sensor_check)-1:
                     dummy = (power_sensor_check[index_closest_value] - power_sensor_check[index_closest_value + 1])/ \
                             (power_time_sensor_check[index_closest_value] - power_time_sensor_check[index_closest_value
                                                                                                     + 1])
