@@ -10,7 +10,7 @@ from numpy import arctan
 from numpy import sin
 from numpy import cos
 from scipy.optimize import curve_fit
-
+#TODO Commit
 class Main(wx.Frame):
     def __init__(self, parent, title):
         """
