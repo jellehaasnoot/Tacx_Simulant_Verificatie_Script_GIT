@@ -175,7 +175,7 @@ class Main(wx.Frame):
         self.border = wx.BoxSizer()
         self.border.Add(self.sizer, 1, wx.ALL | wx.EXPAND, 5)
 
-        self.simulated_mass_ask_alt_2 = wx.StaticText(self.user_input_panel, label="User input lin. / rot. ratio: ", pos=(322, 80))
+        self.simulated_mass_ask_alt_2 = wx.StaticText(self.user_input_panel, label="User input rot. / lin. ratio: ", pos=(322, 80))
         self.sim_mass_units_alt_2 = wx.StaticText(self.user_input_panel, label="rad / m", pos=(605, 80))
         self.sim_mass_units_alt_2.SetFont(self.font_normal)
         self.simulated_mass_ask_alt_2.SetFont(self.font_normal)
