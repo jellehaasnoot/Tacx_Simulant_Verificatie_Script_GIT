@@ -1120,7 +1120,7 @@ class Main(wx.Frame):
         worksheet_charts.write('T2', 'Simulated Mass:', header)
         worksheet_charts.write('X2', str(round(float(self.simulated_mass_guess), 2)), header)
         worksheet_charts.write_rich_string('Y2', header, '[kg]')
-        worksheet_charts.write('T3', 'Trainer deviation:', header)
+        worksheet_charts.write('T3', 'Mean power error:', header)
         worksheet_charts.write('X3', str(round(mean_error_power, 1)), header)
         worksheet_charts.write('Y3', '[%]', header)
         # TODO: uncomment (only uncomment mean if there are more measurements.
