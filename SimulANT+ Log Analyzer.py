@@ -282,9 +282,9 @@ class Main(wx.Frame):
         """
 
         # Opening all files with the use of a dialog. Add a question to dummy_strings to make this code open more files.
-        # File 1 will contain the ANT+ data of the measurements with a high gradient (slope). This will be used to
-        # calculate the maximal brake power. File 2 will contain the ANT+ data of the measurements with a low
-        # (negative) gradient (slope). This will be used to calculate the minimal brake power. Opening File 3 with the
+        # File 1 will contain the ANT+ data of the measurements with a high resistance (wattage). This will be used to
+        # calculate the maximal brake power. File 2 will contain the ANT+ data of the measurements with 0 W as goal
+        # power. This will be used to calculate the minimal brake power. Opening File 3 with the
         # use of a dialog. File 3 will contain the ANT+ data of the measurements with a power goal of 0W while cycling
         # at some multiple constant velocities. This will be used to see the residual brake power if no brake is used.
         # Opening File 4 with the use of a dialog. File 4 will contain the ANT+ data of the measurements with a power
@@ -300,7 +300,7 @@ class Main(wx.Frame):
 
         self.pathname = []
         dummy_strings = ["Choose the logged SimulANT+ file with the HIGHEST slope / power...",
-                         "Choose the second logged SimulANT+ file with the LOWEST (negative) slope...",
+                         "Choose the second logged SimulANT+ file with the LOWEST (negative) slope/ 0W...",
                          "Choose the third logged SimulANT+ file with the 0 W Power program - constant velocities...",
                          "Choose the fourth logged SimulANT+ file with the 0 W Power program - read from the external power sensor..."]
         for i in range(len(dummy_strings)):
@@ -768,7 +768,7 @@ class Main(wx.Frame):
         graph_2.set_x_axis({'name': 'Time [s]'})
         graph_2.set_title({'name': 'Power ' + self.user_file_name + ' vs. Power external sensor'})
         graph_2.set_size({'width': 1080, 'height': 720})
-        graph_3.set_y_axis({'name': 'Velocity [m/s]'})
+        graph_3.set_y_axis({'name': 'Velocity [km/h]'})
         graph_3.set_x_axis({'name': 'Time [s]'})
         graph_3.set_title({'name': 'Velocity ' + self.user_file_name + ' vs. Velocity external sensor'})
         graph_3.set_size({'width': 1080, 'height': 720})
@@ -824,24 +824,35 @@ class Main(wx.Frame):
         i = 0
         velocity_check = []
         pop = []
+        fill_power = []
+        fill_power_low = []
+        power_flywheel_h = []
+        power_flywheel_l = []
 
         for i in range(1000):
             velocity_check.append(i * 0.2)
             if velocity_check[i] > max(velocity_clean_low):
                 break
         worksheet_data.write_column(2, 449, velocity_check)
-        fill_power_low = self.func_lin(array(velocity_check), *popt1_low)
+        fill_power_raw_low = self.func_lin(array(velocity_check), *popt1_low)
+        fill_power_raw_high = self.func_lin(array(velocity_check), *popt1_high)
+        for i in range(len(velocity_check)):
+            power_flywheel_h.append(float(self.simulated_mass_guess) * velocity_check[i] / 3.6 * popt5[0])
+            power_flywheel_l.append(float(self.simulated_mass_guess) * velocity_check[i] / 3.6 * popt6[0])
+            fill_power.append(fill_power_raw_high[i] - power_flywheel_h[i])
+            fill_power_low.append(fill_power_raw_low[i] - power_flywheel_l[i])
+
+
         for j in range(240):
-                fill_power = self.func_lin(array(velocity_check), *popt1_high)
                 count.append(count[j] + 1)
                 pops = 0
                 fill_power_list = []
                 for i in range(len(fill_power)):
-                    fill_power_list.append(fill_power[i] - j * 3)
+                    fill_power_list.append(fill_power[i] - j * 5)
                     if fill_power_list[i - pops] < fill_power_low[i]:
                         fill_power_list.pop()
                         pops += 1
-                    elif fill_power_list[i - pops] > max(fitted_power_high):
+                    elif fill_power_list[i - pops] > max(power_clean_high_brake):
                         fill_power_list.pop()
                         break
                 worksheet_data.write_column(2 + pops, 450 + j, fill_power_list)
@@ -892,12 +903,12 @@ class Main(wx.Frame):
             graph.add_series({
             'categories': [worksheet_data.name] + [2, 449] + [len(velocity_check) + 2, 449],
             'values': [worksheet_data.name] + [2, 450 + i] + [len(velocity_check) + 2, 450 + i],
-            'line': {'color': '#67bfe7', 'width': 10, 'transparency': 99},
+            'line': {'color': 'red', 'width': 10, 'transparency': 99},
         })
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
             'values': [worksheet_data.name] + [2, 1] + [len(power_clean_high) + 2, 1],
-            'line': {'color': '#67bfe7', 'dash_type': 'dash', 'width': 1.5},
+            'line': {'color': 'blue', 'dash_type': 'dash', 'width': 1.5},
             'name': 'Highest Gradient Power',
         })
 
@@ -905,7 +916,7 @@ class Main(wx.Frame):
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
             'values': [worksheet_data.name] + [2, 8] + [len(power_clean_high) + 2, 8],
-            'line': {'color': '#67bfe7', 'width': 1.5},
+            'line': {'color': 'red', 'width': 3},
             'name': 'Highest Gradient Power - Without Flywheel Effects',
         })
         graph.add_series({
@@ -917,25 +928,25 @@ class Main(wx.Frame):
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 4] + [len(velocity_clean_low) + 2, 4],
             'values': [worksheet_data.name] + [2, 5] + [len(power_clean_low) + 2, 5],
-            'line': {'color': '#67bfe7', 'dash_type': 'dash', 'width': 1.5},
+            'line': {'color': 'blue', 'dash_type': 'dash', 'width': 1.5},
             'name': 'Lowest Gradient Power',
         })
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 4] + [len(velocity_clean_low) + 2, 4],
             'values': [worksheet_data.name] + [2, 9] + [len(power_clean_low_brake) + 2, 9],
-            'line': {'color': '#67bfe7', 'width': 1.5},
+            'line': {'color': 'red', 'width': 3},
             'name': 'Lowest Gradient Power - Without Flywheel Effects',
         })
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 4] + [len(velocity_clean_low) + 2, 4],
             'values': [worksheet_data.name] + [2, 6] + [len(power_clean_low) + 2, 6],
-            'line': {'color': 'black', 'width': 3},
+            'line': {'color': 'blue', 'width': 2},
             'name': 'Fitted Lowest Gradient Power',
         })
         graph.add_series({
             'categories': [worksheet_data.name] + [2, 0] + [len(velocity_clean_high) + 2, 0],
             'values': [worksheet_data.name] + [2, 2] + [len(power_clean_high) + 2, 2],
-            'line': {'color': 'black', 'width': 3},
+            'line': {'color': 'blue', 'width': 2},
             'name': 'Fitted Highest Gradient Power',
         })
 
