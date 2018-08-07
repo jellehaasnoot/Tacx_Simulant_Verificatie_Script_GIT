@@ -300,6 +300,14 @@ class Main(wx.Frame):
                 return
             return
 
+        if self.edit_simulated_mass_text.GetValue() == "" and self.simulated_mass_alt_1_text.GetValue() == "" and self.saved == False:
+            no_entry_dialog = wx.MessageDialog(self.top_panel, style=wx.ICON_ERROR, message="(some of) The fields are still left empty, or haven't been saved. \n\nPlease fill out the gear ratio, deviations and optionally inertia data.")
+            no_entry_dialog.CenterOnParent()
+            if no_entry_dialog.ShowModal() == wx.OK:
+                no_entry_dialog.Destroy()
+                return
+            return
+
         self.pathname = []
         dummy_strings = ["Choose the logged SimulANT+ file with high power...",
                          "Choose the second logged SimulANT+ file with low power...",
