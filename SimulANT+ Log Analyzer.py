@@ -425,7 +425,7 @@ class Main(wx.Frame):
 
         error = []
         if len(power_time_const_check) > len(power_time_sensor_check):
-            for i in range(len(power_sensor_check)):
+            for i in range(len(power_sensor_check)-1):
                 closest_value = min(enumerate(power_time_const_check), key=lambda x: abs(x[1] - power_time_sensor_check[i]))
                 index_closest_value = closest_value[0]
                 if power_sensor_check[i] == 0 or power_const_check[i] == 0:
@@ -450,15 +450,15 @@ class Main(wx.Frame):
                     power_const_at_index = power_const_check[index_closest_value] - dummy * dummy2
 
                     error.append(abs(power_sensor_check[i] - power_const_at_index) / power_sensor_check[i] * 100)
-                    # print(abs(power_sensor_check[i] - power_const_at_index) / power_sensor_check[i] * 100)
-                    # print(power_time_const_check[index_closest_value], power_const_check[index_closest_value])
-                    # print(power_time_sensor_check[i], power_sensor_check[i])
-                    # print(power_time_const_check[index_closest_value+1], power_const_check[index_closest_value+1])
-                    # print(power_const_at_index)
-                    # print('--------')
+                    print(abs(power_sensor_check[i] - power_const_at_index) / power_sensor_check[i] * 100)
+                    print(power_time_const_check[index_closest_value], power_const_check[index_closest_value])
+                    print(power_time_sensor_check[i], power_sensor_check[i])
+                    print(power_time_const_check[index_closest_value+1], power_const_check[index_closest_value+1])
+                    print(power_const_at_index)
+                    print('--------')
 
         elif len(power_time_const_check) < len(power_time_sensor_check):
-             for i in range(len(power_time_const_check)):
+             for i in range(len(power_time_const_check)-1):
                 closest_value = min(enumerate(power_time_sensor_check), key=lambda x: abs(x[1] - power_time_const_check[i]))
                 index_closest_value = closest_value[0]
                 if power_sensor_check[i] == 0 or power_const_check[i] == 0:
@@ -487,6 +487,9 @@ class Main(wx.Frame):
                     # print(power_const_at_index)
                     # print('--------')
                     error.append(abs(power_const_check[i] - power_sensor_at_index) / power_sensor_at_index * 100)
+
+        mean_error_power = mean(error)
+        print(mean_error_power)
 
         speed_sensor_check = []
         speed_sensor_check_upper_bound = []
