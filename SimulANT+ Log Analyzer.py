@@ -468,7 +468,7 @@ class Main(wx.Frame):
         self.power_sensor_avg = mean(self.power_list_sensor)
         self.all_averages[3].append(round(float(self.power_sensor_avg), 1))
         self.cadence_sensor_avg = mean(self.cadence_list_sensor)
-        self.all_averages[3].append(round(float(self.cadence_sensor_avg), 1))
+        self.all_averages[3].append(round(float(self.cadence_sensor_avg * self.wheel_radius * self.sprocket_ratio), 1))
         self.all_averages[3].append(len(self.cadence_list_sensor))
         self.all_averages = array(self.all_averages)
 
@@ -1050,7 +1050,7 @@ class Main(wx.Frame):
         graph.set_legend({'position': 'bottom', 'delete_series': list})
         worksheet_charts.write('T2', 'Simulated Mass:', header)
         worksheet_charts.write('X2', str(round(float(self.simulated_mass_guess), 2)), header)
-        worksheet_charts.write_rich_string('Y2', header, '[kgm', superscript, '2', header, ']')
+        worksheet_charts.write_rich_string('Y2', header, '[kg]')
         # TODO: uncomment (only uncomment mean if there are more measurements.
         # worksheet_charts.write('T3', 'Minimal precision:', header)
         # worksheet_charts.write('X3', str(round(float(precision_trainer_mean), 2)), header)
