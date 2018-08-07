@@ -850,8 +850,6 @@ class Main(wx.Frame):
                     if max(fill_power_list) <= max(fill_power_low):
                         break
 
-        print(pop)
-
         # Fill graph 2
         count_1 = [4]
         for i in range(int(trainer_deviation_perc * 2)):
