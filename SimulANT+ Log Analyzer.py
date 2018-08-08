@@ -213,7 +213,7 @@ class Main(wx.Frame):
         self.power_list_high = []
         self.power_list_const = []
         self.check_counter = 0
-        self.wheel_radius = 0.3395 # TODO CHECKEN OF DIT WERKT BINNEN SIMULANT, ANDERS DIT EN README AANPASSEN
+        self.wheel_radius = 0.35
 
         self.checkbox = wx.CheckBox(self.user_input_panel, -1, '', pos=(300, 10.7))
         self.checkbox.SetValue(False)
